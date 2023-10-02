@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [typescript(), react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "src"),
     },
   },
   server: {
@@ -15,7 +15,7 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
-    sourcemap: true,
+    sourcemap: false,
   },
   test: {
     globals: true,
