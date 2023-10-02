@@ -1,5 +1,5 @@
-const router = require("express").Router();
-const { ROLE } = require("../../config/roles");
+const router = require('express').Router()
+const {ROLE} = require('../../config/roles')
 // Bring in the User Registration function
 const {
   userAuth,
@@ -11,82 +11,97 @@ const {
   getAuthButtons,
   updateAuthButton,
   removeAuthButton,
-} = require("../../controllers/auth/index");
+} = require('../../Controllers/auth/index')
 
-router.get("/", async (req, res) => {
-  return res.send("Auth service running...");
-});
+router.get('/', async (req, res) => {
+  return res.send('Auth service running...')
+})
 
 // Admin Registration Route
-router.post("/signup-admin", async (req, res) => {
-  await userRegister(req.body, ROLE.admin, res);
-});
+router.post('/signup-admin', async (req, res) => {
+  await userRegister(req.body, ROLE.admin, res)
+})
 
-router.post("/signup-operator", async (req, res) => {
-  await userRegister(req.body, ROLE.operator, res);
-});
- 
-router.post("/signup-analytics", async (req, res) => {
-  await userRegister(req.body, ROLE.analytics, res);
-});
+router.post('/signup-operator', async (req, res) => {
+  await userRegister(req.body, ROLE.operator, res)
+})
 
-router.post("login-operator", async (req, res) => {
-  await userLogin(req.body, ROLE.operator, res);
-});
- 
-router.post("login-analytics", async (req, res) => {
-  await userLogin(req.body, ROLE.analytics, res);
-});
+router.post('/signup-analytics', async (req, res) => {
+  await userRegister(req.body, ROLE.analytics, res)
+})
+
+router.post('login-operator', async (req, res) => {
+  await userLogin(req.body, ROLE.operator, res)
+})
+
+router.post('login-analytics', async (req, res) => {
+  await userLogin(req.body, ROLE.analytics, res)
+})
 
 // Admin Login Route
-router.post("/login-admin", async (req, res) => {
-  await userLogin(req.body, ROLE.admin, res);
-});
-
-router.post("/add-auth-button",userAuth,checkRole([ROLE.admin]), async (req, res) => {
-  await addAuthButton(req, res);
+router.post('/login-admin', async (req, res) => {
+  await userLogin(req.body, ROLE.admin, res)
 })
 
-router.get("/get-auth-buttons", userAuth, async (req, res) => {
-  await getAuthButtons(req, res);
-})
-
-router.post("/update-auth-button/:authButtonId", userAuth, checkRole([ROLE.admin]), async (req, res) => {
-  await updateAuthButton(req, res);
-})
-
-router.delete("/delete-auth-button/:authButtonId", userAuth, checkRole([ROLE.admin]), async (req, res) => {
-  await removeAuthButton(req, res);
-})
-
-// Super Admin Protected Route
-router.get(
-  "/admin-protected",
+router.post(
+  '/add-auth-button',
   userAuth,
   checkRole([ROLE.admin]),
   async (req, res) => {
-    return res.json("Hello Super Admin");
+    await addAuthButton(req, res)
   }
-);
+)
+
+router.get('/get-auth-buttons', userAuth, async (req, res) => {
+  await getAuthButtons(req, res)
+})
+
+router.post(
+  '/update-auth-button/:authButtonId',
+  userAuth,
+  checkRole([ROLE.admin]),
+  async (req, res) => {
+    await updateAuthButton(req, res)
+  }
+)
+
+router.delete(
+  '/delete-auth-button/:authButtonId',
+  userAuth,
+  checkRole([ROLE.admin]),
+  async (req, res) => {
+    await removeAuthButton(req, res)
+  }
+)
+
+// Super Admin Protected Route
+router.get(
+  '/admin-protected',
+  userAuth,
+  checkRole([ROLE.admin]),
+  async (req, res) => {
+    return res.json('Hello Super Admin')
+  }
+)
 
 // Admin Protected Route
 router.get(
-  "/operator-protected",
+  '/operator-protected',
   userAuth,
   checkRole([ROLE.operator]),
   async (req, res) => {
-    return res.json("Hello Admin");
+    return res.json('Hello Admin')
   }
-);
+)
 
 // User Protected Route
 router.get(
-  "/analytics-protected",
+  '/analytics-protected',
   userAuth,
   checkRole([ROLE.analytics]),
   async (req, res) => {
-    return res.json("Hello User");
+    return res.json('Hello User')
   }
-);
+)
 
-module.exports = router;
+module.exports = router
