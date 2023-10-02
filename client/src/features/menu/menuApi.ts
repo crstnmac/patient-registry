@@ -1,4 +1,4 @@
-import { prepareHeaders } from "@/utils/util"
+import { prepareHeaders } from "../../utils/util"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export namespace Menus {

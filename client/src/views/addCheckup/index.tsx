@@ -1,4 +1,4 @@
-import AddCheckupForm from "@/features/addCheckupForm"
+import AddCheckupForm from "../../features/addCheckupForm"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 import { useLocation } from "react-router-dom"

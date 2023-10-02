@@ -7,9 +7,9 @@ import {
   UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons"
-import { useDispatch } from "@/app/store"
-import { logout, selectUserInfo, updateCollapse } from "@/app/globalSlice"
-import { useAppSelector } from "@/app/hooks"
+import { useDispatch } from "../app/store"
+import { logout, selectUserInfo, updateCollapse } from "../app/globalSlice"
+import { useAppSelector } from "../app/hooks"
 import { useEffect, useState } from "react"
 import { ProLayout } from "@ant-design/pro-components"
 

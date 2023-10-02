@@ -6,14 +6,14 @@ import {
   getOpenKeys,
   handleRouter,
   searchRoute,
-} from "@/utils/util"
-import { setMenuList as reduxSetMenuList } from "@/app/globalSlice"
-import { setBreadcrumbList } from "@/app/globalSlice"
-import { setAuthRouter } from "@/app/authSlice"
-import menuApi from "@/features/menu/menuApi"
+} from "../../../utils/util"
+import { setMenuList as reduxSetMenuList } from "../../../app/globalSlice"
+import { setBreadcrumbList } from "../../../app/globalSlice"
+import { setAuthRouter } from "../../../app/authSlice"
+import menuApi from "../../../features/menu/menuApi"
 import type { MenuProps } from "antd"
 import * as Icons from "@ant-design/icons"
-import { RootState, useDispatch, useSelector } from "@/app/store"
+import { RootState, useDispatch, useSelector } from "../../../app/store"
 
 const LayoutMenu = () => {
   const dispatch = useDispatch()

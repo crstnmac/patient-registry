@@ -1,4 +1,4 @@
-import CheckupsTable from "@/features/checkupsTable"
+import CheckupsTable from "../../features/checkupsTable"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 

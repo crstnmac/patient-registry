@@ -1,5 +1,5 @@
-import { RootState } from "@/app/store"
-import { RouteObject } from "@/routers/interface"
+import { RootState } from "../app/store"
+import { RouteObject } from "../routers/interface"
 
 /**
  * @description Get localStorage

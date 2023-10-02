@@ -1,4 +1,4 @@
-import { prepareHeaders } from "@/utils/util"
+import { prepareHeaders } from "../../utils/util"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export namespace Login {
@@ -14,7 +14,7 @@ export namespace Login {
   }
 }
 
-export const loginApi = createApi({
+const loginApi = createApi({
   reducerPath: "login",
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_BASE_API_URL}/api/auth`,
@@ -39,3 +39,5 @@ export const loginApi = createApi({
     }),
   }),
 })
+
+export default loginApi

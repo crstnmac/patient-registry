@@ -1,4 +1,4 @@
-import { prepareHeaders } from "@/utils/util"
+import { prepareHeaders } from "../../utils/util"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export namespace PatientTable {
@@ -57,7 +57,7 @@ export namespace PatientTable {
   }
 }
 
-export const patientTableApi = createApi({
+const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
@@ -142,3 +142,5 @@ export const patientTableApi = createApi({
     }),
   }),
 })
+
+export default patientTableApi

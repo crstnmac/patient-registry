@@ -1,6 +1,6 @@
-import { LayoutIndex } from "@/routers/constant"
-import { RouteObject } from "@/routers/interface"
-import Analytics from "@/views/analytics/index"
+import { LayoutIndex } from "../../routers/constant"
+import { RouteObject } from "../../routers/interface"
+import Analytics from "../../views/analytics/index"
 
 const analyticsRouter: Array<RouteObject> = [
   {

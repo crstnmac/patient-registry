@@ -1,10 +1,10 @@
-import LayoutIndex from "@/layouts"
-import AddCheckup from "@/views/addCheckup"
-import AddPatients from "@/views/addPatients"
-import Analytics from "@/views/analytics"
-import { Checkups } from "@/views/checkups"
-import Login from "@/views/login"
-import Patients from "@/views/patients"
+import LayoutIndex from "../layouts"
+import AddCheckup from "../views/addCheckup"
+import AddPatients from "../views/addPatients"
+import Analytics from "../views/analytics"
+import { Checkups } from "../views/checkups"
+import Login from "../views/login"
+import Patients from "../views/patients"
 import { Routes, Route } from "react-router-dom"
 
 const Router = () => {
