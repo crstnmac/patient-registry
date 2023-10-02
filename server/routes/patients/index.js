@@ -11,7 +11,7 @@ const {
   deleteCheckup,
   updateCheckup,
   updatePatient,
-} = require('../../controllers/patients')
+} = require('../../controllers/patients/index')
 
 router.get('/', async (req, res) => {
   return res.send('Patients service running...')

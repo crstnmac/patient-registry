@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const { ROLE } = require("../../config/roles");
-const {userAuth, checkRole, serializeUser} = require('../../Controllers/auth')
+const {userAuth, checkRole, serializeUser} = require('../../Controllers/auth/index')
 const {
   addMenu,
   deleteMenu,
   getMenus,
   updateMenu,
-} = require("../../controllers/menu");
+} = require("../../controllers/menu/index");
 
 router.get("/", async (req, res) => {
   return res.send("Menu service running...");

@@ -11,7 +11,7 @@ const {
   getAuthButtons,
   updateAuthButton,
   removeAuthButton,
-} = require("../../Controllers/auth");
+} = require("../../Controllers/auth/index");
 
 router.get("/", async (req, res) => {
   return res.send("Auth service running...");
