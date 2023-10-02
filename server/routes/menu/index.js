@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { ROLE } = require("../../config/roles");
-const {userAuth, checkRole, serializeUser} = require('../../Controllers/auth/index')
+const {userAuth, checkRole, serializeUser} = require('../../controllers/auth/index')
 const {
   addMenu,
   deleteMenu,
