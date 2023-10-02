@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
 
-const { MONGO_HOST, MONGO_DB_NAME, REQUEST_TIMEOUT, NODE_PORT } = require("./config");
+const { MONGO_HOST, MONGO_DB_NAME, REQUEST_TIMEOUT, NODE_PORT, MONGO_URL } = require("./config");
 const PORT = NODE_PORT || 5000;
 
 const app = exp();
@@ -33,7 +33,7 @@ app.use("/api", require("./routes"));
 const startApp = async () => {
   try {
     // Connection With DB
-    await connect(MONGO_HOST, {
+    await connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: REQUEST_TIMEOUT,
