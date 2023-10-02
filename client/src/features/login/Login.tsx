@@ -10,7 +10,7 @@ import { useDispatch } from "@/app/store"
 import { setToken, setUserInfo } from "@/app/globalSlice"
 import jwtDecode from "jwt-decode"
 import { type Login as TLogin } from "./loginApi"
-import loginApi from "./loginApi"
+import { loginApi } from "@/features/login/loginApi"
 
 export function Login() {
   const [form] = Form.useForm()

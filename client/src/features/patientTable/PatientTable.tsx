@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import patientTableApi, {
+import {
+  patientTableApi,
   PatientTable as PatientTableT,
-} from "./patientTableApi"
+} from "@/features/patientTable/patientTableApi"
 import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components"
-import "./PatientTable.module.css"
 import { Button, Dropdown, Modal, message } from "antd"
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons"
 import ImportData from "../importData/ImportData"

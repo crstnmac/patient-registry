@@ -57,7 +57,7 @@ export namespace PatientTable {
   }
 }
 
-const patientTableApi = createApi({
+export const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
@@ -142,5 +142,3 @@ const patientTableApi = createApi({
     }),
   }),
 })
-
-export default patientTableApi

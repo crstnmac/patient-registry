@@ -14,7 +14,7 @@ export namespace Login {
   }
 }
 
-const loginApi = createApi({
+export const loginApi = createApi({
   reducerPath: "login",
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_BASE_API_URL}/api/auth`,
@@ -39,5 +39,3 @@ const loginApi = createApi({
     }),
   }),
 })
-
-export default loginApi
