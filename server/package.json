@@ -1,8 +1,9 @@
 {
-  "name": "role-based-auth",
-  "version": "1.0.0",
-  "description": "Role based authentication for NodeJS and ExpressJS",
+  "name": "server",
+  "version": "0.0.1",
+  "description": "Server for the application",
   "main": "index.js",
+  "type": "module",
   "keywords": [
     "expressjs",
     "nodejs",
@@ -19,7 +20,7 @@
     "serve": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "Omar Mokhfi [ob.mokhfi@gmail.com]",
+  "author": "Criston Mascarenhas[criston2011@gmail.com]",
   "license": "ISC",
   "dependencies": {
     "async": "^3.2.4",
