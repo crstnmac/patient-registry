@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {userAuth, checkRole, serializeUser} = require('../controllers/auth')
+const {userAuth, checkRole, serializeUser} = require('../Controllers/auth')
 const {ROLE} = require('../config/roles')
 const passport = require('passport')
 
