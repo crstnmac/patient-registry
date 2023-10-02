@@ -61,7 +61,7 @@ const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_BASE_API_URL}/api/patients`,
+    baseUrl: "https://patient-registry-production.up.railway.app/api/patients",
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
