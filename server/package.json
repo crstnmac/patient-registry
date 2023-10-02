@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Server for the application",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "keywords": [
     "expressjs",
     "nodejs",
