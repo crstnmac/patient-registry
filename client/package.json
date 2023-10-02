@@ -8,6 +8,7 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "prod": "vite build && vite preview --host",
     "test": "vitest",
     "format": "prettier --write .",
     "lint": "eslint .",
