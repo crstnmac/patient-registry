@@ -20,7 +20,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "ant-vendor": ["antd", "moment"],
+          "ant-vendor": ["antd"],
         },
       },
     },
