@@ -5,7 +5,7 @@ const {
   getRoles,
   updateRole,
   deleteRole,
-} = require('../../Controllers/roles/index')
+} = require('../../controllers/roles/index')
 
 router.get('/', async (req, res) => {
   return res.send('Roles service running...')

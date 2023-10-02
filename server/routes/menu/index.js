@@ -4,13 +4,13 @@ const {
   userAuth,
   checkRole,
   serializeUser,
-} = require('../../Controllers/auth/index')
+} = require('../../controllers/auth/index')
 const {
   addMenu,
   deleteMenu,
   getMenus,
   updateMenu,
-} = require('../../Controllers/menu/index')
+} = require('../../controllers/menu/index')
 
 router.get('/', async (req, res) => {
   return res.send('Menu service running...')
