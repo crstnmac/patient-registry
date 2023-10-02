@@ -8,7 +8,7 @@ const BreadcrumbNav = () => {
   const breadcrumbState = useSelector((state: RootState) => state.global)
   const breadcrumbList = breadcrumbState.breadcrumbList[pathname] || []
 
-  const items = breadcrumbList.map((item) => {
+  const items = breadcrumbList.map((item: { path: string; name: string }) => {
     return {
       key: item.path,
       label: item.name,

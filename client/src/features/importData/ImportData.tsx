@@ -28,7 +28,7 @@ export default function ImportData() {
       } catch (error) {
         message.error("Something went wrong")
         if (options.onError) {
-          options.onError(error, "Error")
+          options.onError(error as any, "Error")
         }
       }
     },
