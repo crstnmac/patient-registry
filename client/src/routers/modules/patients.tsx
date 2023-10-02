@@ -1,7 +1,7 @@
-import { LayoutIndex } from "../../routers/constant"
-import { RouteObject } from "../../routers/interface"
-import AddPatients from "../../views/addPatients"
-import Patients from "../../views/patients/index"
+import { LayoutIndex } from "@/routers/constant"
+import { RouteObject } from "@/routers/interface"
+import AddPatients from "@/views/addPatients"
+import Patients from "@/views/patients/index"
 
 const patientsRouter: Array<RouteObject> = [
   {

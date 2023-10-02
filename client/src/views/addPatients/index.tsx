@@ -1,4 +1,4 @@
-import { AddPatientForm } from "../../features/addPatientForm/addPatientForm"
+import { AddPatientForm } from "@/features/addPatientForm/addPatientForm"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 import { useLocation } from "react-router-dom"

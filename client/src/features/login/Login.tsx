@@ -6,11 +6,11 @@ import {
 } from "@ant-design/icons"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "../../app/store"
-import { setToken, setUserInfo } from "../../app/globalSlice"
+import { useDispatch } from "@/app/store"
+import { setToken, setUserInfo } from "@/app/globalSlice"
 import jwtDecode from "jwt-decode"
 import { type Login as TLogin } from "./loginApi"
-import loginApi from "../../features/login/loginApi"
+import loginApi from "@/features/login/loginApi"
 
 export function Login() {
   const [form] = Form.useForm()

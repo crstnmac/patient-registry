@@ -1,4 +1,4 @@
-import { PatientTable } from "../../features/patientTable/PatientTable"
+import { PatientTable } from "@/features/patientTable/PatientTable"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 

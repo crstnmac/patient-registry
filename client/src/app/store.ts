@@ -17,9 +17,9 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist"
-import loginApi from "../features/login/loginApi"
-import patientTableApi from "../features/patientTable/patientTableApi"
-import menuApi from "../features/menu/menuApi"
+import loginApi from "@/features/login/loginApi"
+import patientTableApi from "@/features/patientTable/patientTableApi"
+import menuApi from "@/features/menu/menuApi"
 
 // redux persist
 const persistConfig = {

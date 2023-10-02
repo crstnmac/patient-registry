@@ -1,8 +1,8 @@
 import { useLocation, Navigate } from "react-router-dom"
-import { searchRoute } from "../../utils/util"
+import { searchRoute } from "@/utils/util"
 // import { rootRouter } from "@/routers/index"
-import { HOME_URL } from "../../config/config"
-import { store } from "../../app/store"
+import { HOME_URL } from "@/config/config"
+import { store } from "@/app/store"
 
 const AuthRouter = (props: { children: JSX.Element }) => {
   const { pathname } = useLocation()

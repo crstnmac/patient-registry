@@ -1,4 +1,4 @@
-import Layout from "../layouts/index"
+import Layout from "@/layouts/index"
 
 /**
  * @description: default layout
