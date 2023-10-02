@@ -22,6 +22,8 @@ node_modules
 
 # Testing
 coverage
+.env.local
+.env.production
 
 # Production
 build

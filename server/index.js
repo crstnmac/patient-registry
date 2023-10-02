@@ -6,8 +6,8 @@ const morgan = require("morgan");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
 
-const { MONGO_HOST, REQUEST_TIMEOUT } = require("./config");
-const PORT = 3003;
+const { MONGO_HOST, MONGO_DB_NAME, REQUEST_TIMEOUT, NODE_PORT } = require("./config");
+const PORT = NODE_PORT || 5000;
 
 const app = exp();
 app.use(morgan("dev"));
@@ -33,15 +33,18 @@ app.use("/api", require("./routes"));
 const startApp = async () => {
   try {
     // Connection With DB
-    await connect(MONGOHOST, {
+    await connect(MONGO_HOST, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: REQUEST_TIMEOUT,
       autoIndex: true,
+      dbName: MONGO_DB_NAME,
+      user: process.env.MONGO_USER,
+      pass: process.env.MONGO_PASSWORD,
     })
 
     success({
-      message: `Successfully connected with the Database \n${DB}`,
+      message: `Successfully connected with the Database \n${MONGO_DB_NAME}`,
       badge: true,
     });
 

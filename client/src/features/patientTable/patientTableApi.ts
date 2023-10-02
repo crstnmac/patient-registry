@@ -61,7 +61,7 @@ const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3003/api/patients",
+    baseUrl: `${import.meta.env.VITE_BASE_API_URL}/api/patients`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
