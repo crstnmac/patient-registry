@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     open: true,
+    https: true,
   },
   build: {
     outDir: "build",
