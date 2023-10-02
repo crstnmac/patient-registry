@@ -1,6 +1,6 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
 import counterReducer from "@/features/counter/counterSlice"
-import loginApi from "@/features/login/loginApi"
+import { loginApi } from "@/features/login/loginApi"
 import globalReducer from "./globalSlice"
 import storage from "redux-persist/lib/storage"
 import {
@@ -19,7 +19,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist"
-import patientTableApi from "@/features/patientTable/patientTableApi"
+import { patientTableApi } from "@/features/patientTable/patientTableApi"
 import menuApi from "@/features/menu/menuApi"
 
 // redux persist
