@@ -1,0 +1,467 @@
+import {
+  ProCard,
+  ProForm,
+  ProFormDatePicker,
+  ProFormSelect,
+  ProFormText,
+} from "@ant-design/pro-components"
+import React, { useEffect } from "react"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import patientTableApi from "../patientTable/patientTableApi"
+import { message } from "antd"
+
+const AddCheckupForm = () => {
+  const params = useParams()
+
+  const { id, checkupId } = params
+
+  const [form] = ProForm.useForm()
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo)
+    message.error("Failed to add checkup", errorInfo)
+  }
+
+  const { useAddCheckupMutation, useUpdateCheckupMutation } = patientTableApi
+
+  const [addCheckup, { isLoading }] = useAddCheckupMutation()
+  const [updateCheckup] = useUpdateCheckupMutation()
+  const navigate = useNavigate()
+
+  const { state } = useLocation()
+
+  const { patientCheckup, isEdit } = state
+
+  const onFinish = async (values: any) => {
+    if (isEdit) {
+      await updateCheckup({
+        patientId: id,
+        ...values,
+        _id: checkupId,
+      })
+      message.success("Checkup updated successfully")
+      navigate(`/patients/${id}/get-checkups`)
+      return
+    }
+
+    addCheckup({
+      patientId: id,
+      ...values,
+    })
+    message.success("Checkup added successfully")
+    navigate(`/patients/${id}/get-checkups`)
+  }
+
+  useEffect(() => {
+    if (isEdit) {
+      form.setFieldsValue(patientCheckup)
+    }
+  }, [form, isEdit, patientCheckup])
+
+  const drugs = [
+    "Gefitinib",
+    "Erlotinib",
+    "Afatinib",
+    "Osimertinib",
+    "Amivantamab",
+    "Crizotinib",
+    "Alectinib",
+    "Brigatinib",
+    "Lorlatinib",
+    "Ceretinib",
+    "Entrectinib",
+    "Dacomitinib",
+    "Selpercatenib",
+    "Pralsetinib",
+    "Capmatinib",
+    "Savolitinib",
+    "Osi-Savo",
+    "Trastuzumab deruxtecan",
+    "Larotrectinib",
+    "Tepotinib",
+    "Moboceritinib",
+  ]
+
+  const drugsChemotherapy = [
+    "Pem",
+    "Pem_Cis",
+    "Pem_Carb",
+    "Gem_cis",
+    "Gem_carb",
+    "Paclitaxel",
+    "Docetaxel",
+  ]
+
+  const treatment = [
+    "Chemotherapy",
+    "Targeted",
+    "Immunotherapy",
+    "Chemo-immuno",
+    "Radiation",
+    "Surgery",
+    "No treatment",
+  ]
+
+  const drugImmuno = [
+    "Nivolumab",
+    "Pembrolizumab",
+    "Druvalumab",
+    "Atezolizumab",
+  ]
+
+  const pet_cet = [
+    {
+      value: "CR",
+      label: "Complete Response",
+    },
+    {
+      value: "PR",
+      label: "Partial Response",
+    },
+    {
+      value: "SD",
+      label: "Stable Disease",
+    },
+    {
+      value: "PD",
+      label: "Progressive Disease",
+    },
+    {
+      value: "Not assessed",
+      label: "Not Assessed",
+    },
+  ]
+
+  const intracranialResponses = [
+    {
+      value: "CR",
+      label: "Complete Response",
+    },
+    {
+      value: "PR",
+      label: "Partial Response",
+    },
+    {
+      value: "SD",
+      label: "Stable Disease",
+    },
+    {
+      value: "PD/new lesions",
+      label: "Progressive Disease/New lesions",
+    },
+    {
+      value: "Not assessed",
+      label: "Not Assessed",
+    },
+  ]
+
+  const treatmentOptions = treatment.map((treatment) => {
+    return {
+      value: treatment,
+      label: treatment,
+    }
+  })
+
+  const drugsTargeted = drugs.map((drug) => {
+    return {
+      value: drug,
+      label: drug,
+    }
+  })
+
+  const drugsChemo = drugsChemotherapy.map((drug) => {
+    return {
+      value: drug,
+      label: drug,
+    }
+  })
+
+  const drugsImmuno = drugImmuno.map((drug) => {
+    return {
+      value: drug,
+      label: drug,
+    }
+  })
+
+  const petCetOptions = pet_cet.map((pet) => {
+    return {
+      value: pet.value,
+      label: pet.label,
+    }
+  })
+
+  const intracranialResponseOptions = intracranialResponses.map((pet) => {
+    return {
+      value: pet.value,
+      label: pet.label,
+    }
+  })
+
+  return (
+    <ProCard>
+      <ProForm
+        name="Add Checkup"
+        layout="vertical"
+        form={form}
+        onFinish={onFinish}
+        loading={isLoading}
+        onFinishFailed={onFinishFailed}
+        initialValues={{ remember: true }}
+      >
+        <ProForm.Group>
+          <ProForm.Item
+            label="Treatment"
+            name="treatment"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              showSearch
+              options={treatmentOptions}
+              placeholder="Please select your gender"
+              rules={[
+                { required: true, message: "Please select your gender!" },
+              ]}
+            />
+          </ProForm.Item>
+
+          <ProForm.Item
+            label="Drug Targeted"
+            name="drug_name_targeted"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={drugsTargeted}
+              showSearch
+              placeholder="Please select the drug"
+              rules={[{ required: true, message: "Please select the drug!" }]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Drug Name Chemotherapy"
+            name="drug_name_chemo"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={drugsChemo}
+              showSearch
+              placeholder="Please select the drug"
+              rules={[{ required: true, message: "Please select the drug!" }]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Drug Immunotherapy"
+            name="drug_name_immuno"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={drugsImmuno}
+              showSearch
+              placeholder="Please select the drug"
+              rules={[{ required: true, message: "Please select the drug!" }]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Date start of Treatment"
+            name="date_of_start_of_treatment"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormDatePicker />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Response PET CT"
+            name="response_pet_ct"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={petCetOptions}
+              showSearch
+              placeholder="Please select response PET CT"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select response PET CT ",
+                },
+              ]}
+            />
+          </ProForm.Item>
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProForm.Item
+            label="Intracranial Response"
+            name="intracranial_response"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={intracranialResponseOptions}
+              showSearch
+              placeholder="Please select response PET CT"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select response PET CT ",
+                },
+              ]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Is Progressed"
+            name="progressed_on_line"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={[
+                {
+                  value: "Progressed",
+                  label: "Progressed",
+                },
+                {
+                  value: "Not_progressed",
+                  label: "Not Progressed",
+                },
+                {
+                  value: "LFU",
+                  label: "LFU",
+                },
+              ]}
+              showSearch
+              placeholder="Has the patient progressed ?"
+              rules={[
+                {
+                  required: true,
+                  message: "Has the patient progressed ?",
+                },
+              ]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Date of Progression"
+            name="date_of_progression"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormDatePicker />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Biopsy"
+            name="biopsy_progression"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={[
+                {
+                  value: "Yes",
+                  label: "Yes",
+                },
+                {
+                  value: "No",
+                  label: "No",
+                },
+              ]}
+              showSearch
+              placeholder="Biopsy"
+              rules={[
+                {
+                  required: true,
+                  message: "Biopsy",
+                },
+              ]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="NGS at progression"
+            name="ngs_at_progression"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormSelect
+              options={[
+                {
+                  value: "Yes",
+                  label: "Yes",
+                },
+                {
+                  value: "No",
+                  label: "No",
+                },
+              ]}
+              showSearch
+              placeholder="NGS at progression"
+              rules={[
+                {
+                  required: true,
+                  message: "NGS at progression",
+                },
+              ]}
+            />
+          </ProForm.Item>
+          <ProForm.Item
+            label="NGS Result"
+            name="ngs_result"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormText placeholder="NGS result" />
+          </ProForm.Item>
+          <ProForm.Item
+            label="Other Remarks"
+            name="other_remarks"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <ProFormText placeholder="Other Remarks" />
+          </ProForm.Item>
+        </ProForm.Group>
+      </ProForm>
+    </ProCard>
+  )
+}
+
+export default AddCheckupForm

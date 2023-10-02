@@ -1,45 +1,34 @@
-import { Navigate, useRoutes } from "react-router-dom"
+import LayoutIndex from "@/layouts"
+import AddCheckup from "@/views/addCheckup"
+import AddPatients from "@/views/addPatients"
+import Analytics from "@/views/analytics"
+import { Checkups } from "@/views/checkups"
 import Login from "@/views/login"
-import { RouteObject } from "./interface"
-import { NonIndexRouteObject } from "react-router-dom"
-
-const metaRouters = import.meta.glob("./modules/*.tsx", { eager: true })
-
-export const routerArray: RouteObject[] = []
-Object.keys(metaRouters as Record<string, any>).forEach((item) => {
-  Object.keys(metaRouters[item] as Record<string, RouteObject[]>).forEach(
-    (key: string) => {
-      routerArray.push(
-        ...(metaRouters[item] as Record<string, RouteObject[]>)[key],
-      )
-    },
-  )
-})
-
-export const rootRouter: RouteObject[] = [
-  {
-    path: "/",
-    element: <Navigate to="/login" />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-    meta: {
-      requiresAuth: false,
-      title: "Login",
-      key: "login",
-    },
-  },
-  ...routerArray,
-  {
-    path: "*",
-    element: <Navigate to="/404" />,
-  },
-]
+import Patients from "@/views/patients"
+import { Routes, Route } from "react-router-dom"
 
 const Router = () => {
-  const routes = useRoutes(rootRouter as NonIndexRouteObject[])
-  return routes
+  return (
+    <Routes>
+      <Route path="/">
+        <Route index element={<LayoutIndex />} />
+        <Route path="login" element={<Login />} />
+        <Route path="patients" element={<LayoutIndex />}>
+          <Route index element={<Patients />} />
+          <Route path="add-patient" element={<AddPatients />} />
+          <Route path=":id/add-checkup" element={<AddCheckup />} />
+          <Route path=":id/edit-patient" element={<AddPatients />} />
+          <Route path=":id/edit-checkup/:checkupId" element={<AddCheckup />} />
+          <Route path=":id/get-checkups" element={<Checkups />} />
+        </Route>
+        <Route path="analytics" element={<LayoutIndex />}>
+          <Route index element={<Analytics />} />
+        </Route>
+        <Route path="settings" element={<LayoutIndex />} />
+        <Route path="*" element={<div>404</div>} />
+      </Route>
+    </Routes>
+  )
 }
 
 export default Router

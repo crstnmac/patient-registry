@@ -7,6 +7,10 @@ const {
   checkRole,
   userRegister,
   serializeUser,
+  addAuthButton,
+  getAuthButtons,
+  updateAuthButton,
+  removeAuthButton,
 } = require("../../Controllers/auth");
 
 router.get("/", async (req, res) => {
@@ -39,6 +43,21 @@ router.post("/login-admin", async (req, res) => {
   await userLogin(req.body, ROLE.admin, res);
 });
 
+router.post("/add-auth-button",userAuth,checkRole([ROLE.admin]), async (req, res) => {
+  await addAuthButton(req, res);
+})
+
+router.get("/get-auth-buttons", userAuth, async (req, res) => {
+  await getAuthButtons(req, res);
+})
+
+router.post("/update-auth-button/:authButtonId", userAuth, checkRole([ROLE.admin]), async (req, res) => {
+  await updateAuthButton(req, res);
+})
+
+router.delete("/delete-auth-button/:authButtonId", userAuth, checkRole([ROLE.admin]), async (req, res) => {
+  await removeAuthButton(req, res);
+})
 
 // Super Admin Protected Route
 router.get(

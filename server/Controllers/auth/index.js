@@ -1,6 +1,10 @@
 const passport = require("passport");
 const register = require("./register");
 const login = require("./login");
+const addAuthButton = require("./addAuthButton");
+const removeAuthButton = require('./removeAuthButton')
+const updateAuthButton = require('./updateAuthButton')
+const getAuthButtons = require("./getAuthButtons");
 
 const userRegister = (userRequest, role, res) =>
   register(userRequest, role, res);
@@ -34,10 +38,15 @@ const serializeUser = (user) => {
   };
 };
 
+
 module.exports = {
   userAuth,
   userLogin,
   userRegister,
   checkRole,
   serializeUser,
+  addAuthButton,
+  removeAuthButton,
+  updateAuthButton,
+  getAuthButtons,
 };

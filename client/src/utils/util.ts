@@ -1,3 +1,4 @@
+import { RootState } from "@/app/store"
 import { RouteObject } from "@/routers/interface"
 
 /**
@@ -189,4 +190,22 @@ export const deepCopy = <T>(obj: any): T => {
     }
   }
   return newObj
+}
+
+/**
+ * @description Prepare headers for API requests
+ * @param headers Headers object
+ * @param getState Function to get the current state
+ * @returns Headers object with authorization token if available in state
+ */
+//@ts-ignore
+export const prepareHeaders = (headers, { getState }) => {
+  const token = getState().global.token
+
+  // If we have a token set in state, let's assume that we should be passing it.
+  if (token) {
+    headers.set("Authorization", `${token}`)
+  }
+
+  return headers
 }

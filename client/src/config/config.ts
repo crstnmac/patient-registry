@@ -1,1 +1,1 @@
-export const HOME_URL: string = "/home/index"
+export const HOME_URL: string = "/patients/index"
