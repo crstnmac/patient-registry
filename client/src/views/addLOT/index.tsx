@@ -1,22 +1,20 @@
-import { AddPatientForm } from "@/features/addPatientForm/addPatientForm"
+import AddLOTForm from "@/features/addLOTForm"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 import { useLocation } from "react-router-dom"
 
-const AddPatients = () => {
+const AddLOT = () => {
   const { isEdit } = useLocation().state as { [key: string]: string }
 
   return (
     <PageContainer
-      title={isEdit ? "Edit Patient" : "Add Patient"}
-      onBack={() => {
-        window.history.back()
-      }}
+      title={isEdit ? "Edit LOT" : "Add LOT"}
       fixedHeader
+      onBack={() => window.history.back()}
     >
-      <AddPatientForm />
+      <AddLOTForm />
     </PageContainer>
   )
 }
 
-export default AddPatients
+export default AddLOT

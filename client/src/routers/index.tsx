@@ -1,34 +1,115 @@
+import ProtectedRoute from "@/features/protectedRoute"
 import LayoutIndex from "@/layouts"
-import AddCheckup from "@/views/addCheckup"
+import AddLOT from "@/views/addLOT"
 import AddPatients from "@/views/addPatients"
 import Analytics from "@/views/analytics"
-import { Checkups } from "@/views/checkups"
 import Login from "@/views/login"
+import { LOTs } from "@/views/lots"
+import PatientDetails from "@/views/patientDetails"
 import Patients from "@/views/patients"
-import { Routes, Route } from "react-router-dom"
+import { RouteObject, useRoutes } from "react-router-dom"
+
+export const routesConfig: RouteObject[] = [
+  {
+    path: "/",
+    element: <LayoutIndex />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/patients",
+    element: <LayoutIndex />,
+    children: [
+      {
+        path: "/patients/",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Patients />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/:id",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <PatientDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/add-patient",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AddPatients />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/:id/add-lot",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AddLOT />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/:id/edit-patient",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AddPatients />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/:id/edit-lot/:lotId",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AddLOT />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/patients/:id/get-lots",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <LOTs />
+          </ProtectedRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/analytics",
+    element: <LayoutIndex />,
+    children: [
+      {
+        path: "/analytics/",
+        element: <Analytics />,
+      },
+    ],
+  },
+  {
+    path: "/settings",
+    element: <LayoutIndex />,
+  },
+  {
+    path: "*",
+    element: <LayoutIndex />,
+    children: [
+      {
+        path: "*",
+        element: <div>404</div>,
+      },
+    ],
+  },
+]
 
 const Router = () => {
-  return (
-    <Routes>
-      <Route path="/">
-        <Route index element={<LayoutIndex />} />
-        <Route path="login" element={<Login />} />
-        <Route path="patients" element={<LayoutIndex />}>
-          <Route index element={<Patients />} />
-          <Route path="add-patient" element={<AddPatients />} />
-          <Route path=":id/add-checkup" element={<AddCheckup />} />
-          <Route path=":id/edit-patient" element={<AddPatients />} />
-          <Route path=":id/edit-checkup/:checkupId" element={<AddCheckup />} />
-          <Route path=":id/get-checkups" element={<Checkups />} />
-        </Route>
-        <Route path="analytics" element={<LayoutIndex />}>
-          <Route index element={<Analytics />} />
-        </Route>
-        <Route path="settings" element={<LayoutIndex />} />
-        <Route path="*" element={<div>404</div>} />
-      </Route>
-    </Routes>
-  )
+  const router = useRoutes(routesConfig)
+
+  return router
 }
 
 export default Router

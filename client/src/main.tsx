@@ -8,17 +8,16 @@ import { PersistGate } from "redux-persist/integration/react"
 import { StyleProvider } from "@ant-design/cssinjs"
 import { ConfigProvider } from "antd"
 import en_US from "antd/locale/en_US"
+import "dayjs/locale/en-gb"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <StyleProvider hashPriority="high">
-        <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={en_US}>
+        <StyleProvider hashPriority="high">
           <App />
-        </ConfigProvider>
-      </StyleProvider>
+        </StyleProvider>
+      </ConfigProvider>
     </PersistGate>
   </Provider>,
-  // </React.StrictMode>,
 )

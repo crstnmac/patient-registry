@@ -1,4 +1,5 @@
-export interface IPatientCheckup {
+export interface IPatientLOT {
+  _id: string
   treatment: string
   drug_name_targeted: string
   drug_name_chemo: string
@@ -11,6 +12,8 @@ export interface IPatientCheckup {
   biopsy_line_of_progression: string
   ngs_at_progression: string
   ngs_result: string
+  other_remarks: string
+  patientId: string
 }
 
 export interface IPatient {
@@ -27,5 +30,18 @@ export interface IPatient {
   phone_number: string
   status_at_last_follow_up: string
   date_of_last_follow_up: Date
-  checkups?: IPatientCheckup[]
+  date_of_hpe_diagnosis: Date
+  ecog_ps: string
+  extrathoracic_mets: string
+  brain_mets: string
+  letptomeningeal_mets: string
+  lm_mets_csf: string
+  histology: string
+  pdl1: string
+  brg1: string
+  ttf1: string
+  small_cell_transformation_date: Date
+  vaf: string
+  co_mutation: string
+  lots?: IPatientLOT[]
 }

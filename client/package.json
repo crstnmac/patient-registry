@@ -21,6 +21,7 @@
     "@vitejs/plugin-react-swc": "^3.4.0",
     "antd": "^5.9.4",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.10",
     "import": "^0.0.6",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
@@ -29,6 +30,7 @@
     "react-router-dom": "^6.16.0",
     "redux-persist": "^6.0.0",
     "tailwind-merge": "^1.14.0",
+    "umi-request": "^1.2.3",
     "vite-plugin-mkcert": "^1.16.0",
     "vite-tsconfig-paths": "^4.2.1"
   },

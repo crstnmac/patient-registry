@@ -2,7 +2,8 @@ import { prepareHeaders } from "@/utils/util"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export namespace PatientTable {
-  export interface Checkup {
+  export interface LOT {
+    biopsy_progression: string
     _id: string
     treatment: string
     drug_name_targeted: string
@@ -20,6 +21,14 @@ export namespace PatientTable {
     patientId: string // Assuming this is a patient id
   }
 
+  export interface SearchParams {
+    order: string
+    search: string
+    page: number
+    rowsPerPage: number
+    sort: string
+  }
+
   export interface Patient {
     _id: string
     cr_number: string
@@ -34,13 +43,39 @@ export namespace PatientTable {
     treatment_at_rgci: string
     phone_number: string
     status_at_last_follow_up: string
-    date_of_last_follow_up: string
-    checkups?: Checkup[]
+    date_of_last_follow_up: Date
+    date_of_hpe_diagnosis: Date
+    ecog_ps: string
+    extrathoracic_mets: string
+    brain_mets: string
+    letptomeningeal_mets: string
+    lm_mets_csf: string
+    histology: string
+    pdl1: string
+    brg1: string
+    ttf1: string
+    small_cell_transformation_date: string
+    vaf: string
+    co_mutation: string
+    lots?: LOT[]
+  }
+
+  export interface ReqGetPatientTable {
+    page: number
+    rowsPerPage: number
+    sort: string
+    order: string
+    search: string
   }
 
   export interface ResGetPatientTable {
     patients: Patient[]
     totalCount: number
+    success: boolean
+  }
+
+  export interface ResGetPatientById {
+    patient: Patient
     success: boolean
   }
 
@@ -61,13 +96,19 @@ const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://patient-registry-production.up.railway.app/api/patients",
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/patients`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
-    getPatients: builder.query<PatientTable.ResGetPatientTable, {}>({
-      query: () => ({
-        url: `/get-patients`,
+    getPatients: builder.query<PatientTable.ResGetPatientTable, string>({
+      query: (url) => ({
+        url: `get-patients?${url}`,
+        method: "POST",
+      }),
+    }),
+    getPatientById: builder.query<PatientTable.ResGetPatientById, string>({
+      query: (patientId) => ({
+        url: `/${patientId}`,
         method: "GET",
       }),
     }),
@@ -90,44 +131,45 @@ const patientTableApi = createApi({
         },
       },
     ),
-    addCheckup: builder.mutation<PatientTable.Checkup, PatientTable.Checkup>({
+    addLOT: builder.mutation<PatientTable.LOT, PatientTable.LOT>({
       query(data) {
         const { patientId, ...body } = data
         return {
-          url: `${patientId}/add-checkup`,
+          url: `${patientId}/add-lot`,
           method: "POST",
           body,
         }
       },
     }),
-    updateCheckup: builder.mutation<PatientTable.Checkup, PatientTable.Checkup>(
-      {
-        query(data) {
-          const { patientId, _id, ...body } = data
-          return {
-            url: `${patientId}/update-checkup/${_id}`,
-            method: "PUT",
-            body,
-          }
-        },
+    updateLOT: builder.mutation<PatientTable.LOT, PatientTable.LOT>({
+      query(data) {
+        const { patientId, _id, ...body } = data
+        return {
+          url: `${patientId}/update-lot/${_id}`,
+          method: "PUT",
+          body,
+        }
       },
-    ),
-    deleteCheckup: builder.mutation<{}, string>({
+    }),
+    deleteLOT: builder.mutation<{}, string>({
       query: (id) => ({
-        url: `/delete-checkup/${id}`,
+        url: `/delete-lot/${id}`,
         method: "DELETE",
       }),
     }),
-    getCheckups: builder.query<PatientTable.Checkup[], string>({
+    getLOTs: builder.query<PatientTable.LOT[], string>({
       query: (patientId) => ({
-        url: `${patientId}/get-checkups/`,
+        url: `${patientId}/get-lots/`,
         method: "GET",
       }),
     }),
-    deletePatient: builder.mutation<PatientTable.ResDeletePatient, string>({
-      query: (id) => ({
-        url: `/delete-patient/${id}`,
+    deletePatients: builder.mutation<PatientTable.ResDeletePatient, string[]>({
+      query: (ids) => ({
+        url: `/delete-patients`,
         method: "DELETE",
+        body: {
+          patientIds: ids,
+        },
       }),
     }),
     uploadPatientData: builder.mutation<
@@ -144,3 +186,16 @@ const patientTableApi = createApi({
 })
 
 export default patientTableApi
+
+export const {
+  useGetPatientsQuery,
+  useGetPatientByIdQuery,
+  useAddPatientMutation,
+  useUpdatePatientMutation,
+  useAddLOTMutation,
+  useUpdateLOTMutation,
+  useDeleteLOTMutation,
+  useGetLOTsQuery,
+  useDeletePatientsMutation,
+  useUploadPatientDataMutation,
+} = patientTableApi

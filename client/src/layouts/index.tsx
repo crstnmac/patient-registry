@@ -1,16 +1,17 @@
+import { useEffect, useState } from "react"
+import { Dropdown, Modal } from "antd"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
-import { Dropdown, MenuProps, Modal } from "antd"
+import { useDispatch } from "@/app/store"
 import {
-  PieChartOutlined,
-  TeamOutlined,
-  UserAddOutlined,
   UserOutlined,
   LogoutOutlined,
+  TeamOutlined,
+  UserAddOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons"
-import { useDispatch } from "@/app/store"
 import { logout, selectUserInfo, updateCollapse } from "@/app/globalSlice"
 import { useAppSelector } from "@/app/hooks"
-import { useEffect, useState } from "react"
+import { MenuProps } from "antd/lib"
 import { ProLayout } from "@ant-design/pro-components"
 
 const LayoutIndex = () => {
@@ -46,7 +47,6 @@ const LayoutIndex = () => {
       icon: <LogoutOutlined />,
       onClick: () => {
         dispatch(logout())
-        // navigate("/login")
       },
     },
   ]
@@ -65,90 +65,6 @@ const LayoutIndex = () => {
     setIsModalOpen(false)
   }
 
-  // return (
-  //   <Layout>
-  //     <Layout>
-  //       <Sider width={200} style={{ background: colorBgContainer }}>
-  //         <Header
-  //           style={{
-  //             borderRight: "1px solid #0f0f0f0f",
-  //             backgroundColor: colorBgContainer,
-  //             borderBottom: "1px solid #0f0f0f0f",
-  //           }}
-  //         ></Header>
-
-  //         <Menu
-  //           mode="inline"
-  //           defaultSelectedKeys={["1"]}
-  //           defaultOpenKeys={["sub1"]}
-  //           items={[
-  //             {
-  //               key: "1",
-  //               icon: <TeamOutlined />,
-  //               label: "Patients",
-  //               title: "Patients",
-  //               onClick: () => {
-  //                 navigate("/patients")
-  //               },
-  //             },
-  //             {
-  //               key: "2",
-  //               icon: <PieChartTwoTone />,
-  //               label: "Analytics",
-  //               title: "Analytics",
-  //               onClick: () => {
-  //                 navigate("/analytics")
-  //               },
-  //             },
-  //           ]}
-  //           style={{ height: "100%", borderRight: "1px solid #0f0f0f0f" }}
-  //         />
-  //       </Sider>
-  //       <Layout>
-  //         <Header
-  //           style={{
-  //             display: "flex",
-  //             alignItems: "center",
-  //             justifyContent: "space-between",
-  //             backgroundColor: colorBgContainer,
-  //           }}
-  //         >
-  //           <h1 className="font-bold text-2xl">RGCI Patient Database</h1>
-  //           <Dropdown
-  //             menu={{
-  //               items: menuItems,
-  //             }}
-  //             placement="bottomLeft"
-  //           >
-  //             <Button>{userInfo?.username}</Button>
-  //           </Dropdown>
-  //         </Header>
-  //         <Content
-  //           style={{
-  //             padding: 18,
-  //             margin: 0,
-  //             minHeight: "100vh",
-  //             background: colorBgContainer,
-  //             borderTop: "1px solid #0f0f0f0f",
-  //           }}
-  //         >
-  //           <Outlet></Outlet>
-  //           <Modal
-  //             title="Profile"
-  //             open={isModalOpen}
-  //             onOk={handleOk}
-  //             onCancel={handleCancel}
-  //           >
-  //             <p>Username: {userInfo?.username}</p>
-  //             <p>Role: {userInfo?.role}</p>
-  //             <p>Email: {userInfo?.email}</p>
-  //           </Modal>
-  //         </Content>
-  //       </Layout>
-  //     </Layout>
-  //   </Layout>
-  // )
-
   return (
     <ProLayout
       title="RGCI Patient Database"
@@ -160,6 +76,28 @@ const LayoutIndex = () => {
       onCollapse={(collapsed) => {
         dispatch(updateCollapse(collapsed))
       }}
+      footerRender={() => (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "16px",
+            fontSize: "12px",
+            color: "rgba(0, 0, 0, 0.45)",
+          }}
+        >
+          <span>
+            ©2023 Created by{" "}
+            <a
+              href=""
+              rel="noopener noreferrer"
+              target="_blank"
+              style={{ color: "rgba(0, 0, 0, 0.45)" }}
+            >
+              RGCI
+            </a>
+          </span>
+        </div>
+      )}
       pageTitleRender={false}
       menuDataRender={() => [
         {
@@ -173,8 +111,8 @@ const LayoutIndex = () => {
               icon: <UserAddOutlined />,
             },
             {
-              path: "/patients/:id/add-checkup",
-              name: "Add Checkup",
+              path: "/patients/:id/add-lot",
+              name: "Add LOT",
               icon: <UserAddOutlined />,
             },
             {
@@ -183,8 +121,8 @@ const LayoutIndex = () => {
               icon: <UserAddOutlined />,
             },
             {
-              path: "/patients/:id/get-checkups",
-              name: "Checkups",
+              path: "/patients/:id/get-lots",
+              name: "Line of Treatments",
               icon: <UserAddOutlined />,
             },
           ],
@@ -200,6 +138,7 @@ const LayoutIndex = () => {
         src: "https://avatars.githubusercontent.com/u/8186664?v=4",
         size: "small",
         title: userInfo?.username,
+        shape: "circle",
         render: (props, dom) => {
           return (
             <Dropdown
@@ -218,13 +157,7 @@ const LayoutIndex = () => {
       subMenuItemRender={(item: any, defaultDom: any) => (
         <Link to={item.path}> {defaultDom} </Link>
       )}
-      breadcrumbRender={(routers = []) => [
-        {
-          path: "/",
-          breadcrumbName: "Home",
-        },
-        ...routers,
-      ]}
+      breadcrumbRender={(routers = []) => [...routers]}
       layout="mix"
       location={location}
     >

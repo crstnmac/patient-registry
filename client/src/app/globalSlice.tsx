@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { persistor, RootState } from "./store"
+import { RootState } from "./store"
 
 export interface UserInfo {
   user_id: string

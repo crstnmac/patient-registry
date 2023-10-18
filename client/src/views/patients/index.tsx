@@ -4,7 +4,7 @@ import React from "react"
 
 const Patients = () => {
   return (
-    <PageContainer title="Patients">
+    <PageContainer title="Patients" fixedHeader>
       <PatientTable />
     </PageContainer>
   )

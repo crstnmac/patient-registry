@@ -29,7 +29,7 @@ export namespace Menus {
 const menuApi = createApi({
   reducerPath: "menu",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3003/api/menu",
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/menu`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
@@ -48,8 +48,8 @@ const menuApi = createApi({
     }),
     updateMenu: builder.mutation<Menus.ResMenu, Menus.PostReqMenu>({
       query: (body) => ({
-        url: "/update-menu/",
-        method: "POST",
+        url: "/update-menu",
+        method: "PUT",
         body,
       }),
     }),

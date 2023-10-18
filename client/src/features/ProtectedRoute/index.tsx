@@ -1,25 +1,32 @@
-import React, { useEffect } from "react"
-import { useNavigate, Outlet } from "react-router-dom"
+import { selectUserInfo } from "@/app/globalSlice"
+import { useAppSelector } from "@/app/hooks"
+import React from "react"
+import { useNavigate } from "react-router-dom"
 
 const ProtectedRoute = ({
   allowedRoles,
-  userRole,
+  children,
 }: {
   allowedRoles: string[]
-  userRole: string | undefined
+  children: React.ReactNode
 }) => {
   const navigate = useNavigate()
 
-  console.log("userRole", userRole)
-  console.log("allowedRoles", allowedRoles)
+  const isAuthorized = useAppSelector(selectUserInfo)?.user_id !== undefined
 
-  useEffect(() => {
-    if (!allowedRoles.includes(userRole as string)) {
-      navigate("/access-denied")
-    }
-  }, [allowedRoles, userRole, navigate])
+  const areRolesRequired = !!allowedRoles?.length
 
-  return <Outlet />
+  const currentRole = useAppSelector(selectUserInfo)?.role
+
+  const rolesMatch = areRolesRequired
+    ? allowedRoles?.includes(currentRole || "admin")
+    : true
+
+  if (!isAuthorized || !rolesMatch) {
+    navigate("/login")
+  }
+
+  return children
 }
 
 export default ProtectedRoute

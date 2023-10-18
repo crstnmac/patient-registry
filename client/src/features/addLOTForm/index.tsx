@@ -10,53 +10,53 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"
 import patientTableApi from "../patientTable/patientTableApi"
 import { message } from "antd"
 
-const AddCheckupForm = () => {
+const AddLOTForm = () => {
   const params = useParams()
 
-  const { id, checkupId } = params
+  const { id, lotId } = params
 
   const [form] = ProForm.useForm()
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo)
-    message.error("Failed to add checkup", errorInfo)
+    message.error("Failed to add LOT", errorInfo)
   }
 
-  const { useAddCheckupMutation, useUpdateCheckupMutation } = patientTableApi
+  const { useAddLOTMutation, useUpdateLOTMutation } = patientTableApi
 
-  const [addCheckup, { isLoading }] = useAddCheckupMutation()
-  const [updateCheckup] = useUpdateCheckupMutation()
+  const [addLOT, { isLoading }] = useAddLOTMutation()
+  const [updateLOT] = useUpdateLOTMutation()
   const navigate = useNavigate()
 
   const { state } = useLocation()
 
-  const { patientCheckup, isEdit } = state
+  const { patientLOT, isEdit } = state
 
   const onFinish = async (values: any) => {
     if (isEdit) {
-      await updateCheckup({
+      await updateLOT({
         patientId: id,
         ...values,
-        _id: checkupId,
+        _id: lotId,
       })
-      message.success("Checkup updated successfully")
-      navigate(`/patients/${id}/get-checkups`)
+      message.success("LOT updated successfully")
+      navigate(`/patients/${id}`)
       return
     }
 
-    addCheckup({
+    addLOT({
       patientId: id,
       ...values,
     })
-    message.success("Checkup added successfully")
-    navigate(`/patients/${id}/get-checkups`)
+    message.success("LOT added successfully")
+    navigate(`/patients/${id}`)
   }
 
   useEffect(() => {
     if (isEdit) {
-      form.setFieldsValue(patientCheckup)
+      form.setFieldsValue(patientLOT)
     }
-  }, [form, isEdit, patientCheckup])
+  }, [form, isEdit, patientLOT])
 
   const drugs = [
     "Gefitinib",
@@ -200,7 +200,7 @@ const AddCheckupForm = () => {
   return (
     <ProCard>
       <ProForm
-        name="Add Checkup"
+        name="Add LOT"
         layout="vertical"
         form={form}
         onFinish={onFinish}
@@ -285,7 +285,11 @@ const AddCheckupForm = () => {
               },
             ]}
           >
-            <ProFormDatePicker />
+            <ProFormDatePicker
+              fieldProps={{
+                format: (value) => value.format("DD-MM-YYYY"),
+              }}
+            />
           </ProForm.Item>
           <ProForm.Item
             label="Response PET CT"
@@ -374,7 +378,11 @@ const AddCheckupForm = () => {
               },
             ]}
           >
-            <ProFormDatePicker />
+            <ProFormDatePicker
+              fieldProps={{
+                format: (value) => value.format("DD-MM-YYYY"),
+              }}
+            />
           </ProForm.Item>
           <ProForm.Item
             label="Biopsy"
@@ -464,4 +472,4 @@ const AddCheckupForm = () => {
   )
 }
 
-export default AddCheckupForm
+export default AddLOTForm
