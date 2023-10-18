@@ -1,14 +1,14 @@
 import React from "react"
-import { BrowserRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import Router from "./routers"
 import { App as AntdApp } from "antd"
 const App: React.FC = () => {
   return (
-    <BrowserRouter basename="/">
+    <HashRouter basename="/">
       <AntdApp>
         <Router />
       </AntdApp>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 export default App

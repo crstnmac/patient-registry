@@ -1,9 +1,9 @@
 import { ActionType, ProColumns, ProForm } from "@ant-design/pro-components"
-import React from "react"
+import React, { useEffect } from "react"
 import patientTableApi, {
   PatientTable as PatientTableT,
 } from "../patientTable/patientTableApi"
-import { PlusOutlined, EditTwoTone } from "@ant-design/icons"
+import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, message } from "antd"
 
@@ -24,9 +24,11 @@ export default function LOTTable() {
     refetch: getPatientLOTs,
   } = useGetLOTsQuery(id!)
 
-  // const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
+  const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
 
-  // const actionRef = React.useRef<ActionType>()
+  useEffect(() => {
+    getPatientLOTs()
+  }, [getPatientLOTs])
 
   // const columns: ProColumns<PatientTableT.LOT>[] = [
   //   {
@@ -174,7 +176,7 @@ export default function LOTTable() {
         return "3rd"
       case 3:
         return "4th"
-      case 5:
+      case 4:
         return "5th"
     }
   }
@@ -261,6 +263,21 @@ export default function LOTTable() {
                         })
                       }}
                       icon={<EditTwoTone />}
+                    />
+                    <Button
+                      type="text"
+                      style={{
+                        fontWeight: 700,
+                      }}
+                      onClick={() => {
+                        deleteLOT(item._id)
+                        if (deleteLOTResponse) {
+                          message.success("LOT deleted successfully")
+                          getPatientLOTs()
+                        }
+                      }}
+                      danger
+                      icon={<DeleteTwoTone twoToneColor="red" />}
                     />
                   </th>
                   <td className="border px-4 py-2">{item.treatment}</td>
