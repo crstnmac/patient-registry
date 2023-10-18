@@ -5,10 +5,10 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components"
-import { Divider, message } from "antd"
+import { Button, Divider, message } from "antd"
 import patientTableApi, { PatientTable } from "../patientTable/patientTableApi"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
   brainMetastasesOptions,
   brg1Options,
@@ -28,6 +28,8 @@ import {
   ttf1Options,
 } from "@/utils/constants"
 
+import { EditOutlined } from "@ant-design/icons"
+
 export function AddPatientForm() {
   const [form] = ProForm.useForm()
 
@@ -38,7 +40,7 @@ export function AddPatientForm() {
 
   const { state } = useLocation()
 
-  const { isEdit, patient } = state
+  const { isEdit, patientId } = state
 
   const {
     useAddPatientMutation,
@@ -50,8 +52,8 @@ export function AddPatientForm() {
     data,
     error,
     isLoading: isPatientLoading,
-  } = useGetPatientByIdQuery(patient?._id!, {
-    skip: !patient?._id,
+  } = useGetPatientByIdQuery(patientId, {
+    skip: !patientId,
   })
 
   const [addPatient, { isLoading: isPatientMutating }] = useAddPatientMutation()
@@ -61,7 +63,7 @@ export function AddPatientForm() {
   const onFinish = async (values: any) => {
     if (isEdit) {
       updatePatient({
-        _id: patient?._id,
+        _id: patientId,
         ...values,
       })
       form.setFieldsValue(data?.patient)
@@ -86,6 +88,8 @@ export function AddPatientForm() {
     }
   }, [data, error, form])
 
+  const [edit, setEdit] = useState(isEdit || false)
+
   return (
     <ProCard>
       <ProForm<PatientTable.Patient>
@@ -93,8 +97,26 @@ export function AddPatientForm() {
         form={form}
         dateFormatter="string"
         onFinish={onFinish}
+        labelAlign="left"
+        labelCol={{
+          style: {
+            fontWeight: 600,
+          },
+        }}
+        // readonly={edit}
         loading={isPatientLoading || isPatientMutating}
         onFinishFailed={onFinishFailed}
+        submitter={{
+          searchConfig: {
+            submitText: "Save",
+            resetText: "Cancel",
+          },
+          onReset: () => {
+            navigate("/patients", {
+              replace: true,
+            })
+          },
+        }}
         initialValues={{ remember: true }}
       >
         <ProForm.Group

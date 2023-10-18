@@ -1,9 +1,4 @@
-import {
-  ActionType,
-  ProColumns,
-  ProForm,
-  ProTable,
-} from "@ant-design/pro-components"
+import { ActionType, ProColumns, ProForm } from "@ant-design/pro-components"
 import React from "react"
 import patientTableApi, {
   PatientTable as PatientTableT,
@@ -11,6 +6,8 @@ import patientTableApi, {
 import { PlusOutlined, EditTwoTone } from "@ant-design/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button, Card, message } from "antd"
+
+import dayjs from "dayjs"
 
 export default function LOTTable() {
   const { useGetLOTsQuery, useDeleteLOTMutation } = patientTableApi
@@ -27,100 +24,100 @@ export default function LOTTable() {
     refetch: getPatientLOTs,
   } = useGetLOTsQuery(id!)
 
-  const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
+  // const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
 
-  const actionRef = React.useRef<ActionType>()
+  // const actionRef = React.useRef<ActionType>()
 
-  const columns: ProColumns<PatientTableT.LOT>[] = [
-    {
-      dataIndex: "index",
-      key: "indexBorder",
-      valueType: "indexBorder",
-      width: 48,
-    },
-    {
-      title: "Treatment",
-      dataIndex: "treatment",
-    },
-    {
-      title: "Drug Name Targeted",
-      dataIndex: "drug_name_targeted",
-    },
-    {
-      title: "Drug Name Chemo",
-      dataIndex: "drug_name_chemo",
-    },
-    {
-      title: "Drug name Immuno",
-      dataIndex: "drug_name_immuno",
-    },
-    {
-      title: "Date of start of treatment",
-      dataIndex: "date_of_start_of_treatment",
-      valueType: "date",
-    },
-    {
-      title: "Response pet ct",
-      dataIndex: "response_pet_ct",
-    },
-    {
-      title: "Intracranial response",
-      dataIndex: "intracranial_response",
-    },
-    {
-      title: "Progressed on line",
-      dataIndex: "progressed_on_line",
-    },
-    {
-      title: "Date of progression",
-      dataIndex: "date_of_progression",
-      valueType: "date",
-    },
-    {
-      title: "Biopsy line of progression",
-      dataIndex: "biopsy_progression",
-    },
-    {
-      title: "NGS at progression",
-      dataIndex: "ngs_at_progression",
-    },
-    {
-      title: "NGS result",
-      dataIndex: "ngs_result",
-    },
-    {
-      title: "Other remarks",
-      dataIndex: "other_remarks",
-    },
-    {
-      title: "Action",
-      valueType: "option",
-      render: (text, record, _, action) => [
-        <Button
-          key="edit"
-          onClick={() => {
-            navigate(`/patients/${id}/edit-lot/${record._id}`, {
-              state: { patientLOT: record, isEdit: true },
-            })
-          }}
-        >
-          Edit
-        </Button>,
-        <Button
-          key="delete"
-          onClick={async () => {
-            await deleteLOT(record._id)
-            if (deleteLOTResponse) {
-              message.success("LOT deleted successfully")
-              actionRef.current?.reload()
-            }
-          }}
-        >
-          Delete
-        </Button>,
-      ],
-    },
-  ]
+  // const columns: ProColumns<PatientTableT.LOT>[] = [
+  //   {
+  //     dataIndex: "index",
+  //     key: "indexBorder",
+  //     valueType: "indexBorder",
+  //     width: 48,
+  //   },
+  //   {
+  //     title: "Treatment",
+  //     dataIndex: "treatment",
+  //   },
+  //   {
+  //     title: "Drug Name Targeted",
+  //     dataIndex: "drug_name_targeted",
+  //   },
+  //   {
+  //     title: "Drug Name Chemo",
+  //     dataIndex: "drug_name_chemo",
+  //   },
+  //   {
+  //     title: "Drug name Immuno",
+  //     dataIndex: "drug_name_immuno",
+  //   },
+  //   {
+  //     title: "Date of start of treatment",
+  //     dataIndex: "date_of_start_of_treatment",
+  //     valueType: "date",
+  //   },
+  //   {
+  //     title: "Response pet ct",
+  //     dataIndex: "response_pet_ct",
+  //   },
+  //   {
+  //     title: "Intracranial response",
+  //     dataIndex: "intracranial_response",
+  //   },
+  //   {
+  //     title: "Progressed on line",
+  //     dataIndex: "progressed_on_line",
+  //   },
+  //   {
+  //     title: "Date of progression",
+  //     dataIndex: "date_of_progression",
+  //     valueType: "date",
+  //   },
+  //   {
+  //     title: "Biopsy line of progression",
+  //     dataIndex: "biopsy_progression",
+  //   },
+  //   {
+  //     title: "NGS at progression",
+  //     dataIndex: "ngs_at_progression",
+  //   },
+  //   {
+  //     title: "NGS result",
+  //     dataIndex: "ngs_result",
+  //   },
+  //   {
+  //     title: "Other remarks",
+  //     dataIndex: "other_remarks",
+  //   },
+  //   {
+  //     title: "Action",
+  //     valueType: "option",
+  //     render: (text, record, _, action) => [
+  //       <Button
+  //         key="edit"
+  //         onClick={() => {
+  //           navigate(`/patients/${id}/edit-lot/${record._id}`, {
+  //             state: { patientLOT: record, isEdit: true },
+  //           })
+  //         }}
+  //       >
+  //         Edit
+  //       </Button>,
+  //       <Button
+  //         key="delete"
+  //         onClick={async () => {
+  //           await deleteLOT(record._id)
+  //           if (deleteLOTResponse) {
+  //             message.success("LOT deleted successfully")
+  //             actionRef.current?.reload()
+  //           }
+  //         }}
+  //       >
+  //         Delete
+  //       </Button>,
+  //     ],
+  //   },
+  // ]
 
   //transform data to be displayed in table
 
@@ -166,6 +163,21 @@ export default function LOTTable() {
   //     ]}
   //   />
   // )
+
+  function parseHeader(index: number) {
+    switch (index) {
+      case 0:
+        return "1st"
+      case 1:
+        return "2nd"
+      case 2:
+        return "3rd"
+      case 3:
+        return "4th"
+      case 5:
+        return "5th"
+    }
+  }
 
   return (
     <Card className="w-full">
@@ -235,9 +247,9 @@ export default function LOTTable() {
                 >
                   <th
                     key={index}
-                    className="px-4 py-2 border text-left text-xs text-black-500 uppercase tracking-wider font-bold"
+                    className="px-4 py-2 border text-left text-xs text-black-500 uppercase tracking-wider font-bold items-center flex justify-between"
                   >
-                    {index + 1}st line of treatment
+                    {parseHeader(index)}
                     <Button
                       type="text"
                       style={{
@@ -258,7 +270,9 @@ export default function LOTTable() {
                   <td className="border px-4 py-2">{item.drug_name_chemo}</td>
                   <td className="border px-4 py-2">{item.drug_name_immuno}</td>
                   <td className="border px-4 py-2">
-                    {item.date_of_start_of_treatment}
+                    {dayjs(item.date_of_start_of_treatment).format(
+                      "DD/MM/YYYY",
+                    )}
                   </td>
                   <td className="border px-4 py-2">{item.response_pet_ct}</td>
                   <td className="border px-4 py-2">
@@ -268,7 +282,7 @@ export default function LOTTable() {
                     {item.progressed_on_line}
                   </td>
                   <td className="border px-4 py-2">
-                    {item.date_of_progression}
+                    {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
                   </td>
                   <td className="border px-4 py-2">
                     {item.biopsy_progression}

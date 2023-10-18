@@ -290,6 +290,7 @@ export function PatientTable() {
   const formRef = React.useRef<ProFormInstance>()
 
   const [params, setParams] = useState<PatientTableT.SearchParams | {}>({})
+  const [totalPatients, setTotalPatients] = useState(0)
 
   const [showFilterModal, setShowFilterModal] = useState(false)
 
@@ -307,7 +308,7 @@ export function PatientTable() {
         onRow={(record) => ({
           onClick: () => {
             navigate(`/patients/${record._id}`, {
-              state: { isEdit: true, patient: record },
+              state: { isEdit: true, patientId: record._id },
             })
           },
           style: { cursor: "pointer" },
@@ -369,6 +370,7 @@ export function PatientTable() {
           showSizeChanger: true,
         }}
         toolbar={{
+          title: `Total (${totalPatients})`,
           filter: (
             <Space
               size={[0, "middle"]}
@@ -463,9 +465,11 @@ export function PatientTable() {
           }).toString()
 
           return request(
-            `${
-              import.meta.env.REACT_APP_API_URL
-            }/api/patients/get-patients?${url}`,
+            import.meta.env.MODE === "development"
+              ? `${
+                  import.meta.env.REACT_APP_API_URL
+                }/api/patients/get-patients?${url}`
+              : `https://patient-registry-production.up.railway.app/api/patients/get-patients?${url}`,
             {
               method: "POST",
               headers: {
@@ -474,6 +478,7 @@ export function PatientTable() {
               },
             },
           ).then((res) => {
+            setTotalPatients(res.totalCount)
             return {
               data: res.patients,
               success: res.success,

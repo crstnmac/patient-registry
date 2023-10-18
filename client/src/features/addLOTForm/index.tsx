@@ -32,6 +32,8 @@ const AddLOTForm = () => {
 
   const { patientLOT, isEdit } = state
 
+  console.log(isEdit)
+
   const onFinish = async (values: any) => {
     if (isEdit) {
       await updateLOT({
@@ -40,7 +42,12 @@ const AddLOTForm = () => {
         _id: lotId,
       })
       message.success("LOT updated successfully")
-      navigate(`/patients/${id}`)
+      navigate(`/patients/${id}`, {
+        state: {
+          patientId: id,
+          isEdit: true,
+        },
+      })
       return
     }
 
@@ -49,7 +56,12 @@ const AddLOTForm = () => {
       ...values,
     })
     message.success("LOT added successfully")
-    navigate(`/patients/${id}`)
+    navigate(`/patients/${id}`, {
+      state: {
+        patientId: id,
+        isEdit: false,
+      },
+    })
   }
 
   useEffect(() => {
@@ -205,8 +217,28 @@ const AddLOTForm = () => {
         form={form}
         onFinish={onFinish}
         loading={isLoading}
+        labelAlign="left"
+        labelCol={{
+          style: {
+            fontWeight: 600,
+          },
+        }}
         onFinishFailed={onFinishFailed}
         initialValues={{ remember: true }}
+        submitter={{
+          searchConfig: {
+            submitText: "Save",
+            resetText: "Cancel",
+          },
+          onReset: () => {
+            navigate(`/patients/${id}`, {
+              state: {
+                patientId: id,
+                isEdit: false,
+              },
+            })
+          },
+        }}
       >
         <ProForm.Group>
           <ProForm.Item

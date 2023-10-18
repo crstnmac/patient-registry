@@ -17,7 +17,10 @@ export namespace Login {
 const loginApi = createApi({
   reducerPath: "login",
   baseQuery: fetchBaseQuery({
-    baseUrl: `https://patient-registry-production.up.railway.app/api/auth`,
+    baseUrl:
+      import.meta.env.MODE === "development"
+        ? `${import.meta.env.REACT_APP_API_URL}/api/auth`
+        : `https://patient-registry-production.up.railway.app/api/auth`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
