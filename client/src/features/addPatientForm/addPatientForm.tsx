@@ -5,7 +5,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components"
-import { Button, Divider, message } from "antd"
+import { App, Button, Divider, message } from "antd"
 import patientTableApi, { PatientTable } from "../patientTable/patientTableApi"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -33,8 +33,12 @@ import { EditOutlined } from "@ant-design/icons"
 export function AddPatientForm() {
   const [form] = ProForm.useForm()
 
+  const { message } = App.useApp()
+
   const onFinishFailed = (errorInfo: any) => {
-    message.error("Failed:", errorInfo)
+    message.error({
+      content: "Something went wrong",
+    })
   }
   const navigate = useNavigate()
 
@@ -67,13 +71,13 @@ export function AddPatientForm() {
         ...values,
       })
       form.setFieldsValue(data?.patient)
-      message.success("Patient updated successfully")
+      message.success({ content: "Patient updated successfully" })
       navigate("/patients")
       return
     } else {
       const { _id, ...body } = values
       addPatient(body)
-      message.success("Patient added successfully")
+      message.success({ content: "Patient added successfully" })
       navigate("/patients")
       return
     }
@@ -84,9 +88,9 @@ export function AddPatientForm() {
       form.setFieldsValue(data.patient)
     }
     if (error) {
-      message.error("Something went wrong")
+      message.error({ content: "Something went wrong" })
     }
-  }, [data, error, form])
+  }, [data, error, form, message])
 
   const [edit, setEdit] = useState(isEdit || false)
 

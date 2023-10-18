@@ -21,12 +21,12 @@ export default function ImportData() {
       formData.append("file", file)
       try {
         const res = await uploadPatientData(formData)?.unwrap()
-        message.success("File uploaded successfully")
+        message.success({ content: "File uploaded successfully" })
         if (options.onSuccess) {
           options.onSuccess(res)
         }
       } catch (error) {
-        message.error("Something went wrong")
+        message.error({ content: "Something went wrong" })
         if (options.onError) {
           options.onError(error as any, "Error")
         }

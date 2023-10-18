@@ -276,9 +276,9 @@ export function PatientTable() {
     setIsDeleteModalOpen(false)
     if (deletePatientsResponse) {
       actionRef.current?.reload()
-      message.success("Patient deleted successfully")
+      message.success({ content: "Patient deleted successfully" })
     } else {
-      message.error("Patient deletion failed")
+      message.error({ content: "Patient deletion failed" })
     }
   }
 

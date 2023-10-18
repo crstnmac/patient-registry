@@ -18,8 +18,9 @@ const AddLOTForm = () => {
   const [form] = ProForm.useForm()
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo)
-    message.error("Failed to add LOT", errorInfo)
+    message.error({
+      content: "Failed to add LOT",
+    })
   }
 
   const { useAddLOTMutation, useUpdateLOTMutation } = patientTableApi
@@ -41,7 +42,9 @@ const AddLOTForm = () => {
         ...values,
         _id: lotId,
       })
-      message.success("LOT updated successfully")
+      message.success({
+        content: "LOT updated successfully",
+      })
       navigate(`/patients/${id}`, {
         state: {
           patientId: id,
@@ -55,7 +58,7 @@ const AddLOTForm = () => {
       patientId: id,
       ...values,
     })
-    message.success("LOT added successfully")
+    message.success({ content: "LOT added successfully" })
     navigate(`/patients/${id}`, {
       state: {
         patientId: id,

@@ -5,7 +5,7 @@ import patientTableApi, {
 } from "../patientTable/patientTableApi"
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, message } from "antd"
+import { Button, Card, Popconfirm, message } from "antd"
 
 import dayjs from "dayjs"
 
@@ -264,21 +264,30 @@ export default function LOTTable() {
                       }}
                       icon={<EditTwoTone />}
                     />
-                    <Button
-                      type="text"
-                      style={{
-                        fontWeight: 700,
-                      }}
-                      onClick={() => {
+                    <Popconfirm
+                      title="Delete the LOT"
+                      description="Are you sure to delete this LOT?"
+                      onConfirm={() => {
                         deleteLOT(item._id)
                         if (deleteLOTResponse) {
-                          message.success("LOT deleted successfully")
+                          message.success({
+                            content: "LOT deleted successfully",
+                          })
                           getPatientLOTs()
                         }
                       }}
-                      danger
-                      icon={<DeleteTwoTone twoToneColor="red" />}
-                    />
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button
+                        type="text"
+                        style={{
+                          fontWeight: 700,
+                        }}
+                        danger
+                        icon={<DeleteTwoTone twoToneColor="red" />}
+                      />
+                    </Popconfirm>
                   </th>
                   <td className="border px-4 py-2">{item.treatment}</td>
                   <td className="border px-4 py-2">

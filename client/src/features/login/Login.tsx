@@ -31,7 +31,7 @@ export function Login() {
       const token = data!.token
       dispatch(setToken(token))
       dispatch(setUserInfo(jwtDecode(token)))
-      message.success("Success")
+      message.success({ content: "Success" })
       navigate("/patients")
     } finally {
       setLoading(false)
