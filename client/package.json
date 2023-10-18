@@ -15,22 +15,22 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.17.0",
-    "@ant-design/pro-components": "^2.6.28",
-    "@reduxjs/toolkit": "^1.9.6",
+    "@ant-design/cssinjs": "^1.17.2",
+    "@ant-design/pro-components": "^2.6.30",
+    "@reduxjs/toolkit": "^1.9.7",
     "@vitejs/plugin-react-swc": "^3.4.0",
-    "antd": "^5.9.4",
+    "antd": "^5.10.1",
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",
     "import": "^0.0.6",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.2",
-    "react-router-dom": "^6.16.0",
+    "react-redux": "^8.1.3",
+    "react-router-dom": "^6.17.0",
     "redux-persist": "^6.0.0",
     "tailwind-merge": "^1.14.0",
-    "umi-request": "^1.2.3",
+    "umi-request": "^1.4.0",
     "vite-plugin-mkcert": "^1.16.0",
     "vite-tsconfig-paths": "^4.2.1"
   },
@@ -55,8 +55,8 @@
     "prettier-config-nick": "^1.0.2",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
-    "vite": "^4.4.9",
-    "vitest": "^0.30.1"
+    "vite": "^4.5.0",
+    "vitest": "^0.34.6"
   },
   "eslintConfig": {
     "extends": [
