@@ -44,7 +44,9 @@ import { SortOrder } from "antd/es/table/interface"
 export function PatientTable() {
   const { useDeletePatientsMutation } = patientTableApi
 
-  const token = useAppSelector((state) => state.global.token)
+  const token = useAppSelector(
+    (state: { global: { token: any } }) => state.global.token,
+  )
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 

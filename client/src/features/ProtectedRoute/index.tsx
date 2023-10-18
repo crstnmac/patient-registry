@@ -3,13 +3,7 @@ import { useAppSelector } from "@/app/hooks"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 
-const ProtectedRoute = ({
-  allowedRoles,
-  children,
-}: {
-  allowedRoles: string[]
-  children: React.ReactNode
-}) => {
+export default function ProtectedRoute({ children, allowedRoles }: any) {
   const navigate = useNavigate()
 
   const isAuthorized = useAppSelector(selectUserInfo)?.user_id !== undefined
@@ -28,5 +22,3 @@ const ProtectedRoute = ({
 
   return children
 }
-
-export default ProtectedRoute

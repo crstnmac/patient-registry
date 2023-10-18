@@ -219,6 +219,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormSelect
+              width={"sm"}
               showSearch
               options={treatmentOptions}
               placeholder="Please select your gender"
@@ -239,6 +240,7 @@ const AddLOTForm = () => {
           >
             <ProFormSelect
               options={drugsTargeted}
+              width={"sm"}
               showSearch
               placeholder="Please select the drug"
               rules={[{ required: true, message: "Please select the drug!" }]}
@@ -255,6 +257,7 @@ const AddLOTForm = () => {
           >
             <ProFormSelect
               options={drugsChemo}
+              width={"sm"}
               showSearch
               placeholder="Please select the drug"
               rules={[{ required: true, message: "Please select the drug!" }]}
@@ -271,6 +274,7 @@ const AddLOTForm = () => {
           >
             <ProFormSelect
               options={drugsImmuno}
+              width={"sm"}
               showSearch
               placeholder="Please select the drug"
               rules={[{ required: true, message: "Please select the drug!" }]}
@@ -286,6 +290,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormDatePicker
+              width={"sm"}
               fieldProps={{
                 format: (value) => value.format("DD-MM-YYYY"),
               }}
@@ -302,6 +307,7 @@ const AddLOTForm = () => {
           >
             <ProFormSelect
               options={petCetOptions}
+              width={"sm"}
               showSearch
               placeholder="Please select response PET CT"
               rules={[
@@ -312,8 +318,6 @@ const AddLOTForm = () => {
               ]}
             />
           </ProForm.Item>
-        </ProForm.Group>
-        <ProForm.Group>
           <ProForm.Item
             label="Intracranial Response"
             name="intracranial_response"
@@ -325,6 +329,7 @@ const AddLOTForm = () => {
           >
             <ProFormSelect
               options={intracranialResponseOptions}
+              width={"md"}
               showSearch
               placeholder="Please select response PET CT"
               rules={[
@@ -345,6 +350,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormSelect
+              width={"sm"}
               options={[
                 {
                   value: "Progressed",
@@ -379,6 +385,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormDatePicker
+              width={"sm"}
               fieldProps={{
                 format: (value) => value.format("DD-MM-YYYY"),
               }}
@@ -394,6 +401,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormSelect
+              width={"sm"}
               options={[
                 {
                   value: "Yes",
@@ -424,6 +432,7 @@ const AddLOTForm = () => {
             ]}
           >
             <ProFormSelect
+              width={"sm"}
               options={[
                 {
                   value: "Yes",
@@ -453,7 +462,7 @@ const AddLOTForm = () => {
               },
             ]}
           >
-            <ProFormText placeholder="NGS result" />
+            <ProFormText width={"sm"} placeholder="NGS result" />
           </ProForm.Item>
           <ProForm.Item
             label="Other Remarks"
@@ -464,7 +473,7 @@ const AddLOTForm = () => {
               },
             ]}
           >
-            <ProFormText placeholder="Other Remarks" />
+            <ProFormText width={"md"} placeholder="Other Remarks" />
           </ProForm.Item>
         </ProForm.Group>
       </ProForm>
