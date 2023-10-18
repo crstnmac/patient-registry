@@ -3,7 +3,7 @@ import { useAppSelector } from "@/app/hooks"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function ProtectedRoute({ children, allowedRoles }: any) {
+export function ProtectedRoute({ children, allowedRoles }: any) {
   const navigate = useNavigate()
 
   const isAuthorized = useAppSelector(selectUserInfo)?.user_id !== undefined

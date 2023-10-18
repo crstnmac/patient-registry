@@ -1,4 +1,4 @@
-import ProtectedRoute from "@/features/protectedRoute"
+import { ProtectedRoute } from "@/features/protectedRoute/ProtectedRoute"
 import LayoutIndex from "@/layouts"
 import AddLOT from "@/views/addLOT"
 import AddPatients from "@/views/addPatients"
