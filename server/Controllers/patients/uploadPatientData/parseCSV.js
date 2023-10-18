@@ -1,7 +1,6 @@
-
 const exceljs = require('exceljs')
-const { Readable } = require('stream')
-const Checkup = require('../../../models/Checkup')
+const {Readable} = require('stream')
+const LOT = require('../../../models/LOT')
 
 const parseCSV = async (buffer) => {
   const readableFile = new Readable()
@@ -18,7 +17,7 @@ const parseCSV = async (buffer) => {
       const rowData = {}
       row.eachCell((cell, j) => {
         rowData[worksheet.getRow(1).getCell(j).value] = cell.value
-      }) 
+      })
       rows.push([rowData])
     }
   })

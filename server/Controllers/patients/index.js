@@ -1,24 +1,23 @@
 const addPatient = require('./addPatient')
 const getPatientById = require('./getPatientById')
 const getPatients = require('./getPatients')
-const deletePatientById = require('./deletePatientById')
-const addCheckup = require('./addCheckup')
-const getCheckups = require('./getCheckups')
+const deletePatientsById = require('./deletePatientsById')
+const addLOT = require('./addLOT')
+const getLOTs = require('./getLOTs')
 const uploadPatientData = require('./uploadPatientData')
-const deleteCheckup = require('./deleteCheckup')
+const deleteLOT = require('./deleteLOT')
 const updatePatient = require('./updatePatient')
-const updateCheckup = require('./updateCheckup')
-
+const updateLOT = require('./updateLOT')
 
 module.exports = {
   addPatient,
   getPatientById,
   getPatients,
-  deletePatientById,
-  addCheckup,
-  getCheckups,
+  deletePatientsById,
+  addLOT,
+  getLOTs,
   uploadPatientData,
-  deleteCheckup,
+  deleteLOT,
   updatePatient,
-  updateCheckup,
+  updateLOT,
 }

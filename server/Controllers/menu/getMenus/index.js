@@ -4,12 +4,15 @@ const getMenus = async (req, res) => {
   try {
     const role = req.user.role
 
-    const menus = await Menu.find({
-      role: role,
-    }, {
-      role: 0,
-      'children.role': 0
-    })
+    const menus = await Menu.find(
+      {
+        role: role,
+      },
+      {
+        role: 0,
+        'children.role': 0,
+      }
+    )
 
     const menuCount = await Menu.countDocuments({
       role: role,

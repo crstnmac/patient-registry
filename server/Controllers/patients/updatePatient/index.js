@@ -6,7 +6,6 @@ const updatePatient = async (req, res) => {
     const patient = await Patient.findOneAndUpdate(
       {_id: patientId},
       {$set: req.body},
-      {new: true}
     )
 
     if (!patient) {

@@ -1,5 +1,5 @@
 const PatientModel = require('../../../models/Patient') // Import your Mongoose model here
-const CheckupModel = require('../../../models/Checkup') // Import your Mongoose model here
+const CheckupModel = require('../../../models/LOT') // Import your Mongoose model here
 
 const processBatch = async (batch) => {
   try {
@@ -20,6 +20,20 @@ const processBatch = async (batch) => {
         phone_number: rowData['Phone_number'],
         status_at_last_follow_up: rowData['Status_at_last_follow_up'],
         date_of_last_follow_up: rowData['Date_of_Last_follow_up'],
+        //progressive data
+        date_of_hpe_diagnosis: rowData['Date of HPE diagnosis'],
+        ecog_ps: rowData['ECOG_PS'],
+        extrathoracic_mets: rowData['Extrathoracic_Mets'],
+        brain_mets: rowData['Brain_Mets'],
+        letptomeningeal_mets: rowData['Letptomeningeal_Mets'],
+        lm_mets_csf: rowData['LM_Mets_CSF'],
+        histology: rowData['Histology'],
+        pdl1: rowData['PDL1'],
+        brg1: rowData['BRG1'],
+        ttf1: rowData['TTF1'],
+        small_cell_transformation_date: rowData['Small_cell_transformation_date'],
+        vaf: rowData['VAF'],
+        co_mutation: rowData['Co-mutation'],
       }
 
       try {
@@ -34,8 +48,7 @@ const processBatch = async (batch) => {
             drug_name_targeted: rowData[`${tr}_Drug_Name_Targeted`],
             drug_name_chemo: rowData[`${tr}_Drug_Name_Chemotherapy`],
             drug_name_immuno: rowData[`${tr}_Drug_Name_Immuno`],
-            date_of_start_of_treatment:
-              rowData[`${tr}_Date_of_start_of_Rx`],
+            date_of_start_of_treatment: rowData[`${tr}_Date_of_start_of_Rx`],
             response_pet_ct: rowData[`${tr}_Response_PET_CT`],
             intracranial_response: rowData[`${tr}_Intracranial_response`],
             progressed_on_line: rowData[`${tr}_Progressed_on_line`],
@@ -46,12 +59,12 @@ const processBatch = async (batch) => {
             other_remarks: rowData[`${tr}_Other_remarks`],
           }
 
-          const checkup = new CheckupModel(checkupData)
+          const lot = new CheckupModel(checkupData)
 
           try {
-            await checkup.save()
+            await lot.save()
           } catch (err) {
-            console.error(`Error saving checkup: ${err}`) // Use 'err' instead of 'error' for the error object
+            console.error(`Error saving lot: ${err}`) // Use 'err' instead of 'error' for the error object
           }
         }
       } catch (err) {

@@ -41,6 +41,7 @@ const startApp = async () => {
       dbName: MONGO_DB_NAME,
       user: process.env.MONGO_USER,
       pass: process.env.MONGO_PASSWORD,
+      autoCreate: true,
     })
 
     success({

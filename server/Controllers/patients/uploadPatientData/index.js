@@ -7,8 +7,6 @@ const uploadPatientData = async (req, res) => {
   try {
     const file = req.files.file
 
-    console.log(file.name)
-
     const buffer = file.data
 
     const batchSize = 50 // Set your desired batch size here

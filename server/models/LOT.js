@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose')
 
-const checkupSchema = new Schema({
+const lotSchema = new Schema({
   treatment: String,
   drug_name_targeted: String,
   drug_name_chemo: String,
@@ -16,8 +16,8 @@ const checkupSchema = new Schema({
   other_remarks: String,
   patient: {
     type: Schema.Types.ObjectId,
-    ref: 'Patient'
-  }
+    ref: 'Patient',
+  },
 })
 
-module.exports = model('Checkup', checkupSchema)
+module.exports = model('LOT', lotSchema)
