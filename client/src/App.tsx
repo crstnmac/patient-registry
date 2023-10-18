@@ -4,7 +4,7 @@ import Router from "./routers"
 import { App as AntdApp } from "antd"
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <AntdApp>
         <Router />
       </AntdApp>
