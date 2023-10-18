@@ -132,14 +132,31 @@ export function AddPatientForm() {
           labelLayout="inline"
         >
           <ProForm.Group>
-            <ProForm.Item label="CR Number" name="cr_number" required>
-              <ProFormText width={"sm"} />
+            <ProForm.Item
+              label="CR Number"
+              name="cr_number"
+              rules={[{ required: true }]}
+            >
+              <ProFormText
+                width={"sm"}
+                rules={[{ required: true, message: "Please enter CR!" }]}
+              />
             </ProForm.Item>
-            <ProForm.Item label="Name" name="name" required>
-              <ProFormText width={"sm"} />
+            <ProForm.Item label="Name" name="name" rules={[{ required: true }]}>
+              <ProFormText
+                width={"sm"}
+                rules={[{ required: true, message: "Please enter your name!" }]}
+              />
             </ProForm.Item>
-            <ProForm.Item label="Date of Birth" name="dob" required>
-              <ProFormDatePicker width={"sm"} />
+            <ProForm.Item
+              label="Date of Birth"
+              name="dob"
+              rules={[{ required: true }]}
+            >
+              <ProFormDatePicker
+                width={"sm"}
+                rules={[{ required: true, message: "Please select your DOB!" }]}
+              />
             </ProForm.Item>
             <ProForm.Item
               label="Gender"
@@ -168,7 +185,6 @@ export function AddPatientForm() {
                 },
               ]}
               name="state"
-              required
             >
               <ProFormSelect
                 width={"sm"}
@@ -198,7 +214,15 @@ export function AddPatientForm() {
                 ]}
               />
             </ProForm.Item>
-            <ProForm.Item label="Family History" name="family_history" required>
+            <ProForm.Item
+              label="Family History"
+              name="family_history"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <ProFormSelect
                 options={familyHistoryOptions}
                 width={"sm"}
@@ -208,7 +232,15 @@ export function AddPatientForm() {
                 ]}
               />
             </ProForm.Item>
-            <ProForm.Item label="Gene" name="gene" required>
+            <ProForm.Item
+              label="Gene"
+              name="gene"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <ProFormSelect
                 options={geneOptions}
                 width={"sm"}
@@ -217,39 +249,101 @@ export function AddPatientForm() {
               />
             </ProForm.Item>
 
-            <ProForm.Item label="Variant" name="variant" required>
-              <ProFormText width={"sm"} />
+            <ProForm.Item
+              label="Variant"
+              name="variant"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <ProFormText
+                width={"sm"}
+                rules={[
+                  { required: true, message: "Please select the Variant" },
+                ]}
+              />
             </ProForm.Item>
             <ProForm.Item
               label="Treatment at RGCI"
               name="treatment_at_rgci"
-              required
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
-              <ProFormSelect width={"sm"} options={treatmentAtRGCIOptions} />
+              <ProFormSelect
+                width={"sm"}
+                options={treatmentAtRGCIOptions}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select the treatment at rgci",
+                  },
+                ]}
+              />
             </ProForm.Item>
-            <ProForm.Item label="Phone Number" name="phone_number" required>
-              <ProFormText width={"sm"} />
+            <ProForm.Item
+              label="Phone Number"
+              name="phone_number"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <ProFormText
+                width={"sm"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter the phone number",
+                  },
+                ]}
+              />
             </ProForm.Item>
             <ProForm.Item
               label="Status at Last Follow-up"
               name="status_at_last_follow_up"
-              required
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <ProFormSelect
                 width={"sm"}
                 options={statusAtLastFollowUpOptions}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select the status at last followup",
+                  },
+                ]}
               />
             </ProForm.Item>
             <ProForm.Item
               label="Date of Last Follow-up"
               name="date_of_last_follow_up"
-              required
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <ProFormDatePicker
                 width={"sm"}
                 fieldProps={{
                   format: (value) => value.format("DD/MM/YYYY"),
                 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select the date of last followup",
+                  },
+                ]}
               />
             </ProForm.Item>
           </ProForm.Group>
