@@ -1,4 +1,4 @@
-const User = require('../../../Models/User')
+const User = require('../../../models/User')
 
 const updateUser = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-const User = require('../../../Models/User')
+const User = require('../../../models/User')
 
 const removeUser = async (req, res) => {
   try {
