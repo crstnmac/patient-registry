@@ -33,15 +33,24 @@ app.use("/api", require("./routes"));
 const startApp = async () => {
   try {
     // Connection With DB
+    // await connect(MONGO_URL, {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true,
+    //   serverSelectionTimeoutMS: REQUEST_TIMEOUT,
+    //   autoIndex: true,
+    //   dbName: MONGO_DB_NAME,
+    //   user: process.env.MONGO_USER,
+    //   pass: process.env.MONGO_PASSWORD,
+    //   autoCreate: true,
+    // })
+
     await connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: REQUEST_TIMEOUT,
       autoIndex: true,
-      dbName: MONGO_DB_NAME,
-      user: process.env.MONGO_USER,
-      pass: process.env.MONGO_PASSWORD,
       autoCreate: true,
+      dbName: MONGO_DB_NAME,
     })
 
     success({
