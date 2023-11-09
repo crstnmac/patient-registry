@@ -29,10 +29,7 @@ export namespace Menus {
 const menuApi = createApi({
   reducerPath: "menu",
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      import.meta.env.MODE === "development"
-        ? `${import.meta.env.REACT_APP_API_URL}/api/menu`
-        : `https://patient-registry-production.up.railway.app/api/menu`,
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/menu`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({

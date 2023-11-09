@@ -12,10 +12,7 @@ const pieChartApi = createApi({
   reducerPath: "pieChart",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      import.meta.env.MODE === "development"
-        ? `${import.meta.env.REACT_APP_API_URL}/api/charts`
-        : `https://patient-registry-production.up.railway.app/api/charts`,
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/charts`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
