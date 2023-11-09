@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom"
 export function ProtectedRoute({ children, allowedRoles }: any) {
   const navigate = useNavigate()
 
-  const isAuthorized = useAppSelector(selectUserInfo)?.user_id !== undefined
+  const userInfo = useAppSelector(selectUserInfo)
+  const isAuthorized = userInfo?.exp ? userInfo.exp > Date.now() / 1000 : false
 
   const areRolesRequired = !!allowedRoles?.length
 
-  const currentRole = useAppSelector(selectUserInfo)?.role
+  const currentRole = userInfo?.role
 
   const rolesMatch = areRolesRequired
     ? allowedRoles?.includes(currentRole || "admin")

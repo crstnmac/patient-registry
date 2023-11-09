@@ -5,7 +5,7 @@ import patientTableApi, {
 } from "../patientTable/patientTableApi"
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, Popconfirm, message } from "antd"
+import { Button, Card, Divider, Popconfirm, message } from "antd"
 
 import dayjs from "dayjs"
 
@@ -182,10 +182,9 @@ export default function LOTTable() {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="px-6">
       <ProForm.Group
         title="Line of Treatments"
-        collapsible
         titleStyle={{
           cursor: "pointer",
         }}
@@ -289,34 +288,40 @@ export default function LOTTable() {
                       />
                     </Popconfirm>
                   </th>
-                  <td className="border px-4 py-2">{item.treatment}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">{item.treatment}</td>
+                  <td className="border px-4 py-2 flex-1">
                     {item.drug_name_targeted}
                   </td>
-                  <td className="border px-4 py-2">{item.drug_name_chemo}</td>
-                  <td className="border px-4 py-2">{item.drug_name_immuno}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
+                    {item.drug_name_chemo}
+                  </td>
+                  <td className="border px-4 py-2 flex-1">
+                    {item.drug_name_immuno}
+                  </td>
+                  <td className="border px-4 py-2 flex-1">
                     {dayjs(item.date_of_start_of_treatment).format(
                       "DD/MM/YYYY",
                     )}
                   </td>
-                  <td className="border px-4 py-2">{item.response_pet_ct}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
+                    {item.response_pet_ct}
+                  </td>
+                  <td className="border px-4 py-2 flex-1">
                     {item.intracranial_response}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
                     {item.progressed_on_line}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
                     {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
                     {item.biopsy_progression}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex-1">
                     {item.ngs_at_progression}
                   </td>
-                  <td className="border px-4 py-2">{item.ngs_result}</td>
+                  <td className="border px-4 py-2 flex-1">{item.ngs_result}</td>
                 </tr>
               ))}
             </tbody>

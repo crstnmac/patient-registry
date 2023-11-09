@@ -7,6 +7,8 @@ import Login from "@/views/login"
 import { LOTs } from "@/views/lots"
 import PatientDetails from "@/views/patientDetails"
 import Patients from "@/views/patients"
+import Settings from "@/views/settings"
+import Users from "@/views/users"
 import { RouteObject, useRoutes } from "react-router-dom"
 
 export const routesConfig: RouteObject[] = [
@@ -91,8 +93,28 @@ export const routesConfig: RouteObject[] = [
     ],
   },
   {
+    path: "/users",
+    element: <LayoutIndex />,
+    children: [
+      {
+        path: "/users/",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Users />
+          </ProtectedRoute>
+        ),
+      },
+    ],
+  },
+  {
     path: "/settings",
     element: <LayoutIndex />,
+    children: [
+      {
+        path: "/settings/",
+        element: <Settings />,
+      },
+    ],
   },
   {
     path: "*",

@@ -9,11 +9,12 @@ import { StyleProvider } from "@ant-design/cssinjs"
 import { ConfigProvider } from "antd"
 import en_US from "antd/locale/en_US"
 import "dayjs/locale/en-gb"
+import { themeConfig } from "./utils/themeConfig"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <ConfigProvider locale={en_US}>
+      <ConfigProvider locale={en_US} theme={themeConfig}>
         <StyleProvider hashPriority="high">
           <App />
         </StyleProvider>

@@ -1,7 +1,6 @@
-const Patient = require('../../../models/Patient')
-const LOT = require('../../../models/LOT')
+const User = require('../../../Models/User')
 
-const getPatients = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
     const params = new URLSearchParams(req.query)
     const page = parseInt(params.get('page')) || 1
@@ -22,11 +21,7 @@ const getPatients = async (req, res) => {
       )
         continue
 
-      if (
-        param === 'date_of_last_follow_up' ||
-        param === 'small_cell_transformation_date' ||
-        param === 'date_of_hpe_diagnosis'
-      ) {
+      if (param === 'created_at' || param === 'updated_at') {
         const parts = value.split('/')
         const date = new Date(
           parts[2],
@@ -39,6 +34,7 @@ const getPatients = async (req, res) => {
         }
         continue
       }
+
       const regexPattern = {
         $regex: new RegExp(params.get(param) || '', 'i'),
       }
@@ -49,28 +45,27 @@ const getPatients = async (req, res) => {
       (key) => (filters[key] === '' || undefined) && delete filters[key]
     )
 
-    const patients = await Patient.aggregate([
+    const users = await User.aggregate([
       {
         $match: {
           ...filters,
-          is_deleted: false,
         },
       },
     ])
-      .sort({[sort]: order === 'ascend' ? 1 : -1})
+      .sort({ [sort]: order === 'ascend' ? 1 : -1 })
       .skip((page - 1) * perPage)
       .limit(perPage)
       .exec()
-  
-    const patientCount = await Patient.countDocuments({
+
+    const usersCount = await User.countDocuments({
       ...filters,
       is_deleted: false,
     })
 
     return res.status(200).json({
       success: true,
-      patients: patients,
-      totalCount: patientCount,
+      users: users,
+      totalCount: usersCount,
     })
   } catch (error) {
     return res.status(500).json({
@@ -80,4 +75,4 @@ const getPatients = async (req, res) => {
   }
 }
 
-module.exports = getPatients
+module.exports = getUsers

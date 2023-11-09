@@ -1,7 +1,11 @@
 const {Schema, model} = require('mongoose')
 
 const patientSchema = new Schema({
-  cr_number: String,
+  cr_number: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   name: String,
   age: String,
   dob: String,
@@ -39,6 +43,8 @@ const patientSchema = new Schema({
       ref: 'LOT',
     },
   ],
+}, {
+  timestamps: true,
 })
 
 patientSchema.index({cr_number: 1}, {unique: true})

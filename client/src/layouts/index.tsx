@@ -1,18 +1,23 @@
-import { useEffect, useState } from "react"
-import { Dropdown, Modal } from "antd"
+import { useEffect } from "react"
+import { Dropdown, theme } from "antd"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useDispatch } from "@/app/store"
 import {
   UserOutlined,
   LogoutOutlined,
-  TeamOutlined,
   UserAddOutlined,
-  PieChartOutlined,
 } from "@ant-design/icons"
+import {
+  LucidePieChart,
+  LucideUserSquare2,
+  Settings2,
+  Users2,
+} from "lucide-react"
 import { logout, selectUserInfo, updateCollapse } from "@/app/globalSlice"
 import { useAppSelector } from "@/app/hooks"
 import { MenuProps } from "antd/lib"
 import { ProLayout } from "@ant-design/pro-components"
+import { themeConfig } from "@/utils/themeConfig"
 
 const LayoutIndex = () => {
   const navigate = useNavigate()
@@ -38,7 +43,7 @@ const LayoutIndex = () => {
       label: "Profile",
       icon: <UserOutlined />,
       onClick: () => {
-        showModal()
+        navigate("/settings")
       },
     },
     {
@@ -51,31 +56,44 @@ const LayoutIndex = () => {
     },
   ]
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
-
   return (
     <ProLayout
-      title="RGCI Patient Database"
+      title="RGCI"
       fixSiderbar
       fixedHeader
-      logo={false}
+      logo="https://play-lh.googleusercontent.com/LbZ7BQqFOaWeEewm18KR1UszhpfOMb3X5qPv0vLk3TDEqEnyLw2NjRHbkQ96wpn8OBA"
       breakpoint={false}
       collapsed={isCollapsed}
+      onMenuHeaderClick={() => {
+        navigate("/patients")
+      }}
       onCollapse={(collapsed) => {
         dispatch(updateCollapse(collapsed))
       }}
+      token={{
+        header: {
+          colorBgHeader: "#fff",
+        },
+        sider: {
+          colorMenuBackground: "#fff",
+        },
+      }}
+      // headerContentRender={() => {
+      //   return (
+      //     <div className="flex flex-row space-between w-full gap-2 items-center">
+      //       <Input
+      //         placeholder="Search"
+      //         style={{ width: "600px" }}
+      //         size="large"
+      //         suffix={<SearchOutlined />}
+      //       />
+      //       <Button size="large" className="ml-auto">
+      //         {dayjs().format("DD MMMM YYYY")}
+      //       </Button>
+      //       <Button size="large" type="text" icon={<BellTwoTone />} />
+      //     </div>
+      //   )
+      // }}
       footerRender={() => (
         <div
           style={{
@@ -86,15 +104,19 @@ const LayoutIndex = () => {
           }}
         >
           <span>
-            ©2023 Created by{" "}
-            <a
-              href=""
-              rel="noopener noreferrer"
-              target="_blank"
-              style={{ color: "rgba(0, 0, 0, 0.45)" }}
+            ©2023 Created by
+            <button
+              onClick={() => window.open("https://www.rgcirc.org/")}
+              style={{
+                color: "rgba(0, 0, 0, 0.45)",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                paddingLeft: "4px",
+              }}
             >
               RGCI
-            </a>
+            </button>
           </span>
         </div>
       )}
@@ -102,7 +124,12 @@ const LayoutIndex = () => {
       menuDataRender={() => [
         {
           path: "/patients",
-          icon: <TeamOutlined />,
+          icon: (
+            <LucideUserSquare2
+              color={theme.getDesignToken(themeConfig).colorPrimary}
+              size={20}
+            />
+          ),
           name: "Patients",
           children: [
             {
@@ -130,8 +157,33 @@ const LayoutIndex = () => {
         },
         {
           path: "/analytics",
-          icon: <PieChartOutlined />,
+          icon: (
+            <LucidePieChart
+              color={theme.getDesignToken(themeConfig).colorPrimary}
+              size={20}
+            />
+          ),
           name: "Analytics",
+        },
+        {
+          path: "/users",
+          icon: (
+            <Users2
+              color={theme.getDesignToken(themeConfig).colorPrimary}
+              size={20}
+            />
+          ),
+          name: "Users",
+        },
+        {
+          path: "/settings",
+          icon: (
+            <Settings2
+              color={theme.getDesignToken(themeConfig).colorPrimary}
+              size={20}
+            />
+          ),
+          name: "Settings",
         },
       ]}
       avatarProps={{
@@ -162,16 +214,6 @@ const LayoutIndex = () => {
       location={location}
     >
       <Outlet />
-      <Modal
-        title="Profile"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>Username: {userInfo?.username}</p>
-        <p>Role: {userInfo?.role}</p>
-        <p>Email: {userInfo?.email}</p>
-      </Modal>
     </ProLayout>
   )
 }

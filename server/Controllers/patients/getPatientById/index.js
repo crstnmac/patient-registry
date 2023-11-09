@@ -3,7 +3,7 @@ const Patient = require('../../../models/Patient')
 
 const getPatientById = async (req, res) => {
   try {
-    const patientId = mongoose.Types.ObjectId(req.params.patientId)
+    const patientId = new mongoose.Types.ObjectId(req.params.patientId)
 
     const patient = await Patient.aggregate([
       {

@@ -4,19 +4,35 @@ import patientTableApi, {
 } from "@/features/patientTable/patientTableApi"
 import {
   ActionType,
+  ModalForm,
   ProColumns,
+  ProForm,
+  ProFormDatePicker,
   ProFormInstance,
+  ProFormSelect,
+  ProFormText,
   ProSchemaValueEnumObj,
   ProTable,
 } from "@ant-design/pro-components"
 
-import { Badge, Button, Modal, Space, Table, Tag, Tooltip, message } from "antd"
+import {
+  Badge,
+  Button,
+  Form,
+  Modal,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  message,
+} from "antd"
 import {
   PlusOutlined,
   ImportOutlined,
   DeleteRowOutlined,
   FilterOutlined,
   TableOutlined,
+  CloseCircleTwoTone,
 } from "@ant-design/icons"
 import ImportData from "../importData/ImportData"
 import { useNavigate } from "react-router-dom"
@@ -24,6 +40,7 @@ import "./PatientTable.module.css"
 import {
   brainMetastasesOptions,
   brg1Options,
+  ecogPSOptions,
   extrathoracicMetastasesOptions,
   familyHistoryOptions,
   genderOptions,
@@ -34,19 +51,22 @@ import {
   lmMetsOptions,
   pdl1Options,
   smokingStatusOptions,
+  statusAtLastFollowUpOptions,
   treatmentAtRGCIOptions,
   ttf1Options,
 } from "@/utils/constants"
-import { useAppSelector } from "@/app/hooks"
-import request from "umi-request"
-import { SortOrder } from "antd/es/table/interface"
 
 export function PatientTable() {
-  const { useDeletePatientsMutation } = patientTableApi
+  const { useDeletePatientsMutation, useGetPatientsQuery } = patientTableApi
 
-  const token = useAppSelector(
-    (state: { global: { token: any } }) => state.global.token,
-  )
+  const [url, setUrl] = useState<string>("")
+
+  const [form] = Form.useForm()
+
+  const { data, error, isLoading, refetch } = useGetPatientsQuery(url, {
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  })
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 
@@ -64,38 +84,103 @@ export function PatientTable() {
       return acc
     }, {} as ProSchemaValueEnumObj)
 
+  const actionRef = React.useRef<ActionType>()
+  const formRef = React.useRef<ProFormInstance>()
+
+  const [params, setParams] = useState<Partial<PatientTableT.SearchParams>>({
+    page: 1,
+    rowsPerPage: 10,
+  })
+
+  const [filters, setFilters] = useState<
+    Partial<PatientTableT.SearchParams | Omit<"page", "rowsPerPage">>
+  >({})
+
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const [showFilterModal, setShowFilterModal] = useState(false)
+
+  const handleFilterModal = () => {
+    setShowFilterModal(!showFilterModal)
+  }
+
+  const showUploadModal = () => {
+    setIsUploadModalOpen(true)
+  }
+
+  const handleUploadOk = () => {
+    setIsUploadModalOpen(false)
+  }
+
+  const handleUploadCancel = () => {
+    setIsUploadModalOpen(false)
+  }
+
+  const showDeleteModal = () => {
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleDeleteOk = () => {
+    if (selectedRowKeys.length > 0) {
+      deletePatients(selectedRowKeys as string[])
+    }
+    setIsDeleteModalOpen(false)
+    if (deletePatientsResponse) {
+      actionRef.current?.reload()
+      message.success({ content: "Patient deleted successfully" })
+    } else {
+      message.error({ content: "Patient deletion failed" })
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false)
+  }
+
   const columns: ProColumns<PatientTableT.Patient>[] = [
     {
       title: "#",
       dataIndex: "index",
-      valueType: "index",
+      valueType: "indexBorder",
       fixed: "left",
       width: 48,
     },
     {
       title: "CR Number",
       dataIndex: "cr_number",
-      width: 100,
+      width: 120,
+      sorter: (a, b) => Number(a.cr_number) - Number(b.cr_number),
+      render(dom, entity, index, action, schema) {
+        const dot =
+          new Date(entity.createdAt).getTime() >
+          new Date().getTime() - 1000 * 60 * 10 // 10 mins ago
+        return (
+          <Tooltip title="Data recently added" open={dot}>
+            <Badge dot={dot}>{dom}</Badge>
+          </Tooltip>
+        )
+      },
     },
     {
       title: "Name",
       dataIndex: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
-    {
-      title: "Age",
-      dataIndex: "dob",
-      // sorter: (a, b) => a.age - b.age,
-      renderText(text, record, index, action) {
-        const today = new Date()
-        const birthDate = new Date(text)
-        const age = today.getFullYear() - birthDate.getFullYear()
-        const m = today.getMonth() - birthDate.getMonth()
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          return age - 1
-        }
-      },
-      // sortDirections: ["descend", "ascend"],
-    },
+    // {
+    //   title: "Age",
+    //   dataIndex: "dob",
+    //   sorter: (a, b) => a.age - b.age,
+    //   renderText(text, record, index, action) {
+    //     const today = new Date()
+    //     const birthDate = new Date(text)
+    //     const age = today.getFullYear() - birthDate.getFullYear()
+    //     const m = today.getMonth() - birthDate.getMonth()
+    //     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    //       return age - 1
+    //     }
+    //   },
+    // },
     {
       title: "Gender",
       dataIndex: "gender",
@@ -250,54 +335,6 @@ export function PatientTable() {
     {} as { [key: string]: { text: string } },
   )
 
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-
-  const showUploadModal = () => {
-    setIsUploadModalOpen(true)
-  }
-
-  const handleUploadOk = () => {
-    setIsUploadModalOpen(false)
-  }
-
-  const handleUploadCancel = () => {
-    setIsUploadModalOpen(false)
-  }
-
-  const showDeleteModal = () => {
-    setIsDeleteModalOpen(true)
-  }
-
-  const handleDeleteOk = () => {
-    if (selectedRowKeys.length > 0) {
-      deletePatients(selectedRowKeys as string[])
-    }
-    setIsDeleteModalOpen(false)
-    if (deletePatientsResponse) {
-      actionRef.current?.reload()
-      message.success({ content: "Patient deleted successfully" })
-    } else {
-      message.error({ content: "Patient deletion failed" })
-    }
-  }
-
-  const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false)
-  }
-
-  const actionRef = React.useRef<ActionType>()
-  const formRef = React.useRef<ProFormInstance>()
-
-  const [params, setParams] = useState<PatientTableT.SearchParams | {}>({})
-  const [totalPatients, setTotalPatients] = useState(0)
-
-  const [showFilterModal, setShowFilterModal] = useState(false)
-
-  const handleFilterModal = () => {
-    setShowFilterModal(!showFilterModal)
-  }
-
   return (
     <>
       <ProTable<PatientTableT.Patient, PatientTableT.SearchParams>
@@ -311,8 +348,9 @@ export function PatientTable() {
               state: { isEdit: true, patientId: record._id },
             })
           },
-          style: { cursor: "pointer" },
+          style: { cursor: "pointer", whiteSpace: "nowrap" },
         })}
+        tableLayout="auto"
         options={{
           setting: {
             checkable: true,
@@ -321,6 +359,9 @@ export function PatientTable() {
             settingIcon: <TableOutlined />,
           },
           density: false,
+          reload: () => {
+            refetch()
+          },
         }}
         columnsState={{
           persistenceKey: "patientTable",
@@ -366,138 +407,308 @@ export function PatientTable() {
         columns={columns}
         rowKey="cr_number"
         pagination={{
+          current: params?.page || 1,
+          pageSize: params?.rowsPerPage || 10,
+          showQuickJumper: true,
           pageSizeOptions: ["10", "20", "30", "40", "50"],
+          defaultCurrent: 1,
+          total: data?.totalCount,
+          onChange(page, pageSize) {
+            const newParams = { ...params, page, rowsPerPage: pageSize }
+            setParams(newParams)
+            const urlSearchParams = new URLSearchParams(
+              newParams as unknown as Record<string, string>,
+            )
+            const url = urlSearchParams.toString()
+            setUrl(url)
+          },
           showSizeChanger: true,
         }}
         toolbar={{
-          title: `Total (${totalPatients})`,
+          title: `Total (${data?.totalCount})`,
           filter: (
             <Space
-              size={[0, "middle"]}
+              size={[10, "middle"]}
               wrap
               style={{
                 marginBottom: 16,
               }}
             >
-              {Object.entries(params)
-                .filter(([key, value]) => value !== "")
-                .map(([key, value]) => (
-                  <Tag
+              {Object.entries(filters).map(([key, value]) => {
+                return (
+                  <Button
+                    type="dashed"
                     key={key}
-                    color="green"
-                    style={{ cursor: "pointer", padding: "0 5px" }}
-                    closable={false}
-                    onClose={() => {
-                      const newParams: {
-                        [key: string]:
-                          | string
-                          | number
-                          | (undefined &
-                              Record<string, string | number | undefined>)
-                      } = { ...params }
+                    onClick={() => {
+                      const newParams: Record<string, any> = { ...params }
                       delete newParams[key]
                       setParams(newParams)
-                      formRef.current?.setFieldsValue(newParams)
+                      const newFilters: Record<string, any> = { ...filters }
+                      delete newFilters[key]
+                      setFilters(newFilters)
+                      const urlSearchParams = new URLSearchParams(
+                        newParams as Record<string, string>,
+                      )
+                      const url = urlSearchParams.toString()
+                      setUrl(url)
                     }}
                   >
-                    {
-                      filterLabels[key as keyof typeof filterLabels]
-                        .text as string
-                    }
-                    : {value}
-                  </Tag>
-                ))
-                .filter((tag) => tag !== undefined)}
+                    {filterLabels[key].text}: {value}
+                  </Button>
+                )
+              })}
             </Space>
           ),
           multipleLine: true,
         }}
-        search={
-          showFilterModal && {
-            filterType: "query",
-            split: true,
-            labelWidth: "auto",
-            layout: "vertical",
-            searchText: "Search",
-            optionRender: ({ searchText, resetText }, { form }) => [
-              <Button
-                key="search"
-                type="primary"
-                onClick={() => {
-                  form?.submit()
-                }}
-                icon={<FilterOutlined />}
-              >
-                {searchText}
-              </Button>,
-              <Button
-                key="rest"
-                onClick={() => {
-                  form?.resetFields()
-                  setParams({})
-                }}
-              >
-                {resetText}
-              </Button>,
-            ],
-          }
-        }
-        request={async (params, sort, filter) => {
-          if (sort) {
-            sort = {
-              sort: Object.entries(sort).map(([key, value]) => {
-                return `${key}`
-              }),
-              order: Object.entries(sort).map(([key, value]) => {
-                return `${value}` as "asc" | "desc"
-              }),
-            } as unknown as Record<string, SortOrder>
-          }
-          const newParams = { ...params }
-          delete newParams["current"]
-          delete newParams["pageSize"]
-          setParams(newParams)
-
-          const url = new URLSearchParams({
-            ...(params as unknown as Record<string, string>),
-            ...(sort as unknown as Record<string, string>),
-            ...(filter as unknown as Record<string, string>),
-          }).toString()
-
-          return request(
-            import.meta.env.MODE === "development"
-              ? `${
-                  import.meta.env.REACT_APP_API_URL
-                }/api/patients/get-patients?${url}`
-              : `https://patient-registry-production.up.railway.app/api/patients/get-patients?${url}`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `${token}`,
-              },
-            },
-          ).then((res) => {
-            setTotalPatients(res.totalCount)
-            return {
-              data: res.patients,
-              success: res.success,
-              total: res.totalCount,
-            }
-          })
-        }}
+        dataSource={data?.patients}
+        loading={isLoading}
+        search={false}
         columnEmptyText="NA"
         toolBarRender={() => [
-          <Tooltip title={"Filter"}>
-            <Badge count={Object.entries(params).length}>
-              <Button
-                key="button"
-                icon={<FilterOutlined />}
-                onClick={handleFilterModal}
-                type="primary"
-              />
-            </Badge>
-          </Tooltip>,
+          <ModalForm<PatientTableT.Patient>
+            title="Filters"
+            formRef={formRef}
+            syncToInitialValues
+            preserve={false}
+            trigger={
+              <Button.Group>
+                {Object.entries(filters).length > 0 && (
+                  <Tooltip title={"Clear Filters"}>
+                    <Button
+                      key="button"
+                      icon={<CloseCircleTwoTone />}
+                      onClick={(e) => {
+                        e?.stopPropagation()
+                        const newParams: Record<string, any> = { ...params }
+                        Object.keys(filters).forEach((key) => {
+                          delete newParams[key]
+                        })
+                        setParams(newParams)
+                        setFilters({})
+                        const urlSearchParams = new URLSearchParams(
+                          newParams as Record<string, string>,
+                        )
+                        const url = urlSearchParams.toString()
+                        setUrl(url)
+                      }}
+                      type="primary"
+                    >
+                      Clear
+                    </Button>
+                  </Tooltip>
+                )}
+                <Tooltip title={"Filter"}>
+                  <Badge count={Object.entries(filters).length}>
+                    <Button
+                      key="button"
+                      icon={<FilterOutlined />}
+                      onClick={() => {
+                        handleFilterModal()
+                        form?.setFieldsValue(filters)
+                      }}
+                      type="primary"
+                    />
+                  </Badge>
+                </Tooltip>
+              </Button.Group>
+            }
+            form={form}
+            autoFocusFirstInput
+            modalProps={{
+              destroyOnClose: true,
+              onCancel: () => console.log("run"),
+            }}
+            onFinish={async (values) => {
+              const newParams = { ...params, ...values }
+              setParams(newParams)
+              setFilters(values)
+              const urlSearchParams = new URLSearchParams(
+                newParams as unknown as Record<string, string>,
+              )
+              const url = urlSearchParams.toString()
+              setUrl(url)
+              return true
+            }}
+            submitTimeout={2000}
+          >
+            <ProForm.Group
+              title="Bio"
+              collapsible
+              defaultCollapsed
+              titleStyle={{
+                cursor: "pointer",
+              }}
+              labelLayout="inline"
+            >
+              <ProForm.Group>
+                <ProForm.Item label="CR Number" name="cr_number">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item label="Name" name="name">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item label="Date of Birth" name="dob">
+                  <ProFormDatePicker width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item label="Gender" name="gender">
+                  <ProFormSelect
+                    width={"sm"}
+                    options={genderOptions}
+                    placeholder="Please select your gender"
+                  />
+                </ProForm.Item>
+
+                <ProForm.Item label="State" name="state">
+                  <ProFormSelect
+                    width={"sm"}
+                    options={indianStates}
+                    showSearch
+                    placeholder="Please select your state"
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="Smoking" name="smoking">
+                  <ProFormSelect
+                    options={smokingStatusOptions}
+                    width={"sm"}
+                    placeholder="Please select smoking status"
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="Family History" name="family_history">
+                  <ProFormSelect
+                    options={familyHistoryOptions}
+                    width={"sm"}
+                    placeholder="Please select Family History"
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="Gene" name="gene">
+                  <ProFormSelect
+                    options={geneOptions}
+                    width={"sm"}
+                    placeholder="Please select the Gene"
+                  />
+                </ProForm.Item>
+
+                <ProForm.Item label="Variant" name="variant">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Treatment at RGCI"
+                  name="treatment_at_rgci"
+                >
+                  <ProFormSelect
+                    width={"sm"}
+                    options={treatmentAtRGCIOptions}
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="Phone Number" name="phone_number">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Status at Last Follow-up"
+                  name="status_at_last_follow_up"
+                >
+                  <ProFormSelect
+                    width={"sm"}
+                    options={statusAtLastFollowUpOptions}
+                  />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Date of Last Follow-up"
+                  name="date_of_last_follow_up"
+                >
+                  <ProFormDatePicker
+                    width={"sm"}
+                    fieldProps={{
+                      format: (value) => value.format("DD/MM/YYYY"),
+                    }}
+                  />
+                </ProForm.Item>
+              </ProForm.Group>
+            </ProForm.Group>
+
+            {/* <Divider /> */}
+
+            <ProForm.Group
+              title="Progressive Data"
+              collapsible
+              defaultCollapsed
+              titleStyle={{
+                cursor: "pointer",
+              }}
+              labelLayout="inline"
+            >
+              <ProForm.Group>
+                <ProForm.Item
+                  label="Date of HPE Diagnosis"
+                  name="date_of_hpe_diagnosis"
+                >
+                  <ProFormDatePicker
+                    width={"sm"}
+                    fieldProps={{
+                      format: (value) => value.format("DD-MM-YYYY"),
+                    }}
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="ECOG_PS" name="ecog_ps">
+                  <ProFormSelect width={"sm"} options={ecogPSOptions} />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Extrathoracic Mets"
+                  name="extrathoracic_mets"
+                >
+                  <ProFormSelect
+                    width={"sm"}
+                    options={extrathoracicMetastasesOptions}
+                  />
+                </ProForm.Item>
+                <ProForm.Item label="Brain Mets" name="brain_mets">
+                  <ProFormSelect
+                    width={"sm"}
+                    options={brainMetastasesOptions}
+                  />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Letptomeningeal Mets"
+                  name="letptomeningeal_mets"
+                >
+                  <ProFormSelect
+                    width={"sm"}
+                    options={leptomeningealMetastasesOptions}
+                  />
+                </ProForm.Item>
+
+                <ProForm.Item label="LM Mets CSF" name="lm_mets_csf">
+                  <ProFormSelect width={"md"} options={lmMetsOptions} />
+                </ProForm.Item>
+                <ProForm.Item label="Histology" name="histology">
+                  <ProFormSelect width={"md"} options={histoloyOptions} />
+                </ProForm.Item>
+                <ProForm.Item label="PDL1" name="pdl1">
+                  <ProFormSelect width={"sm"} options={pdl1Options} />
+                </ProForm.Item>
+                <ProForm.Item label="BRG1" name="brg1">
+                  <ProFormSelect width={"sm"} options={brg1Options} />
+                </ProForm.Item>
+                <ProForm.Item label="TTF1" name="ttf1">
+                  <ProFormSelect width={"sm"} options={ttf1Options} />
+                </ProForm.Item>
+                <ProForm.Item
+                  label="Small Cell Transformation Date"
+                  name="small_cell_transformation_date"
+                  dataFormat="DD/MM/YYYY"
+                >
+                  <ProFormDatePicker width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item label="VAF" name="vaf">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+                <ProForm.Item label="Co-Mutation" name="co_mutation">
+                  <ProFormText width={"sm"} />
+                </ProForm.Item>
+              </ProForm.Group>
+            </ProForm.Group>
+          </ModalForm>,
           <Tooltip title={"Add Patient"}>
             <Button
               key="button"

@@ -21,14 +21,24 @@ router.use(
   require('./patients')
 )
 
+router.use(
+  '/users',
+  userAuth,
+  checkRole([ROLE.admin]),
+  require('./users')
+)
+
+router.use(
+  '/charts',
+  userAuth,
+  checkRole([ROLE.admin, ROLE.analytics]),
+  require('./charts')
+)
+
 // Admin & Operator Protected Route
 router.use('/menu', require('./menu'))
 
 router.use('/roles', userAuth, checkRole([ROLE.admin]), require('./roles'))
 
-// Users Protected Route
-router.get('/profile', userAuth, checkRole([ROLE.user]), async (req, res) => {
-  res.status(200).json({type: ROLE.user, user: serializeUser(req.user)})
-})
 
 module.exports = router

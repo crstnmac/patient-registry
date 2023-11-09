@@ -4,6 +4,7 @@ import { RootState } from "./store"
 export interface UserInfo {
   user_id: string
   role: string
+  name: string
   username: string
   email: string
   iat: number

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const addLOT = async (req, res) => {
   try {
-    const patientId = mongoose.Types.ObjectId(req.params.patientId)
+    const patientId = new mongoose.Types.ObjectId(req.params.patientId)
     const checkupData = req.body
     const lot = new LOT(checkupData)
 

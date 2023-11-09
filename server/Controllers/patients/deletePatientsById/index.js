@@ -6,7 +6,7 @@ const deletePatientsById = async (req, res) => {
   try {
     const { patientIds } = req.body
 
-    const ids = patientIds.map((id) => mongoose.Types.ObjectId(id))
+    const ids = patientIds.map((id) => new mongoose.Types.ObjectId(id))
     
     const patients = await Patient.updateMany(
       { _id: { $in: ids } },

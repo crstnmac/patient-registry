@@ -17,15 +17,28 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist"
+import { encryptTransform } from "redux-persist-transform-encrypt"
 import loginApi from "@/features/login/loginApi"
 import patientTableApi from "@/features/patientTable/patientTableApi"
 import menuApi from "@/features/menu/menuApi"
+import profileApi from "@/features/profile/profileApi"
+import pieChartApi from "@/features/pieChart/pieChartApi"
+import userTableApi from "@/features/usersTable/usersTableApi"
 
 // redux persist
 const persistConfig = {
   key: "global-state",
   storage: storage,
+  transforms: [
+    encryptTransform({
+      secretKey: "WhEreIsMySecRetKey?",
+      onError: function (error) {
+        console.log("encryptTransform error", error)
+      },
+    }),
+  ],
 }
+
 const persistGlobalReducerConfig = persistReducer(persistConfig, globalReducer)
 
 export const store = configureStore({
@@ -35,6 +48,9 @@ export const store = configureStore({
     [loginApi.reducerPath]: loginApi.reducer,
     [patientTableApi.reducerPath]: patientTableApi.reducer,
     [menuApi.reducerPath]: menuApi.reducer,
+    [profileApi.reducerPath]: profileApi.reducer,
+    [userTableApi.reducerPath]: userTableApi.reducer,
+    [pieChartApi.reducerPath]: pieChartApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -45,6 +61,9 @@ export const store = configureStore({
       loginApi.middleware,
       patientTableApi.middleware,
       menuApi.middleware,
+      profileApi.middleware,
+      userTableApi.middleware,
+      pieChartApi.middleware,
     ]),
   devTools: process.env.NODE_ENV !== "production",
 })

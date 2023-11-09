@@ -18,6 +18,8 @@ const lotSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Patient',
   },
+}, {
+  timestamps: true,
 })
 
 module.exports = model('LOT', lotSchema)

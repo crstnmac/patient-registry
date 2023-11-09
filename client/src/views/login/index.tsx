@@ -2,7 +2,7 @@ import { Login as LoginForm } from "@/features/login/Login"
 
 const Login = () => {
   return (
-    <div className="bg-white dark:bg-gray-900">
+    <div className="bg-whit">
       <div className="flex justify-center h-screen">
         <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
           <div className="flex-1">
@@ -15,7 +15,7 @@ const Login = () => {
             </div>
 
             <LoginForm />
-            <p className="mt-6 text-sm text-center text-gray-400">
+            {/* <p className="mt-6 text-sm text-center text-gray-400">
               Don&#x27;t have an account yet?{" "}
               <a
                 href="https://google.com"
@@ -24,7 +24,7 @@ const Login = () => {
                 Sign up
               </a>
               .
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="hidden bg-cover lg:block lg:w-2/3">
