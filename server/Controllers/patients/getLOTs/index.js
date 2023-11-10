@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const getLOTs = async (req, res) => {
   try {
-    const patientId = mongoose.Types.ObjectId(req.params.patientId)
+    const patientId = new mongoose.Types.ObjectId(req.params.patientId)
     const lots = await LOT.find({patient: patientId})
     // .populate(
     //   'patient'

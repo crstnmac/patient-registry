@@ -4,7 +4,7 @@ import patientTableApi, {
   PatientTable as PatientTableT,
 } from "../patientTable/patientTableApi"
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Button, Card, Divider, Popconfirm, message } from "antd"
 
 import dayjs from "dayjs"
@@ -12,17 +12,18 @@ import dayjs from "dayjs"
 export default function LOTTable() {
   const { useGetLOTsQuery, useDeleteLOTMutation } = patientTableApi
 
-  const params = useParams()
   const navigate = useNavigate()
 
-  const { id } = params
+  const location = useLocation()
+
+  const { patientId } = location.state as { [key: string]: string }
 
   const {
     data,
     error,
     isLoading,
     refetch: getPatientLOTs,
-  } = useGetLOTsQuery(id!)
+  } = useGetLOTsQuery(patientId!)
 
   const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
 
@@ -196,7 +197,7 @@ export default function LOTTable() {
             icon={<PlusOutlined />}
             disabled={data?.length === 5}
             onClick={() => {
-              navigate(`/patients/${id}/add-lot`, {
+              navigate(`/patients/${patientId}/add-lot`, {
                 state: { isEdit: false },
               })
             }}
@@ -257,9 +258,12 @@ export default function LOTTable() {
                         fontWeight: 700,
                       }}
                       onClick={() => {
-                        navigate(`/patients/${id}/edit-lot/${item._id}`, {
-                          state: { patientLOT: item, isEdit: true },
-                        })
+                        navigate(
+                          `/patients/${patientId}/edit-lot/${item._id}`,
+                          {
+                            state: { patientLOT: item, isEdit: true },
+                          },
+                        )
                       }}
                       icon={<EditTwoTone />}
                     />

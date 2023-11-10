@@ -18,6 +18,7 @@ import {
 import {
   Badge,
   Button,
+  Divider,
   Form,
   Modal,
   Space,
@@ -40,6 +41,9 @@ import "./PatientTable.module.css"
 import {
   brainMetastasesOptions,
   brg1Options,
+  drugsChemo,
+  drugsImmuno,
+  drugsTargeted,
   ecogPSOptions,
   extrathoracicMetastasesOptions,
   familyHistoryOptions,
@@ -47,12 +51,15 @@ import {
   geneOptions,
   histoloyOptions,
   indianStates,
+  intracranialResponseOptions,
   leptomeningealMetastasesOptions,
   lmMetsOptions,
   pdl1Options,
+  petCetOptions,
   smokingStatusOptions,
   statusAtLastFollowUpOptions,
   treatmentAtRGCIOptions,
+  treatmentOptions,
   ttf1Options,
 } from "@/utils/constants"
 
@@ -86,6 +93,7 @@ export function PatientTable() {
 
   const actionRef = React.useRef<ActionType>()
   const formRef = React.useRef<ProFormInstance>()
+  const modalFormRef = React.useRef<ProFormInstance>()
 
   const [params, setParams] = useState<Partial<PatientTableT.SearchParams>>({
     page: 1,
@@ -325,10 +333,60 @@ export function PatientTable() {
     },
   ]
 
-  const filterLabels: { [key: string]: { text: string } } = columns.reduce(
-    (acc, state) => {
-      acc[state.dataIndex as string] = {
-        text: state.title as string,
+  const filterColumns = [
+    { title: "#", dataIndex: "index" },
+    { title: "CR Number", dataIndex: "cr_number" },
+    { title: "Name", dataIndex: "name" },
+    { title: "Gender", dataIndex: "gender" },
+    { title: "State", dataIndex: "state" },
+    { title: "Smoking", dataIndex: "smoking" },
+    { title: "Family History", dataIndex: "family_history" },
+    { title: "Gene", dataIndex: "gene" },
+    { title: "Variant", dataIndex: "variant" },
+    { title: "Treatment At RGCI", dataIndex: "treatment_at_rgci" },
+    { title: "Phone Number", dataIndex: "phone_number" },
+    {
+      title: "Status at Last Follow Up",
+      dataIndex: "status_at_last_follow_up",
+    },
+    { title: "Date of Last Follow Up", dataIndex: "date_of_last_follow_up" },
+    { title: "Date of HPE Diagnosis", dataIndex: "date_of_hpe_diagnosis" },
+    { title: "ECOG_PS", dataIndex: "ecog_ps" },
+    { title: "Extrathoracic Mets", dataIndex: "extrathoracic_mets" },
+    { title: "Brain Mets", dataIndex: "brain_mets" },
+    { title: "Leptomeningeal Mets", dataIndex: "letptomeningeal_mets" },
+    { title: "LM Mets CSF", dataIndex: "lm_mets_csf" },
+    { title: "Histology", dataIndex: "histology" },
+    { title: "PDL1", dataIndex: "pdl1" },
+    { title: "BRG1", dataIndex: "brg1" },
+    { title: "TTF1", dataIndex: "ttf1" },
+    {
+      title: "Small Cell Transformation Date",
+      dataIndex: "small_cell_transformation_date",
+    },
+    { title: "VAF", dataIndex: "vaf" },
+    { title: "Co-Mutation", dataIndex: "co_mutation" },
+    { title: "Treatment", dataIndex: "treatment" },
+    { title: "Drug Targeted", dataIndex: "drug_name_targeted" },
+    { title: "Drug Chemotherapy", dataIndex: "drug_name_chemo" },
+    { title: "Drug Immunotherapy", dataIndex: "drug_name_immuno" },
+    {
+      title: "Date start of Treatment",
+      dataIndex: "date_of_start_of_treatment",
+    },
+    { title: "Response PET CT", dataIndex: "response_pet_ct" },
+    { title: "Intracranial Response", dataIndex: "intracranial_response" },
+    { title: "Is Progressed", dataIndex: "progressed_on_line" },
+    { title: "Date of Progression", dataIndex: "date_of_progression" },
+    { title: "Biopsy", dataIndex: "biopsy_progression" },
+    { title: "NGS at progression", dataIndex: "ngs_at_progression" },
+    { title: "NGS Result", dataIndex: "ngs_result" },
+  ]
+
+  const filterLabels = filterColumns.reduce(
+    (acc, column) => {
+      acc[column.dataIndex as string] = {
+        text: column.title as string,
       }
       return acc
     },
@@ -453,7 +511,7 @@ export function PatientTable() {
                       setUrl(url)
                     }}
                   >
-                    {filterLabels[key].text}: {value}
+                    {filterLabels[key].text} : {value}
                   </Button>
                 )
               })}
@@ -468,7 +526,7 @@ export function PatientTable() {
         toolBarRender={() => [
           <ModalForm<PatientTableT.Patient>
             title="Filters"
-            formRef={formRef}
+            formRef={modalFormRef}
             syncToInitialValues
             preserve={false}
             trigger={
@@ -549,7 +607,12 @@ export function PatientTable() {
                   <ProFormText width={"sm"} />
                 </ProForm.Item>
                 <ProForm.Item label="Date of Birth" name="dob">
-                  <ProFormDatePicker width={"sm"} />
+                  <ProFormDatePicker
+                    fieldProps={{
+                      format: (value) => value.format("DD/MM/YYYY"),
+                    }}
+                    width={"sm"}
+                  />
                 </ProForm.Item>
                 <ProForm.Item label="Gender" name="gender">
                   <ProFormSelect
@@ -627,7 +690,7 @@ export function PatientTable() {
               </ProForm.Group>
             </ProForm.Group>
 
-            {/* <Divider /> */}
+            <Divider />
 
             <ProForm.Group
               title="Progressive Data"
@@ -646,7 +709,7 @@ export function PatientTable() {
                   <ProFormDatePicker
                     width={"sm"}
                     fieldProps={{
-                      format: (value) => value.format("DD-MM-YYYY"),
+                      format: (value) => value.format("DD/MM/YYYY"),
                     }}
                   />
                 </ProForm.Item>
@@ -696,9 +759,13 @@ export function PatientTable() {
                 <ProForm.Item
                   label="Small Cell Transformation Date"
                   name="small_cell_transformation_date"
-                  dataFormat="DD/MM/YYYY"
                 >
-                  <ProFormDatePicker width={"sm"} />
+                  <ProFormDatePicker
+                    fieldProps={{
+                      format: (value) => value.format("DD/MM/YYYY"),
+                    }}
+                    width={"sm"}
+                  />
                 </ProForm.Item>
                 <ProForm.Item label="VAF" name="vaf">
                   <ProFormText width={"sm"} />
@@ -707,6 +774,160 @@ export function PatientTable() {
                   <ProFormText width={"sm"} />
                 </ProForm.Item>
               </ProForm.Group>
+            </ProForm.Group>
+
+            <Divider />
+
+            <ProForm.Group
+              title="Line of Treatments"
+              collapsible
+              defaultCollapsed
+              titleStyle={{
+                cursor: "pointer",
+              }}
+              labelLayout="inline"
+            >
+              <ProForm.Item label="Treatment" name="treatment">
+                <ProFormSelect
+                  width={"sm"}
+                  showSearch
+                  options={treatmentOptions}
+                  placeholder="Please select your treatment"
+                />
+              </ProForm.Item>
+
+              <ProForm.Item label="Drug Targeted" name="drug_name_targeted">
+                <ProFormSelect
+                  options={drugsTargeted}
+                  width={"sm"}
+                  showSearch
+                  placeholder="Please select the drug"
+                />
+              </ProForm.Item>
+              <ProForm.Item
+                label="Drug Name Chemotherapy"
+                name="drug_name_chemo"
+              >
+                <ProFormSelect
+                  options={drugsChemo}
+                  width={"sm"}
+                  showSearch
+                  placeholder="Please select the drug"
+                />
+              </ProForm.Item>
+              <ProForm.Item label="Drug Immunotherapy" name="drug_name_immuno">
+                <ProFormSelect
+                  options={drugsImmuno}
+                  width={"sm"}
+                  showSearch
+                  placeholder="Please select the drug"
+                />
+              </ProForm.Item>
+              <ProForm.Item
+                label="Date start of Treatment"
+                name="date_of_start_of_treatment"
+              >
+                <ProFormDatePicker
+                  width={"sm"}
+                  fieldProps={{
+                    format: (value) => value.format("DD/MM/YYYY"),
+                  }}
+                />
+              </ProForm.Item>
+              <ProForm.Item label="Response PET CT" name="response_pet_ct">
+                <ProFormSelect
+                  options={petCetOptions}
+                  width={"sm"}
+                  showSearch
+                  placeholder="Please select response PET CT"
+                />
+              </ProForm.Item>
+              <ProForm.Item
+                label="Intracranial Response"
+                name="intracranial_response"
+              >
+                <ProFormSelect
+                  options={intracranialResponseOptions}
+                  width={"md"}
+                  showSearch
+                  placeholder="Please select response PET CT"
+                />
+              </ProForm.Item>
+              <ProForm.Item label="Is Progressed" name="progressed_on_line">
+                <ProFormSelect
+                  width={"sm"}
+                  options={[
+                    {
+                      value: "Progressed",
+                      label: "Progressed",
+                    },
+                    {
+                      value: "Not_progressed",
+                      label: "Not Progressed",
+                    },
+                    {
+                      value: "LFU",
+                      label: "LFU",
+                    },
+                  ]}
+                  showSearch
+                  placeholder="Has the patient progressed ?"
+                />
+              </ProForm.Item>
+              <ProForm.Item
+                label="Date of Progression"
+                name="date_of_progression"
+              >
+                <ProFormDatePicker
+                  width={"sm"}
+                  fieldProps={{
+                    format: (value) => value.format("DD/MM/YYYY"),
+                  }}
+                />
+              </ProForm.Item>
+              <ProForm.Item label="Biopsy" name="biopsy_progression">
+                <ProFormSelect
+                  width={"sm"}
+                  options={[
+                    {
+                      value: "Yes",
+                      label: "Yes",
+                    },
+                    {
+                      value: "No",
+                      label: "No",
+                    },
+                  ]}
+                  showSearch
+                  placeholder="Biopsy"
+                />
+              </ProForm.Item>
+              <ProForm.Item
+                label="NGS at progression"
+                name="ngs_at_progression"
+              >
+                <ProFormSelect
+                  width={"sm"}
+                  options={[
+                    {
+                      value: "Yes",
+                      label: "Yes",
+                    },
+                    {
+                      value: "No",
+                      label: "No",
+                    },
+                  ]}
+                  showSearch
+                  placeholder="NGS at progression"
+                />
+              </ProForm.Item>
+              <ProForm.Item label="NGS Result" name="ngs_result">
+                <ProFormText width={"sm"} placeholder="NGS result" />
+              </ProForm.Item>
+              <ProForm.Item label="Other Remarks" name="other_remarks">
+                <ProFormText width={"md"} placeholder="Other Remarks" />
+              </ProForm.Item>
             </ProForm.Group>
           </ModalForm>,
           <Tooltip title={"Add Patient"}>

@@ -28,8 +28,6 @@ import {
   ttf1Options,
 } from "@/utils/constants"
 
-import { EditOutlined } from "@ant-design/icons"
-
 export function AddPatientForm() {
   const [form] = ProForm.useForm()
 
@@ -56,6 +54,7 @@ export function AddPatientForm() {
     data,
     error,
     isLoading: isPatientLoading,
+    refetch,
   } = useGetPatientByIdQuery(patientId, {
     skip: !patientId,
   })
@@ -84,15 +83,16 @@ export function AddPatientForm() {
   }
 
   useEffect(() => {
-    if (data) {
-      form.setFieldsValue(data.patient)
+    if (isEdit) {
+      refetch()
+      form.setFieldsValue(data?.patient)
     }
     if (error) {
       message.error({ content: "Something went wrong" })
     }
-  }, [data, error, form, message])
+  }, [data?.patient, error, form, isEdit, message, refetch])
 
-  const [edit, setEdit] = useState(isEdit || false)
+  // const [edit, setEdit] = useState(isEdit || false)
 
   return (
     <ProCard>
@@ -155,6 +155,9 @@ export function AddPatientForm() {
             >
               <ProFormDatePicker
                 width={"sm"}
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
                 rules={[{ required: true, message: "Please select your DOB!" }]}
               />
             </ProForm.Item>
@@ -367,7 +370,7 @@ export function AddPatientForm() {
               <ProFormDatePicker
                 width={"sm"}
                 fieldProps={{
-                  format: (value) => value.format("DD-MM-YYYY"),
+                  format: (value) => value.format("DD/MM/YYYY"),
                 }}
               />
             </ProForm.Item>
@@ -411,9 +414,13 @@ export function AddPatientForm() {
             <ProForm.Item
               label="Small Cell Transformation Date"
               name="small_cell_transformation_date"
-              dataFormat="DD/MM/YYYY"
             >
-              <ProFormDatePicker width={"sm"} />
+              <ProFormDatePicker
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
+                width={"sm"}
+              />
             </ProForm.Item>
             <ProForm.Item label="VAF" name="vaf">
               <ProFormText width={"sm"} />

@@ -349,3 +349,217 @@ export const ttf1Options = [
     label: "Not done",
   },
 ]
+
+export const treatmentOptions = [
+  {
+    value: "Chemotherapy",
+    label: "Chemotherapy",
+  },
+  {
+    value: "Targeted",
+    label: "Targeted Therapy",
+  },
+  {
+    value: "Immunotherapy",
+    label: "Immunotherapy",
+  },
+  {
+    value: "Chemo-immuno",
+    label: "Chemo-immuno",
+  },
+  {
+    value: "Surgery",
+    label: "Surgery",
+  },
+  {
+    value: "Radiation",
+    label: "Radiation",
+  },
+  {
+    value: "No treatment",
+    label: "No treatment",
+  },
+]
+
+export const drugsTargeted = [
+  {
+    value: "Gefitinib",
+    label: "Gefitinib",
+  },
+  {
+    value: "Erlotinib",
+    label: "Erlotinib",
+  },
+  {
+    value: "Afatinib",
+    label: "Afatinib",
+  },
+  {
+    value: "Osimertinib",
+    label: "Osimertinib",
+  },
+  {
+    value: "Amivantamab",
+    label: "Amivantamab",
+  },
+  {
+    value: "Crizotinib",
+    label: "Crizotinib",
+  },
+  {
+    value: "Alectinib",
+    label: "Alectinib",
+  },
+  {
+    value: "Brigatinib",
+    label: "Brigatinib",
+  },
+  {
+    value: "Lorlatinib",
+    label: "Lorlatinib",
+  },
+  {
+    value: "Ceretinib",
+    label: "Ceretinib",
+  },
+  {
+    value: "Entrectinib",
+    label: "Entrectinib",
+  },
+  {
+    value: "Dacomitinib",
+    label: "Dacomitinib",
+  },
+  {
+    value: "Selpercatenib",
+    label: "Selpercatenib",
+  },
+  {
+    value: "Pralsetinib",
+    label: "Pralsetinib",
+  },
+  {
+    value: "Capmatinib",
+    label: "Capmatinib",
+  },
+  {
+    value: "Savolitinib",
+    label: "Savolitinib",
+  },
+  {
+    value: "Osi-Savo",
+    label: "Osi-Savo",
+  },
+  {
+    value: "Trastuzumab deruxtecan",
+    label: "Trastuzumab deruxtecan",
+  },
+  {
+    value: "Larotrectinib",
+    label: "Larotrectinib",
+  },
+  {
+    value: "Tepotinib",
+    label: "Tepotinib",
+  },
+  {
+    value: "Moboceritinib",
+    label: "Moboceritinib",
+  },
+]
+
+export const drugsChemo = [
+  {
+    value: "Pem",
+    label: "Pem",
+  },
+  {
+    value: "Pem_Cis",
+    label: "Pem_Cis",
+  },
+  {
+    value: "Pem_Carb",
+    label: "Pem_Carb",
+  },
+  {
+    value: "Gem_cis",
+    label: "Gem_cis",
+  },
+  {
+    value: "Gem_carb",
+    label: "Gem_carb",
+  },
+  {
+    value: "Paclitaxel",
+    label: "Paclitaxel",
+  },
+  {
+    value: "Docetaxel",
+    label: "Docetaxel",
+  },
+]
+
+export const drugsImmuno = [
+  {
+    value: "Nivolumab",
+    label: "Nivolumab",
+  },
+  {
+    value: "Pembrolizumab",
+    label: "Pembrolizumab",
+  },
+  {
+    value: "Druvalumab",
+    label: "Druvalumab",
+  },
+  {
+    value: "Atezolizumab",
+    label: "Atezolizumab",
+  },
+]
+
+export const petCetOptions = [
+  {
+    value: "CR",
+    label: "Complete Response",
+  },
+  {
+    value: "PR",
+    label: "Partial Response",
+  },
+  {
+    value: "SD",
+    label: "Stable Disease",
+  },
+  {
+    value: "PD",
+    label: "Progressive Disease",
+  },
+  {
+    value: "Not assessed",
+    label: "Not Assessed",
+  },
+]
+
+export const intracranialResponseOptions = [
+  {
+    value: "CR",
+    label: "Complete Response",
+  },
+  {
+    value: "PR",
+    label: "Partial Response",
+  },
+  {
+    value: "SD",
+    label: "Stable Disease",
+  },
+  {
+    value: "PD/new lesions",
+    label: "Progressive Disease/New lesions",
+  },
+  {
+    value: "Not assessed",
+    label: "Not Assessed",
+  },
+]

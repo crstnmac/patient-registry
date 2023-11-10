@@ -31,7 +31,11 @@ const PatientDetails = () => {
         setTabKey(key as "patientDetails" | "lineOfTreatments")
       }}
     >
-      {tabKey === "patientDetails" ? <AddPatientForm /> : <LOTTable />}
+      {tabKey === "patientDetails" ? (
+        <AddPatientForm key={tabKey} />
+      ) : (
+        <LOTTable key={tabKey} />
+      )}
     </PageContainer>
   )
 }

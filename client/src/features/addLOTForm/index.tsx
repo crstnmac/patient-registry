@@ -9,6 +9,14 @@ import React, { useEffect } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import patientTableApi from "../patientTable/patientTableApi"
 import { message } from "antd"
+import {
+  drugsChemo,
+  drugsImmuno,
+  drugsTargeted,
+  intracranialResponseOptions,
+  petCetOptions,
+  treatmentOptions,
+} from "@/utils/constants"
 
 const AddLOTForm = () => {
   const params = useParams()
@@ -32,8 +40,6 @@ const AddLOTForm = () => {
   const { state } = useLocation()
 
   const { patientLOT, isEdit } = state
-
-  console.log(isEdit)
 
   const onFinish = async (values: any) => {
     if (isEdit) {
@@ -72,145 +78,6 @@ const AddLOTForm = () => {
       form.setFieldsValue(patientLOT)
     }
   }, [form, isEdit, patientLOT])
-
-  const drugs = [
-    "Gefitinib",
-    "Erlotinib",
-    "Afatinib",
-    "Osimertinib",
-    "Amivantamab",
-    "Crizotinib",
-    "Alectinib",
-    "Brigatinib",
-    "Lorlatinib",
-    "Ceretinib",
-    "Entrectinib",
-    "Dacomitinib",
-    "Selpercatenib",
-    "Pralsetinib",
-    "Capmatinib",
-    "Savolitinib",
-    "Osi-Savo",
-    "Trastuzumab deruxtecan",
-    "Larotrectinib",
-    "Tepotinib",
-    "Moboceritinib",
-  ]
-
-  const drugsChemotherapy = [
-    "Pem",
-    "Pem_Cis",
-    "Pem_Carb",
-    "Gem_cis",
-    "Gem_carb",
-    "Paclitaxel",
-    "Docetaxel",
-  ]
-
-  const treatment = [
-    "Chemotherapy",
-    "Targeted",
-    "Immunotherapy",
-    "Chemo-immuno",
-    "Radiation",
-    "Surgery",
-    "No treatment",
-  ]
-
-  const drugImmuno = [
-    "Nivolumab",
-    "Pembrolizumab",
-    "Druvalumab",
-    "Atezolizumab",
-  ]
-
-  const pet_cet = [
-    {
-      value: "CR",
-      label: "Complete Response",
-    },
-    {
-      value: "PR",
-      label: "Partial Response",
-    },
-    {
-      value: "SD",
-      label: "Stable Disease",
-    },
-    {
-      value: "PD",
-      label: "Progressive Disease",
-    },
-    {
-      value: "Not assessed",
-      label: "Not Assessed",
-    },
-  ]
-
-  const intracranialResponses = [
-    {
-      value: "CR",
-      label: "Complete Response",
-    },
-    {
-      value: "PR",
-      label: "Partial Response",
-    },
-    {
-      value: "SD",
-      label: "Stable Disease",
-    },
-    {
-      value: "PD/new lesions",
-      label: "Progressive Disease/New lesions",
-    },
-    {
-      value: "Not assessed",
-      label: "Not Assessed",
-    },
-  ]
-
-  const treatmentOptions = treatment.map((treatment) => {
-    return {
-      value: treatment,
-      label: treatment,
-    }
-  })
-
-  const drugsTargeted = drugs.map((drug) => {
-    return {
-      value: drug,
-      label: drug,
-    }
-  })
-
-  const drugsChemo = drugsChemotherapy.map((drug) => {
-    return {
-      value: drug,
-      label: drug,
-    }
-  })
-
-  const drugsImmuno = drugImmuno.map((drug) => {
-    return {
-      value: drug,
-      label: drug,
-    }
-  })
-
-  const petCetOptions = pet_cet.map((pet) => {
-    return {
-      value: pet.value,
-      label: pet.label,
-    }
-  })
-
-  const intracranialResponseOptions = intracranialResponses.map((pet) => {
-    return {
-      value: pet.value,
-      label: pet.label,
-    }
-  })
 
   return (
     <ProCard>
@@ -257,9 +124,9 @@ const AddLOTForm = () => {
               width={"sm"}
               showSearch
               options={treatmentOptions}
-              placeholder="Please select your gender"
+              placeholder="Please select your treatment"
               rules={[
-                { required: true, message: "Please select your gender!" },
+                { required: true, message: "Please select your treatment!" },
               ]}
             />
           </ProForm.Item>
@@ -327,7 +194,7 @@ const AddLOTForm = () => {
             <ProFormDatePicker
               width={"sm"}
               fieldProps={{
-                format: (value) => value.format("DD-MM-YYYY"),
+                format: (value) => value.format("DD/MM/YYYY"),
               }}
             />
           </ProForm.Item>
@@ -422,7 +289,7 @@ const AddLOTForm = () => {
             <ProFormDatePicker
               width={"sm"}
               fieldProps={{
-                format: (value) => value.format("DD-MM-YYYY"),
+                format: (value) => value.format("DD/MM/YYYY"),
               }}
             />
           </ProForm.Item>
