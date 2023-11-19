@@ -29,9 +29,7 @@ const LayoutIndex = () => {
   const isLoggedIn = useAppSelector((state) => state.global.userInfo)
   const isCollapsed = useAppSelector((state) => state.global.isCollapse)
 
-  const user = useAppSelector((state) => state.global.userInfo)
-
-  const role = user?.role
+  const role = userInfo?.role
 
   useEffect(() => {
     if (!isLoggedIn) {
