@@ -88,7 +88,11 @@ export const routesConfig: RouteObject[] = [
     children: [
       {
         path: "/analytics/",
-        element: <Analytics />,
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Analytics />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

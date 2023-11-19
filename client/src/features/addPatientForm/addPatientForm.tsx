@@ -132,223 +132,176 @@ export function AddPatientForm() {
           labelLayout="inline"
         >
           <ProForm.Group>
-            <ProForm.Item
+            <ProFormText
               label="CR Number"
               name="cr_number"
-              rules={[{ required: true }]}
-            >
-              <ProFormText
-                width={"sm"}
-                rules={[{ required: true, message: "Please enter CR!" }]}
-              />
-            </ProForm.Item>
-            <ProForm.Item label="Name" name="name" rules={[{ required: true }]}>
-              <ProFormText
-                width={"sm"}
-                rules={[{ required: true, message: "Please enter your name!" }]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+              width={"sm"}
+              validateFirst
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter the CR Number",
+                },
+                {
+                  pattern: /^[0-9]*$/,
+                  message: "Please enter a valid CR Number",
+                },
+              ]}
+            />
+            <ProFormText
+              label="Name"
+              name="name"
+              width={"sm"}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter the name",
+                },
+                {
+                  pattern: /^[a-zA-Z\s]*$/,
+                  message: "Please enter a valid name",
+                },
+                {
+                  min: 3,
+                  message: "Please enter a valid name",
+                },
+              ]}
+            />
+            <ProFormDatePicker
               label="Date of Birth"
               name="dob"
-              rules={[{ required: true }]}
-            >
-              <ProFormDatePicker
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-                rules={[{ required: true, message: "Please select your DOB!" }]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+              width={"sm"}
+              fieldProps={{
+                format: (value) => value.format("DD/MM/YYYY"),
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please select the date of birth",
+                },
+                {
+                  validator: (_, value) => {
+                    if (value && value.isBefore(new Date())) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(
+                      new Error("Date of birth cannot be in future"),
+                    )
+                  },
+                },
+              ]}
+            />
+
+            <ProFormSelect
               label="Gender"
               name="gender"
+              width={"sm"}
+              options={genderOptions}
+              placeholder="Please select your gender"
               rules={[
-                {
-                  required: true,
-                },
+                { required: true, message: "Please select your gender!" },
               ]}
-            >
-              <ProFormSelect
-                width={"sm"}
-                options={genderOptions}
-                placeholder="Please select your gender"
-                rules={[
-                  { required: true, message: "Please select your gender!" },
-                ]}
-              />
-            </ProForm.Item>
-
-            <ProForm.Item
+            />
+            <ProFormSelect
               label="State"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
               name="state"
-            >
-              <ProFormSelect
-                width={"sm"}
-                options={indianStates}
-                showSearch
-                placeholder="Please select your state"
-                rules={[
-                  { required: true, message: "Please select your state!" },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+              width={"sm"}
+              options={indianStates}
+              showSearch
+              placeholder="Please select your state"
+              rules={[{ required: true, message: "Please select your state!" }]}
+            />
+
+            <ProFormSelect
               label="Smoking"
               name="smoking"
+              options={smokingStatusOptions}
+              width={"sm"}
+              placeholder="Please select smoking status"
               rules={[
-                {
-                  required: true,
-                },
+                { required: true, message: "Please select smoking status!" },
               ]}
-            >
-              <ProFormSelect
-                options={smokingStatusOptions}
-                width={"sm"}
-                placeholder="Please select smoking status"
-                rules={[
-                  { required: true, message: "Please select smoking status!" },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+            />
+
+            <ProFormSelect
               label="Family History"
               name="family_history"
+              options={familyHistoryOptions}
+              width={"sm"}
+              placeholder="Please select Family History"
               rules={[
-                {
-                  required: true,
-                },
+                { required: true, message: "Please select Family History!" },
               ]}
-            >
-              <ProFormSelect
-                options={familyHistoryOptions}
-                width={"sm"}
-                placeholder="Please select Family History"
-                rules={[
-                  { required: true, message: "Please select Family History!" },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+            />
+
+            <ProFormSelect
               label="Gene"
               name="gene"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <ProFormSelect
-                options={geneOptions}
-                width={"sm"}
-                placeholder="Please select the Gene"
-                rules={[{ required: true, message: "Please select the Gene" }]}
-              />
-            </ProForm.Item>
+              options={geneOptions}
+              width={"sm"}
+              placeholder="Please select the Gene"
+              rules={[{ required: true, message: "Please select the Gene" }]}
+            />
 
-            <ProForm.Item
+            <ProFormText
               label="Variant"
               name="variant"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <ProFormText
-                width={"sm"}
-                rules={[
-                  { required: true, message: "Please select the Variant" },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+              width={"sm"}
+              rules={[{ required: true, message: "Please select the Variant" }]}
+            />
+
+            <ProFormSelect
               label="Treatment at RGCI"
               name="treatment_at_rgci"
+              width={"sm"}
+              options={treatmentAtRGCIOptions}
               rules={[
                 {
                   required: true,
+                  message: "Please select the treatment at rgci",
                 },
               ]}
-            >
-              <ProFormSelect
-                width={"sm"}
-                options={treatmentAtRGCIOptions}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select the treatment at rgci",
-                  },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+            />
+
+            <ProFormText
               label="Phone Number"
               name="phone_number"
+              width={"sm"}
               rules={[
                 {
                   required: true,
+                  message: "Please enter the phone number",
                 },
               ]}
-            >
-              <ProFormText
-                width={"sm"}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter the phone number",
-                  },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+            />
+
+            <ProFormSelect
               label="Status at Last Follow-up"
               name="status_at_last_follow_up"
+              width={"sm"}
+              options={statusAtLastFollowUpOptions}
               rules={[
                 {
                   required: true,
+                  message: "Please select the status at last followup",
                 },
               ]}
-            >
-              <ProFormSelect
-                width={"sm"}
-                options={statusAtLastFollowUpOptions}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select the status at last followup",
-                  },
-                ]}
-              />
-            </ProForm.Item>
-            <ProForm.Item
+            />
+
+            <ProFormDatePicker
               label="Date of Last Follow-up"
               name="date_of_last_follow_up"
+              width={"sm"}
+              fieldProps={{
+                format: (value) => value.format("DD/MM/YYYY"),
+              }}
               rules={[
                 {
                   required: true,
+                  message: "Please select the date of last followup",
                 },
               ]}
-            >
-              <ProFormDatePicker
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select the date of last followup",
-                  },
-                ]}
-              />
-            </ProForm.Item>
+            />
           </ProForm.Group>
         </ProForm.Group>
 
@@ -363,71 +316,79 @@ export function AddPatientForm() {
           labelLayout="inline"
         >
           <ProForm.Group>
-            <ProForm.Item
+            <ProFormDatePicker
               label="Date of HPE Diagnosis"
               name="date_of_hpe_diagnosis"
-            >
-              <ProFormDatePicker
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-              />
-            </ProForm.Item>
-            <ProForm.Item label="ECOG_PS" name="ecog_ps">
-              <ProFormSelect width={"sm"} options={ecogPSOptions} />
-            </ProForm.Item>
-            <ProForm.Item label="Extrathoracic Mets" name="extrathoracic_mets">
-              <ProFormSelect
-                width={"sm"}
-                options={extrathoracicMetastasesOptions}
-              />
-            </ProForm.Item>
-            <ProForm.Item label="Brain Mets" name="brain_mets">
-              <ProFormSelect width={"sm"} options={brainMetastasesOptions} />
-            </ProForm.Item>
-            <ProForm.Item
+              width={"sm"}
+              fieldProps={{
+                format: (value) => value.format("DD/MM/YYYY"),
+              }}
+            />
+            <ProFormSelect
+              label="ECOG_PS"
+              name="ecog_ps"
+              width={"sm"}
+              options={ecogPSOptions}
+            />
+            <ProFormSelect
+              label="Extrathoracic Mets"
+              name="extrathoracic_mets"
+              width={"sm"}
+              options={extrathoracicMetastasesOptions}
+            />
+            <ProFormSelect
+              label="Brain Mets"
+              name="brain_mets"
+              width={"sm"}
+              options={brainMetastasesOptions}
+            />
+            <ProFormSelect
               label="Letptomeningeal Mets"
               name="letptomeningeal_mets"
-            >
-              <ProFormSelect
-                width={"sm"}
-                options={leptomeningealMetastasesOptions}
-              />
-            </ProForm.Item>
+              width={"sm"}
+              options={leptomeningealMetastasesOptions}
+            />
 
-            <ProForm.Item label="LM Mets CSF" name="lm_mets_csf">
-              <ProFormSelect width={"md"} options={lmMetsOptions} />
-            </ProForm.Item>
-            <ProForm.Item label="Histology" name="histology">
-              <ProFormSelect width={"md"} options={histoloyOptions} />
-            </ProForm.Item>
-            <ProForm.Item label="PDL1" name="pdl1">
-              <ProFormSelect width={"sm"} options={pdl1Options} />
-            </ProForm.Item>
-            <ProForm.Item label="BRG1" name="brg1">
-              <ProFormSelect width={"sm"} options={brg1Options} />
-            </ProForm.Item>
-            <ProForm.Item label="TTF1" name="ttf1">
-              <ProFormSelect width={"sm"} options={ttf1Options} />
-            </ProForm.Item>
-            <ProForm.Item
+            <ProFormSelect
+              label="LM Mets CSF"
+              name="lm_mets_csf"
+              width={"md"}
+              options={lmMetsOptions}
+            />
+            <ProFormSelect
+              label="Histology"
+              name="histology"
+              width={"md"}
+              options={histoloyOptions}
+            />
+            <ProFormSelect
+              label="PDL1"
+              name="pdl1"
+              width={"sm"}
+              options={pdl1Options}
+            />
+            <ProFormSelect
+              label="BRG1"
+              name="brg1"
+              width={"sm"}
+              options={brg1Options}
+            />
+            <ProFormSelect
+              label="TTF1"
+              name="ttf1"
+              width={"sm"}
+              options={ttf1Options}
+            />
+            <ProFormDatePicker
               label="Small Cell Transformation Date"
               name="small_cell_transformation_date"
-            >
-              <ProFormDatePicker
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-                width={"sm"}
-              />
-            </ProForm.Item>
-            <ProForm.Item label="VAF" name="vaf">
-              <ProFormText width={"sm"} />
-            </ProForm.Item>
-            <ProForm.Item label="Co-Mutation" name="co_mutation">
-              <ProFormText width={"sm"} />
-            </ProForm.Item>
+              fieldProps={{
+                format: (value) => value.format("DD/MM/YYYY"),
+              }}
+              width={"sm"}
+            />
+            <ProFormText label="VAF" name="vaf" width={"sm"} />
+            <ProFormText label="Co-Mutation" name="co_mutation" width={"sm"} />
           </ProForm.Group>
         </ProForm.Group>
       </ProForm>

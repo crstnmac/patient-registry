@@ -29,6 +29,8 @@ const LayoutIndex = () => {
   const isLoggedIn = useAppSelector((state) => state.global.userInfo)
   const isCollapsed = useAppSelector((state) => state.global.isCollapse)
 
+  const userType = useAppSelector((state) => state.global.userInfo.role)
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login")
@@ -164,6 +166,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Analytics",
+          hideInMenu: userType !== "admin",
         },
         {
           path: "/users",
@@ -174,6 +177,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Users",
+          hideInMenu: userType !== "admin",
         },
         {
           path: "/settings",
