@@ -29,7 +29,9 @@ const LayoutIndex = () => {
   const isLoggedIn = useAppSelector((state) => state.global.userInfo)
   const isCollapsed = useAppSelector((state) => state.global.isCollapse)
 
-  const userType = useAppSelector((state) => state.global.userInfo.role)
+  const user = useAppSelector((state) => state.global.userInfo)
+
+  const role = user?.role
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -166,7 +168,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Analytics",
-          hideInMenu: userType !== "admin",
+          hideInMenu: role !== "admin",
         },
         {
           path: "/users",
@@ -177,7 +179,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Users",
-          hideInMenu: userType !== "admin",
+          hideInMenu: role !== "admin",
         },
         {
           path: "/settings",
