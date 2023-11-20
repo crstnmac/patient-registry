@@ -19,7 +19,7 @@
     "@ant-design/cssinjs": "^1.17.2",
     "@ant-design/pro-components": "^2.6.42",
     "@reduxjs/toolkit": "^1.9.7",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitejs/plugin-react-swc": "^3.4.1",
     "antd": "^5.11.2",
     "antd-phone-input": "^0.3.1",
     "clsx": "^2.0.0",
