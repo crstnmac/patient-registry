@@ -18,7 +18,8 @@ const getPatients = async (req, res) => {
         param === 'page' ||
         param === 'rowsPerPage' ||
         param === 'sort' ||
-        param === 'order'
+        param === 'order' ||
+        param === 'search'
       )
         continue
 
@@ -56,12 +57,20 @@ const getPatients = async (req, res) => {
           is_deleted: false,
         },
       },
+      {
+        $match: {
+          $or: [
+            {cr_number: {$regex: new RegExp(search, 'i')}},
+            {name: {$regex: new RegExp(search, 'i')}},
+          ],
+        },
+      },
     ])
       .sort({[sort]: order === 'ascend' ? 1 : -1})
       .skip((page - 1) * perPage)
       .limit(perPage)
       .exec()
-  
+
     const patientCount = await Patient.countDocuments({
       ...filters,
       is_deleted: false,

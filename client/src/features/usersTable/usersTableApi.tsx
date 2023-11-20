@@ -28,6 +28,21 @@ export namespace NUsersTable {
   export interface ResGetUserById {
     data: User
   }
+
+  export interface ResAddUser {
+    message: string
+    success: boolean
+  }
+
+  export interface ResUpdateUser {
+    message: string
+    success: boolean
+  }
+
+  export interface ResDeleteUser {
+    message: string
+    success: boolean
+  }
 }
 
 const userTableApi = createApi({
@@ -50,14 +65,14 @@ const userTableApi = createApi({
         method: "GET",
       }),
     }),
-    addUser: builder.mutation<NUsersTable.User, NUsersTable.User>({
+    addUser: builder.mutation<NUsersTable.ResAddUser, NUsersTable.User>({
       query: (body) => ({
         url: `/add`,
         method: "POST",
         body,
       }),
     }),
-    updateUser: builder.mutation<NUsersTable.User, NUsersTable.User>({
+    updateUser: builder.mutation<NUsersTable.ResUpdateUser, NUsersTable.User>({
       query(data) {
         const { _id, ...body } = data
         return {
@@ -67,7 +82,7 @@ const userTableApi = createApi({
         }
       },
     }),
-    deleteUser: builder.mutation<NUsersTable.User, string>({
+    deleteUser: builder.mutation<NUsersTable.ResDeleteUser, string>({
       query: (userId) => ({
         url: `/delete/${userId}`,
         method: "DELETE",
@@ -83,4 +98,5 @@ export const {
   useGetUserByIdQuery,
   useAddUserMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation,
 } = userTableApi

@@ -5,6 +5,8 @@ const processBatch = async (batch) => {
   try {
     const treatments = ['l1', 'l2', 'l3', 'l4', 'l5']
 
+    let failedRows = []
+
     for (const rowData of batch) {
       const patientData = {
         cr_number: rowData['CR_Number'],
@@ -43,7 +45,6 @@ const processBatch = async (batch) => {
 
         for (const tr of treatments) {
           const checkupData = {
-            patient: patient._id,
             treatment: rowData[`${tr}_line_rx`],
             drug_name_targeted: rowData[`${tr}_Drug_Name_Targeted`],
             drug_name_chemo: rowData[`${tr}_Drug_Name_Chemotherapy`],
@@ -59,23 +60,24 @@ const processBatch = async (batch) => {
             other_remarks: rowData[`${tr}_Other_remarks`],
           }
 
-          const lot = new CheckupModel(checkupData)
-
-          try {
-            await lot.save()
-          } catch (err) {
-            console.error(`Error saving lot: ${err}`) // Use 'err' instead of 'error' for the error object
+          if (Object.values(checkupData).some((value) => value !== undefined && value !== '')) {
+            checkupData.patient = patient._id;
+            const lot = new CheckupModel(checkupData);
+            try {
+              await lot.save();
+            } catch (err) {
+              console.error(`Error saving lot: ${err}`); // Use 'err' instead of 'error' for the error object
+            }
           }
         }
       } catch (err) {
-        console.error(`Error creating patient: ${err}`) // Use 'err' instead of 'error' for the error object
+        failedRows.push(err.errors['cr_number'].value)
       }
     }
 
-    return {success: true, insertedCount: batch.length, failedRows: []}
+    return {success: true, insertedCount: batch.length, failedRows: failedRows}
   } catch (error) {
-    const failedRows = batch.map((row) => row.CR_Number) // Replace 'rowId' with the actual ID property name in your data
-    return {success: false, insertedCount: 0, failedRows}
+    return {success: false, message: error.message}
   }
 }
 

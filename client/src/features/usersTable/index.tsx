@@ -1,16 +1,25 @@
 import { useRef, useState } from "react"
-import { NUsersTable, useGetUsersQuery } from "./usersTableApi"
+import {
+  NUsersTable,
+  useAddUserMutation,
+  useDeleteUserMutation,
+  useGetUsersQuery,
+} from "./usersTableApi"
 import {
   ActionType,
   FormInstance,
+  ModalForm,
   ProColumns,
+  ProForm,
+  ProFormSelect,
+  ProFormText,
   ProTable,
 } from "@ant-design/pro-components"
 import { useNavigate } from "react-router-dom"
 import { TableOutlined } from "@ant-design/icons"
-import { Badge, Button, Space, Table, Tag } from "antd"
+import { Badge, Button, Form, Modal, Space, Table, Tag, message } from "antd"
 import { useAppSelector } from "@/app/hooks"
-
+import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons"
 export default function UsersTable() {
   const [url, setUrl] = useState<string>("")
 
@@ -32,14 +41,44 @@ export default function UsersTable() {
 
   const formRef = useRef<FormInstance>()
   const actionRef = useRef<ActionType>()
+  const [form] = Form.useForm()
+  const { confirm } = Modal
 
   const user = useAppSelector((state) => state.global.userInfo)
+
+  const [addUser, { isLoading: isAddingUser }] = useAddUserMutation()
+
+  const [deleteUser] = useDeleteUserMutation()
+
+  const onFinishCreate = async (values: any) => {
+    await addUser(values)
+      .unwrap()
+      .then((res) => {
+        if (res?.success) {
+          message.success("User added successfully")
+          form.resetFields()
+          refetch()
+        } else {
+          message.error("Something went wrong")
+        }
+      })
+    return true
+  }
 
   const columns: ProColumns<NUsersTable.User>[] = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      sorter: true,
+      width: 150,
+      ellipsis: true,
+      search: false,
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
       sorter: true,
       width: 150,
       ellipsis: true,
@@ -72,8 +111,8 @@ export default function UsersTable() {
                   record.role === "admin"
                     ? "volcano"
                     : record.role === "operator"
-                    ? "green"
-                    : "geekblue"
+                      ? "green"
+                      : "geekblue"
                 }
                 style={{ cursor: "pointer" }}
                 key={record._id}
@@ -131,11 +170,6 @@ export default function UsersTable() {
         }}
         bordered
         onRow={(record) => ({
-          onClick: () => {
-            navigate(`/users/${record._id}`, {
-              state: { isEdit: true, userId: record._id },
-            })
-          },
           style: { cursor: "pointer", whiteSpace: "nowrap" },
         })}
         tableLayout="auto"
@@ -222,9 +256,181 @@ export default function UsersTable() {
             </Space>
           ),
           multipleLine: true,
+          actions: [
+            <ModalForm<{
+              name: string
+              company: string
+            }>
+              title="New User"
+              trigger={
+                <Button key={3} type="primary" icon={<PlusOutlined />}>
+                  New User
+                </Button>
+              }
+              form={form}
+              autoFocusFirstInput
+              modalProps={{
+                destroyOnClose: true,
+                onCancel: () => console.log("run"),
+              }}
+              submitTimeout={2000}
+              onFinish={onFinishCreate}
+            >
+              <ProForm.Group title="Bio">
+                <ProFormText
+                  width="md"
+                  name="name"
+                  label="Full Name"
+                  tooltip="Enter your full name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your full name",
+                    },
+                  ]}
+                  placeholder="Full Name"
+                />
+
+                <ProFormText
+                  width="md"
+                  name="username"
+                  label="Username"
+                  tooltip="Enter your username"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your username",
+                    },
+                    {
+                      min: 6,
+                      message: "Username must be at least 6 characters",
+                    },
+                  ]}
+                  placeholder="Username"
+                />
+
+                <ProFormText
+                  width="md"
+                  name="email"
+                  label="Email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your email",
+                    },
+                    {
+                      type: "email",
+                      message: "Please enter a valid email",
+                    },
+                  ]}
+                  placeholder="Enter a valid email address"
+                />
+                <ProFormSelect
+                  width="md"
+                  options={[
+                    {
+                      value: "admin",
+                      label: "Admin",
+                    },
+                    {
+                      value: "operator",
+                      label: "Operator",
+                    },
+                    {
+                      value: "analytics",
+                      label: "Analytics",
+                    },
+                  ]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select a role",
+                    },
+                  ]}
+                  name="role"
+                  label="Select a Role"
+                />
+              </ProForm.Group>
+              <ProForm.Group title="Password">
+                <ProFormText.Password
+                  width="md"
+                  name="password"
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your password",
+                    },
+                  ]}
+                  placeholder="Enter a password"
+                />
+                <ProFormText.Password
+                  width="md"
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your password",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve()
+                        }
+                        return Promise.reject(
+                          new Error(
+                            "The two passwords that you entered do not match!",
+                          ),
+                        )
+                      },
+                    }),
+                  ]}
+                  placeholder="Confirm your password"
+                />
+              </ProForm.Group>
+            </ModalForm>,
+            selectedRowKeys.length === 1 ? (
+              <Button
+                key={2}
+                type="primary"
+                disabled={
+                  selectedRowKeys.length !== 1 ||
+                  user?.user_id === selectedRowKeys[0]
+                }
+                onClick={() => {
+                  confirm({
+                    title: "Do you want to delete this user?",
+                    icon: <ExclamationCircleOutlined />,
+                    content: "This action cannot be undone",
+                    okText: "Yes",
+                    okType: "danger",
+                    cancelText: "No",
+                    onOk() {
+                      deleteUser(selectedRowKeys[0])
+                        .unwrap()
+                        .then((res) => {
+                          if (res?.success === true) {
+                            message.success("User deleted successfully")
+                            refetch()
+                          } else {
+                            message.error("Something went wrong")
+                          }
+                        })
+                    },
+                    onCancel() {
+                      console.log("Cancel")
+                    },
+                  })
+                }}
+              >
+                Delete
+              </Button>
+            ) : null,
+          ],
         }}
         dataSource={data?.users || []}
-        loading={isLoading}
+        loading={isLoading || isAddingUser}
         search={false}
         columnEmptyText="NA"
         dateFormatter="string"

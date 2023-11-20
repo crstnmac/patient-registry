@@ -1,4 +1,4 @@
-import { Upload, message } from "antd"
+import { List, Upload, message } from "antd"
 import { UploadProps } from "antd/lib"
 import React from "react"
 import { InboxOutlined } from "@ant-design/icons"
@@ -12,6 +12,8 @@ export default function ImportData() {
   const [uploadPatientData, uploadPatientDataResponse] =
     useUploadPatientDataMutation()
 
+  const [failedRows, setFailedRows] = React.useState<any[]>([])
+
   const props: UploadProps = {
     name: "file",
     multiple: false,
@@ -24,6 +26,9 @@ export default function ImportData() {
         message.success({ content: "File uploaded successfully" })
         if (options.onSuccess) {
           options.onSuccess(res)
+          if (res.failedRows.length > 0) {
+            setFailedRows(res.failedRows)
+          }
         }
       } catch (error) {
         message.error({ content: "Something went wrong" })
@@ -49,6 +54,17 @@ export default function ImportData() {
         Support for a single or bulk upload. Strictly prohibited from uploading
         company data or other banned files.
       </p>
+      {failedRows.length > 0 && (
+        <List
+          grid={{ gutter: 16, column: 6 }}
+          dataSource={failedRows}
+          renderItem={(item: any) => (
+            <List.Item>
+              <List.Item.Meta title={item} />
+            </List.Item>
+          )}
+        />
+      )}
     </Dragger>
   )
 }

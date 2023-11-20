@@ -13,6 +13,7 @@ import {
   ProFormText,
   ProSchemaValueEnumObj,
   ProTable,
+  Search,
 } from "@ant-design/pro-components"
 
 import {
@@ -164,7 +165,7 @@ export function PatientTable() {
           new Date(entity.createdAt).getTime() >
           new Date().getTime() - 1000 * 60 * 10 // 10 mins ago
         return (
-          <Tooltip title="Data recently added" open={dot}>
+          <Tooltip title="Data recently added">
             <Badge dot={dot}>{dom}</Badge>
           </Tooltip>
         )
@@ -484,6 +485,20 @@ export function PatientTable() {
         }}
         toolbar={{
           title: `Total (${data?.totalCount})`,
+          search: {
+            onSearch: (value) => {
+              const newParams = { ...params, search: value }
+              setParams(newParams)
+              const urlSearchParams = new URLSearchParams(
+                newParams as unknown as Record<string, string>,
+              )
+              const url = urlSearchParams.toString()
+              console.log("url", url)
+              setUrl(url)
+            },
+            allowClear: true,
+            placeholder: "CR Number/Name",
+          },
           filter: (
             <Space
               size={[10, "middle"]}
@@ -972,6 +987,7 @@ export function PatientTable() {
         open={isUploadModalOpen}
         onOk={handleUploadOk}
         onCancel={handleUploadCancel}
+        footer={null}
         width={1000}
       >
         <ImportData />

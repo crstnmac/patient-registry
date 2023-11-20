@@ -171,6 +171,7 @@ export function AddPatientForm() {
               label="Date of Birth"
               name="dob"
               width={"sm"}
+              dataFormat="DD/MM/YYYY"
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
@@ -292,6 +293,7 @@ export function AddPatientForm() {
               label="Date of Last Follow-up"
               name="date_of_last_follow_up"
               width={"sm"}
+              dataFormat="DD/MM/YYYY"
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
@@ -299,6 +301,16 @@ export function AddPatientForm() {
                 {
                   required: true,
                   message: "Please select the date of last followup",
+                },
+                {
+                  validator: (_, value) => {
+                    if (value && value.isBefore(new Date())) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(
+                      new Error("Date of last followup cannot be in future"),
+                    )
+                  },
                 },
               ]}
             />

@@ -31,6 +31,8 @@ const LayoutIndex = () => {
 
   const role = userInfo?.role
 
+  console.log("role", role)
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login")
@@ -156,6 +158,7 @@ const LayoutIndex = () => {
             },
           ],
           hideChildrenInMenu: true,
+          hideInMenu: role !== "admin" && role !== "operator",
         },
         {
           path: "/analytics",
@@ -166,7 +169,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Analytics",
-          hideInMenu: role !== "admin",
+          hideInMenu: role !== "admin" && role !== "analytics",
         },
         {
           path: "/users",
@@ -188,6 +191,7 @@ const LayoutIndex = () => {
             />
           ),
           name: "Settings",
+          hideInMenu: role !== "admin",
         },
       ]}
       avatarProps={{

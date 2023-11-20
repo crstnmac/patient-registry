@@ -43,6 +43,11 @@ router.post('/login-admin', async (req, res) => {
   await userLogin(req.body, ROLE.admin, res)
 })
 
+router.post('/login', async (req, res) => {
+  const {role} = req.body
+  await userLogin(req.body, role, res)
+})
+
 router.post(
   '/add-auth-button',
   userAuth,

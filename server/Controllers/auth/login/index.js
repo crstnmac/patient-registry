@@ -50,14 +50,16 @@ const login = async (userRequest, role, res) => {
       });
     }
 
-    // We will check the role
-    if (user.role !== role) {
-      return res.status(403).json({
-        reason: "role",
-        message: MSG.wrongRole,
-        success: false,
-      });
-    }
+    // // We will check the role
+    // if (user.role !== role) {
+    //   return res.status(403).json({
+    //     reason: "role",
+    //     message: MSG.wrongRole,
+    //     success: false,
+    //   });
+    // }
+
+    
     // That means user is existing and trying to signin from the right portal
     // Now check for the password
     let isMatch = await bcrypt.compare(password, user.password);

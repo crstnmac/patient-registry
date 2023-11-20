@@ -3,7 +3,7 @@ import { PageContainer } from "@ant-design/pro-components"
 
 const Users = () => {
   return (
-    <PageContainer title="Patients">
+    <PageContainer title="Users">
       <UsersTable />
     </PageContainer>
   )

@@ -183,90 +183,81 @@ export default function LOTTable() {
   }
 
   return (
-    <Card className="px-6">
-      <ProForm.Group
-        title="Line of Treatments"
-        titleStyle={{
-          cursor: "pointer",
-        }}
-        labelLayout="inline"
-        extra={
-          <Button
-            key="button"
-            type="primary"
-            icon={<PlusOutlined />}
-            disabled={data?.length === 5}
-            onClick={() => {
-              navigate(`/patients/${patientId}/add-lot`, {
-                state: { isEdit: false },
-              })
-            }}
-          >
-            Add LOT
-          </Button>
-        }
-      >
-        <div className="overflow-x-auto">
-          <table className="table-auto border-none border-gray-700">
-            <tbody className="flex justify-between">
-              <tr className="flex justify-between border-b flex-col bg-blue-50">
-                <th className="px-4 py-2 border text-xs text-black-500 uppercase tracking-wider font-bold">
-                  <Button key="button" type="text">
-                    LINE OF TREATMENT
-                  </Button>
-                </th>
-                <th className="text-left border px-4 py-2">Treatment</th>
-                <th className="text-left border px-4 py-2">
-                  Drug Name Targeted
-                </th>
-                <th className="text-left border px-4 py-2">Drug Name Chemo</th>
-                <th className="text-left border px-4 py-2">Drug name Immuno</th>
-                <th className="text-left border px-4 py-2">
-                  Date of start of treatment
-                </th>
-                <th className="text-left border px-4 py-2">Response pet ct</th>
-                <th className="text-left border px-4 py-2">
-                  Intracranial response
-                </th>
-                <th className="text-left border px-4 py-2">
-                  Progressed on line
-                </th>
-                <th className="text-left border px-4 py-2">
-                  Date of progression
-                </th>
-                <th className="text-left border px-4 py-2">
-                  Biopsy line of progression
-                </th>
-                <th className="text-left border px-4 py-2">
-                  NGS at progression
-                </th>
-                <th className="text-left border px-4 py-2">NGS result</th>
-              </tr>
-              {data?.map((item, index) => (
-                <tr
+    <ProForm.Group
+      title="Line of Treatments"
+      titleStyle={{
+        cursor: "pointer",
+      }}
+      labelLayout="inline"
+      extra={
+        <Button
+          key="button"
+          type="primary"
+          icon={<PlusOutlined />}
+          disabled={data?.length === 5}
+          onClick={() => {
+            navigate(`/patients/${patientId}/add-lot`, {
+              state: { isEdit: false },
+            })
+          }}
+        >
+          Add LOT
+        </Button>
+      }
+    >
+      <Card className="overflow-x-auto">
+        <table className="table-auto border-none border-gray-700">
+          <tbody className="flex justify-between">
+            <tr className="flex justify-between border-b flex-col bg-blue-50">
+              <th className="px-4 py-2 border text-xs text-black-500 uppercase tracking-wider font-bold">
+                <Button key="button" type="text">
+                  LINE OF TREATMENT
+                </Button>
+              </th>
+              <th className="text-left border px-4 py-2">Treatment</th>
+              <th className="text-left border px-4 py-2">Drug Name Targeted</th>
+              <th className="text-left border px-4 py-2">Drug Name Chemo</th>
+              <th className="text-left border px-4 py-2">Drug name Immuno</th>
+              <th className="text-left border px-4 py-2">
+                Date of start of treatment
+              </th>
+              <th className="text-left border px-4 py-2">Response pet ct</th>
+              <th className="text-left border px-4 py-2">
+                Intracranial response
+              </th>
+              <th className="text-left border px-4 py-2">Progressed on line</th>
+              <th className="text-left border px-4 py-2">
+                Date of progression
+              </th>
+              <th className="text-left border px-4 py-2">
+                Biopsy line of progression
+              </th>
+              <th className="text-left border px-4 py-2">NGS at progression</th>
+              <th className="text-left border px-4 py-2">NGS result</th>
+            </tr>
+            {data?.map((item, index) => (
+              <tr
+                key={index}
+                className="flex justify-between border-b flex-col"
+              >
+                <th
                   key={index}
-                  className="flex justify-between border-b flex-col"
+                  className="px-4 py-2 border text-left text-xs text-black-500 uppercase tracking-wider font-bold items-center flex justify-between"
                 >
-                  <th
-                    key={index}
-                    className="px-4 py-2 border text-left text-xs text-black-500 uppercase tracking-wider font-bold items-center flex justify-between"
-                  >
-                    {parseHeader(index)}
-                    <Button
-                      type="text"
-                      style={{
-                        fontWeight: 700,
-                      }}
-                      onClick={() => {
-                        navigate(
-                          `/patients/${patientId}/edit-lot/${item._id}`,
-                          {
-                            state: { patientLOT: item, isEdit: true },
-                          },
-                        )
-                      }}
-                      icon={<EditTwoTone />}
-                    />
+                  {parseHeader(index)}
+                  <Button
+                    type="text"
+                    style={{
+                      fontWeight: 700,
+                    }}
+                    onClick={() => {
+                      navigate(`/patients/${patientId}/edit-lot/${item._id}`, {
+                        state: { patientLOT: item, isEdit: true },
+                      })
+                    }}
+                    icon={<EditTwoTone />}
+                  />
+                  {index === data.length - 1 ? (
                     <Popconfirm
                       title="Delete the LOT"
                       description="Are you sure to delete this LOT?"
@@ -287,51 +278,50 @@ export default function LOTTable() {
                         style={{
                           fontWeight: 700,
                         }}
+                        disabled={index !== data.length - 1}
                         danger
                         icon={<DeleteTwoTone twoToneColor="red" />}
                       />
                     </Popconfirm>
-                  </th>
-                  <td className="border px-4 py-2 flex-1">{item.treatment}</td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.drug_name_targeted}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.drug_name_chemo}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.drug_name_immuno}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {dayjs(item.date_of_start_of_treatment).format(
-                      "DD/MM/YYYY",
-                    )}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.response_pet_ct}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.intracranial_response}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.progressed_on_line}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.biopsy_progression}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">
-                    {item.ngs_at_progression}
-                  </td>
-                  <td className="border px-4 py-2 flex-1">{item.ngs_result}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </ProForm.Group>
-    </Card>
+                  ) : null}
+                </th>
+                <td className="border px-4 py-2 flex-1">{item.treatment}</td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_targeted}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_chemo}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_immuno}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {dayjs(item.date_of_start_of_treatment).format("DD/MM/YYYY")}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.response_pet_ct}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.intracranial_response}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.progressed_on_line}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.biopsy_progression}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.ngs_at_progression}
+                </td>
+                <td className="border px-4 py-2 flex-1">{item.ngs_result}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+    </ProForm.Group>
   )
 }

@@ -24,7 +24,7 @@ router.use(
 router.use(
   '/users',
   userAuth,
-  checkRole([ROLE.admin]),
+  checkRole([ROLE.admin, ROLE.operator, ROLE.analytics]),
   require('./users')
 )
 

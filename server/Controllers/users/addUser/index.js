@@ -1,14 +1,17 @@
-const User = require("../../../models/User")
+const { userRegister } = require("../../auth")
 
 const addUser = async (req, res) => {
   try {
-    const user = new User(req.body)
+    const role = req.body.role
 
-    await user.save()
-    return res.status(200).json({
-      message: 'User added successfully',
-      user
-    })
+    const user = {
+      username: req.body.username,
+      password: req.body.confirmPassword,
+      email: req.body.email,
+      name: req.body.name,
+    }
+
+    await userRegister(user, role, res)
   }catch (err) {
     return res.status(500).json({
       message: 'Unable to add user',

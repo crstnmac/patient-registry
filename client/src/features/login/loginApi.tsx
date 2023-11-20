@@ -23,7 +23,7 @@ const loginApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<Login.ResLogin, Login.ReqLoginForm>({
       query: (body) => ({
-        url: "/login-admin",
+        url: "/login",
         method: "POST",
         body,
       }),
