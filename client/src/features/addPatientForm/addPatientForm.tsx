@@ -87,10 +87,12 @@ export function AddPatientForm() {
       refetch()
       form.setFieldsValue(data?.patient)
     }
+    refetch()
+    form.setFieldsValue(data?.patient)
     if (error) {
       message.error({ content: "Something went wrong" })
     }
-  }, [data?.patient, error, form, isEdit, message, refetch])
+  }, [data, error, isEdit, refetch, form])
 
   // const [edit, setEdit] = useState(isEdit || false)
 
