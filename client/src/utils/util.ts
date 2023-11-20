@@ -205,8 +205,6 @@ export const prepareHeaders = (headers, { getState }) => {
   // If we have a token set in state, let's assume that we should be passing it.
   if (token) {
     headers.set("Authorization", `${token}`)
-    headers.set("Content-Type", "application/json")
-    headers.set("Acess-Control-Allow-Origin", "*")
   }
 
   return headers
