@@ -1,7 +1,7 @@
-import { List, Upload, message } from "antd"
+import { Button, List, Upload, message } from "antd"
 import { UploadProps } from "antd/lib"
 import React from "react"
-import { InboxOutlined } from "@ant-design/icons"
+import { InboxOutlined, DownloadOutlined } from "@ant-design/icons"
 import patientTableApi from "../patientTable/patientTableApi"
 
 export default function ImportData() {
@@ -54,6 +54,14 @@ export default function ImportData() {
         Support for a single or bulk upload. Strictly prohibited from uploading
         company data or other banned files.
       </p>
+      <Button
+        icon={<DownloadOutlined />}
+        onClick={() => window.open("./public/RGCI Import Template.xlsx")}
+        title="Download Template"
+        type="dashed"
+      >
+        Download Template
+      </Button>
       {failedRows.length > 0 && (
         <List
           grid={{ gutter: 16, column: 6 }}

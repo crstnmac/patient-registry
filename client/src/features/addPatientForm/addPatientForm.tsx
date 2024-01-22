@@ -5,9 +5,12 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components"
-import { App, Button, Divider, message } from "antd"
-import patientTableApi, { PatientTable } from "../patientTable/patientTableApi"
-import { useLocation, useNavigate } from "react-router-dom"
+import { App, Button, Card, Checkbox, Divider, Popconfirm, message } from "antd"
+import patientTableApi, {
+  PatientTable,
+  useDeleteLOTMutation,
+} from "../patientTable/patientTableApi"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import {
   brainMetastasesOptions,
@@ -28,8 +31,198 @@ import {
   ttf1Options,
 } from "@/utils/constants"
 
-export function AddPatientForm() {
+import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
+import * as dayjs from "dayjs"
+
+function LOTTable({
+  patientId,
+  data,
+  getPatientLOTs,
+  deleteLOT,
+  deleteLOTResponse,
+}: {
+  patientId: string
+  data: PatientTable.LOT[]
+  getPatientLOTs: () => void
+  deleteLOT: (id: string) => void
+  deleteLOTResponse: any
+}) {
+  const navigate = useNavigate()
+
+  function parseHeader(index: number) {
+    switch (index) {
+      case 0:
+        return "1st"
+      case 1:
+        return "2nd"
+      case 2:
+        return "3rd"
+      case 3:
+        return "4th"
+      case 4:
+        return "5th"
+    }
+  }
+
+  return (
+    <ProForm.Group
+      titleStyle={{
+        cursor: "pointer",
+      }}
+      labelLayout="inline"
+      extra={
+        <Button
+          key="button"
+          type="primary"
+          icon={<PlusOutlined />}
+          disabled={data?.length === 5}
+          onClick={() => {
+            navigate(`/patients/${patientId}/add-lot`, {
+              state: { isEdit: false },
+            })
+          }}
+        >
+          Add LOT
+        </Button>
+      }
+    >
+      <Card className="overflow-x-auto">
+        <table className="table-auto border-none border-gray-700">
+          <tbody className="flex justify-between">
+            <tr className="flex justify-between border-b flex-col bg-blue-50">
+              <th className="px-4 py-2 border text-xs text-black-500 uppercase tracking-wider font-bold">
+                <Button key="button" type="text">
+                  LINE OF TREATMENT
+                </Button>
+              </th>
+              <th className="text-left border px-4 py-2">Treatment</th>
+              <th className="text-left border px-4 py-2">Drug Name Targeted</th>
+              <th className="text-left border px-4 py-2">Drug Name Chemo</th>
+              <th className="text-left border px-4 py-2">Drug name Immuno</th>
+              <th className="text-left border px-4 py-2">
+                Date of start of treatment
+              </th>
+              <th className="text-left border px-4 py-2">Response pet ct</th>
+              <th className="text-left border px-4 py-2">
+                Intracranial response
+              </th>
+              <th className="text-left border px-4 py-2">Progressed on line</th>
+              <th className="text-left border px-4 py-2">
+                Date of progression
+              </th>
+              <th className="text-left border px-4 py-2">
+                Biopsy line of progression
+              </th>
+              <th className="text-left border px-4 py-2">NGS at progression</th>
+              <th className="text-left border px-4 py-2">NGS result</th>
+            </tr>
+            {data?.map((item, index) => (
+              <tr
+                key={index}
+                className="flex justify-between border-b flex-col"
+              >
+                <th
+                  key={index}
+                  className="px-4 py-2 border text-left text-xs text-black-500 uppercase tracking-wider font-bold items-center flex justify-between"
+                >
+                  {parseHeader(index)}
+                  <Button
+                    type="text"
+                    style={{
+                      fontWeight: 700,
+                    }}
+                    onClick={() => {
+                      navigate(`/patients/${patientId}/edit-lot/${item._id}`, {
+                        state: { patientLOT: item, isEdit: true },
+                      })
+                    }}
+                    icon={<EditTwoTone />}
+                  />
+                  {index === data.length - 1 ? (
+                    <Popconfirm
+                      title="Delete the LOT"
+                      description="Are you sure to delete this LOT?"
+                      onConfirm={() => {
+                        deleteLOT(item._id)
+                        if (deleteLOTResponse) {
+                          message.success({
+                            content: "LOT deleted successfully",
+                          })
+                          getPatientLOTs()
+                        }
+                      }}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button
+                        type="text"
+                        style={{
+                          fontWeight: 700,
+                        }}
+                        disabled={index !== data.length - 1}
+                        danger
+                        icon={<DeleteTwoTone twoToneColor="red" />}
+                      />
+                    </Popconfirm>
+                  ) : null}
+                </th>
+                <td className="border px-4 py-2 flex-1">{item.treatment}</td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_targeted}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_chemo}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.drug_name_immuno}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.date_of_start_of_treatment ? (
+                    <span>
+                      {dayjs(item.date_of_start_of_treatment).format(
+                        "DD/MM/YYYY",
+                      )}
+                    </span>
+                  ) : null}{" "}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.response_pet_ct}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.intracranial_response}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.progressed_on_line}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.date_of_progression ? (
+                    <span>
+                      {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
+                    </span>
+                  ) : null}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.biopsy_progression}
+                </td>
+                <td className="border px-4 py-2 flex-1">
+                  {item.ngs_at_progression}
+                </td>
+                <td className="border px-4 py-2 flex-1">{item.ngs_result}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+    </ProForm.Group>
+  )
+}
+
+export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
   const [form] = ProForm.useForm()
+
+  const params = useParams()
+
+  const { id } = params
 
   const { message } = App.useApp()
 
@@ -40,9 +233,9 @@ export function AddPatientForm() {
   }
   const navigate = useNavigate()
 
-  const { state } = useLocation()
+  const { pathname } = useLocation()
 
-  const { isEdit, patientId } = state
+  const [edit, setEdit] = useState(isEdit || false)
 
   const {
     useAddPatientMutation,
@@ -50,28 +243,39 @@ export function AddPatientForm() {
     useGetPatientByIdQuery,
   } = patientTableApi
 
+  const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
+
   const {
     data,
     error,
     isLoading: isPatientLoading,
     refetch,
-  } = useGetPatientByIdQuery(patientId, {
-    skip: !patientId,
+  } = useGetPatientByIdQuery(id!, {
+    skip: !id,
   })
+
+  useEffect(() => {
+    if (id) {
+      refetch()
+    }
+    if (data?.patient) {
+      form.setFieldsValue(data?.patient)
+    }
+  }, [form, data, refetch, id])
 
   const [addPatient, { isLoading: isPatientMutating }] = useAddPatientMutation()
 
   const [updatePatient] = useUpdatePatientMutation()
 
   const onFinish = async (values: any) => {
-    if (isEdit) {
+    if (edit) {
       updatePatient({
-        _id: patientId,
+        _id: id,
         ...values,
       })
+      refetch()
       form.setFieldsValue(data?.patient)
       message.success({ content: "Patient updated successfully" })
-      navigate("/patients")
       return
     } else {
       const { _id, ...body } = values
@@ -82,56 +286,55 @@ export function AddPatientForm() {
     }
   }
 
-  useEffect(() => {
-    if (isEdit) {
-      refetch()
-      form.setFieldsValue(data?.patient)
-    }
-    if (error) {
-      message.error({ content: "Something went wrong" })
-    }
-  }, [data, error, isEdit, refetch, form])
-
-  // const [edit, setEdit] = useState(isEdit || false)
-
   return (
-    <ProCard>
-      <ProForm<PatientTable.Patient>
-        layout="vertical"
-        form={form}
-        dateFormatter="string"
-        onFinish={onFinish}
-        labelAlign="left"
-        labelCol={{
-          style: {
-            fontWeight: 600,
-          },
-        }}
-        // readonly={edit}
-        loading={isPatientLoading || isPatientMutating}
-        onFinishFailed={onFinishFailed}
-        submitter={{
-          searchConfig: {
-            submitText: "Save",
-            resetText: "Cancel",
-          },
-          onReset: () => {
-            navigate("/patients", {
-              replace: true,
-            })
-          },
-        }}
-        initialValues={{ remember: true }}
-      >
-        <ProForm.Group
-          title="Bio"
-          collapsible
-          titleStyle={{
-            cursor: "pointer",
+    <div className="flex flex-col gap-4">
+      <ProCard>
+        {pathname !== "/patients/add-patient" ? (
+          <Button>
+            <Checkbox
+              name="edit"
+              onChange={(e) => {
+                setEdit(e.target.checked)
+              }}
+            >
+              Edit
+            </Checkbox>
+          </Button>
+        ) : null}
+      </ProCard>
+      <ProCard>
+        <ProForm<PatientTable.Patient>
+          layout="vertical"
+          form={form}
+          dateFormatter="string"
+          onFinish={onFinish}
+          labelAlign="left"
+          labelCol={{
+            style: {
+              fontWeight: 600,
+            },
           }}
-          labelLayout="inline"
+          readonly={!edit}
+          loading={isPatientLoading || isPatientMutating}
+          onFinishFailed={onFinishFailed}
+          submitter={
+            edit && {
+              searchConfig: {
+                submitText: "Save",
+              },
+              render: (_, dom) => dom.pop(),
+            }
+          }
+          // initialValues={{ remember: true }}
         >
-          <ProForm.Group>
+          <ProForm.Group
+            title="Bio"
+            collapsible
+            titleStyle={{
+              cursor: "pointer",
+            }}
+            labelLayout="inline"
+          >
             <ProFormText
               label="CR Number"
               name="cr_number"
@@ -139,7 +342,7 @@ export function AddPatientForm() {
               validateFirst
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
                   message: "Please enter the CR Number",
                 },
                 {
@@ -154,7 +357,7 @@ export function AddPatientForm() {
               width={"sm"}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
                   message: "Please enter the name",
                 },
                 {
@@ -171,28 +374,16 @@ export function AddPatientForm() {
               label="Date of Birth"
               name="dob"
               width={"sm"}
-              dataFormat="DD/MM/YYYY"
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
                   message: "Please select the date of birth",
-                },
-                {
-                  validator: (_, value) => {
-                    if (value && value.isBefore(new Date())) {
-                      return Promise.resolve()
-                    }
-                    return Promise.reject(
-                      new Error("Date of birth cannot be in future"),
-                    )
-                  },
                 },
               ]}
             />
-
             <ProFormSelect
               label="Gender"
               name="gender"
@@ -200,7 +391,10 @@ export function AddPatientForm() {
               options={genderOptions}
               placeholder="Please select your gender"
               rules={[
-                { required: true, message: "Please select your gender!" },
+                {
+                  required: edit && true,
+                  message: "Please select your gender!",
+                },
               ]}
             />
             <ProFormSelect
@@ -210,7 +404,12 @@ export function AddPatientForm() {
               options={indianStates}
               showSearch
               placeholder="Please select your state"
-              rules={[{ required: true, message: "Please select your state!" }]}
+              rules={[
+                {
+                  required: edit && true,
+                  message: "Please select your state!",
+                },
+              ]}
             />
 
             <ProFormSelect
@@ -220,7 +419,10 @@ export function AddPatientForm() {
               width={"sm"}
               placeholder="Please select smoking status"
               rules={[
-                { required: true, message: "Please select smoking status!" },
+                {
+                  required: edit && true,
+                  message: "Please select smoking status!",
+                },
               ]}
             />
 
@@ -231,7 +433,10 @@ export function AddPatientForm() {
               width={"sm"}
               placeholder="Please select Family History"
               rules={[
-                { required: true, message: "Please select Family History!" },
+                {
+                  required: edit && true,
+                  message: "Please select Family History!",
+                },
               ]}
             />
 
@@ -241,14 +446,21 @@ export function AddPatientForm() {
               options={geneOptions}
               width={"sm"}
               placeholder="Please select the Gene"
-              rules={[{ required: true, message: "Please select the Gene" }]}
+              rules={[
+                { required: edit && true, message: "Please select the Gene" },
+              ]}
             />
 
             <ProFormText
               label="Variant"
               name="variant"
               width={"sm"}
-              rules={[{ required: true, message: "Please select the Variant" }]}
+              rules={[
+                {
+                  required: edit && true,
+                  message: "Please select the Variant",
+                },
+              ]}
             />
 
             <ProFormSelect
@@ -258,7 +470,8 @@ export function AddPatientForm() {
               options={treatmentAtRGCIOptions}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
+
                   message: "Please select the treatment at rgci",
                 },
               ]}
@@ -270,7 +483,8 @@ export function AddPatientForm() {
               width={"sm"}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
+
                   message: "Please enter the phone number",
                 },
               ]}
@@ -283,7 +497,8 @@ export function AddPatientForm() {
               options={statusAtLastFollowUpOptions}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
+
                   message: "Please select the status at last followup",
                 },
               ]}
@@ -293,117 +508,121 @@ export function AddPatientForm() {
               label="Date of Last Follow-up"
               name="date_of_last_follow_up"
               width={"sm"}
-              dataFormat="DD/MM/YYYY"
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
               rules={[
                 {
-                  required: true,
+                  required: edit && true,
+
                   message: "Please select the date of last followup",
-                },
-                {
-                  validator: (_, value) => {
-                    if (value && value.isBefore(new Date())) {
-                      return Promise.resolve()
-                    }
-                    return Promise.reject(
-                      new Error("Date of last followup cannot be in future"),
-                    )
-                  },
                 },
               ]}
             />
           </ProForm.Group>
-        </ProForm.Group>
 
-        <Divider />
+          <Divider />
 
-        <ProForm.Group
-          title="Progressive Data"
-          collapsible
-          titleStyle={{
-            cursor: "pointer",
-          }}
-          labelLayout="inline"
-        >
-          <ProForm.Group>
-            <ProFormDatePicker
-              label="Date of HPE Diagnosis"
-              name="date_of_hpe_diagnosis"
-              width={"sm"}
-              fieldProps={{
-                format: (value) => value.format("DD/MM/YYYY"),
-              }}
-            />
-            <ProFormSelect
-              label="ECOG_PS"
-              name="ecog_ps"
-              width={"sm"}
-              options={ecogPSOptions}
-            />
-            <ProFormSelect
-              label="Extrathoracic Mets"
-              name="extrathoracic_mets"
-              width={"sm"}
-              options={extrathoracicMetastasesOptions}
-            />
-            <ProFormSelect
-              label="Brain Mets"
-              name="brain_mets"
-              width={"sm"}
-              options={brainMetastasesOptions}
-            />
-            <ProFormSelect
-              label="Letptomeningeal Mets"
-              name="letptomeningeal_mets"
-              width={"sm"}
-              options={leptomeningealMetastasesOptions}
-            />
+          <ProForm.Group
+            title="Progressive Data"
+            collapsible
+            titleStyle={{
+              cursor: "pointer",
+            }}
+            labelLayout="inline"
+          >
+            <ProForm.Group>
+              <ProFormDatePicker
+                label="Date of HPE Diagnosis"
+                name="date_of_hpe_diagnosis"
+                width={"sm"}
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
+              />
+              <ProFormSelect
+                label="ECOG_PS"
+                name="ecog_ps"
+                width={"sm"}
+                options={ecogPSOptions}
+              />
+              <ProFormSelect
+                label="Extrathoracic Mets"
+                name="extrathoracic_mets"
+                width={"sm"}
+                options={extrathoracicMetastasesOptions}
+              />
+              <ProFormSelect
+                label="Brain Mets"
+                name="brain_mets"
+                width={"sm"}
+                options={brainMetastasesOptions}
+              />
+              <ProFormSelect
+                label="Letptomeningeal Mets"
+                name="letptomeningeal_mets"
+                width={"sm"}
+                options={leptomeningealMetastasesOptions}
+              />
 
-            <ProFormSelect
-              label="LM Mets CSF"
-              name="lm_mets_csf"
-              width={"md"}
-              options={lmMetsOptions}
-            />
-            <ProFormSelect
-              label="Histology"
-              name="histology"
-              width={"md"}
-              options={histoloyOptions}
-            />
-            <ProFormSelect
-              label="PDL1"
-              name="pdl1"
-              width={"sm"}
-              options={pdl1Options}
-            />
-            <ProFormSelect
-              label="BRG1"
-              name="brg1"
-              width={"sm"}
-              options={brg1Options}
-            />
-            <ProFormSelect
-              label="TTF1"
-              name="ttf1"
-              width={"sm"}
-              options={ttf1Options}
-            />
-            <ProFormDatePicker
-              label="Small Cell Transformation Date"
-              name="small_cell_transformation_date"
-              fieldProps={{
-                format: (value) => value.format("DD/MM/YYYY"),
-              }}
-              width={"sm"}
-            />
-            <ProFormText label="VAF" name="vaf" width={"sm"} />
-            <ProFormText label="Co-Mutation" name="co_mutation" width={"sm"} />
+              <ProFormSelect
+                label="LM Mets CSF"
+                name="lm_mets_csf"
+                width={"md"}
+                options={lmMetsOptions}
+              />
+              <ProFormSelect
+                label="Histology"
+                name="histology"
+                width={"md"}
+                options={histoloyOptions}
+              />
+              <ProFormSelect
+                label="PDL1"
+                name="pdl1"
+                width={"sm"}
+                options={pdl1Options}
+              />
+              <ProFormSelect
+                label="BRG1"
+                name="brg1"
+                width={"sm"}
+                options={brg1Options}
+              />
+              <ProFormSelect
+                label="TTF1"
+                name="ttf1"
+                width={"sm"}
+                options={ttf1Options}
+              />
+              <ProFormDatePicker
+                label="Small Cell Transformation Date"
+                name="small_cell_transformation_date"
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
+                width={"sm"}
+              />
+              <ProFormText label="VAF" name="vaf" width={"sm"} />
+              <ProFormText
+                label="Co-Mutation"
+                name="co_mutation"
+                width={"sm"}
+              />
+            </ProForm.Group>
           </ProForm.Group>
-        </ProForm.Group>
-      </ProForm>
-    </ProCard>
+        </ProForm>
+      </ProCard>
+
+      <ProCard>
+        <LOTTable
+          patientId={id!}
+          data={data?.patient?.lots || []}
+          getPatientLOTs={refetch}
+          deleteLOT={deleteLOT}
+          deleteLOTResponse={deleteLOTResponse}
+        />
+      </ProCard>
+    </div>
   )
 }

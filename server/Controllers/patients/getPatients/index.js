@@ -24,25 +24,28 @@ const getPatients = async (req, res) => {
         continue
 
       if (
+        param === 'dob' ||
         param === 'date_of_last_follow_up' ||
+        param === 'date_of_hpe_diagnosis' ||
         param === 'small_cell_transformation_date' ||
         param === 'date_of_hpe_diagnosis'
       ) {
-        const parts = value.split('/')
-        const date = new Date(
-          parts[2],
-          parts[1] - 1,
-          (parseInt(parts[0]) + 1).toString()
-        ).toISOString()
+        const parts = value.split(',')
+
+        const lte = parts[0] ? new Date(parts[0]) : new Date()
+        const gte = parts[1] ? new Date(parts[1]) : new Date()
+
         filters[param] = {
-          $lte: date,
-          $gte: new Date(parts[2], parts[1] - 1, parts[0]).toISOString(),
+          $gte: lte,
+          $lte: gte,
         }
         continue
       }
+
       const regexPattern = {
         $regex: new RegExp(params.get(param) || '', 'i'),
       }
+
       filters[param] = regexPattern
     }
     // remove filters with empty values
@@ -60,15 +63,19 @@ const getPatients = async (req, res) => {
       {
         $match: {
           $or: [
-            {cr_number: {$regex: new RegExp(search, 'i')}},
+            {
+              cr_number: {
+                $regex: new RegExp(search, 'i'),
+              },
+            },
             {name: {$regex: new RegExp(search, 'i')}},
           ],
         },
       },
     ])
-      .sort({[sort]: order === 'ascend' ? 1 : -1})
-      .skip((page - 1) * perPage)
-      .limit(perPage)
+      .sort({[sort]: order === 'createdAt' ? 1 : -1})
+      // .skip((page - 1) * perPage)
+      // .limit(perPage)
       .exec()
 
     const patientCount = await Patient.countDocuments({

@@ -4,7 +4,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 export namespace PieChartApi {
   export interface PieChartRes {
     message: string
-    patients: any[]
+    chartData: [
+      {
+        name: string
+        count: number
+      },
+    ]
+  }
+
+  export interface PieChartReq {
+    field: string
   }
 }
 
@@ -16,10 +25,14 @@ const pieChartApi = createApi({
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
-    getPieChart: builder.query<PieChartApi.PieChartRes, void>({
-      query: () => ({
+    getPieChart: builder.query<
+      PieChartApi.PieChartRes,
+      PieChartApi.PieChartReq
+    >({
+      query: (data) => ({
         url: `/pie-chart`,
-        method: "GET",
+        method: "POST",
+        body: data,
       }),
     }),
   }),

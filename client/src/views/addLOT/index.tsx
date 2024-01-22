@@ -4,7 +4,7 @@ import React from "react"
 import { useLocation } from "react-router-dom"
 
 const AddLOT = () => {
-  const { isEdit } = useLocation().state as { [key: string]: string }
+  const { isEdit } = useLocation().state
 
   return (
     <PageContainer
@@ -12,7 +12,7 @@ const AddLOT = () => {
       fixedHeader
       onBack={() => window.history.back()}
     >
-      <AddLOTForm />
+      <AddLOTForm isEdit={isEdit} />
     </PageContainer>
   )
 }

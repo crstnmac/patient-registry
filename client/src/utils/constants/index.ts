@@ -90,11 +90,11 @@ export const geneOptions = [
 
 export const genderOptions = [
   {
-    value: "male",
+    value: "Male",
     label: "Male",
   },
   {
-    value: "female",
+    value: "Female",
     label: "Female",
   },
 ]

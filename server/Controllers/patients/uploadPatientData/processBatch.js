@@ -8,10 +8,27 @@ const processBatch = async (batch) => {
     let failedRows = []
 
     for (const rowData of batch) {
+
+      const dateValues = [
+        'Date of Birth',
+        'Date_of_Last_follow_up',
+        'Date of HPE diagnosis',
+        'Small_cell_transformation_date',
+        'Date_of_Progression',
+        'Date_of_start_of_Rx',
+      ]
+
+      for (const dateValue of dateValues) {
+        if (rowData[dateValue] && rowData[dateValue].length === 10) {
+          rowData[dateValue] = new Date(rowData[dateValue]).toISOString()
+        }
+      }
+
       const patientData = {
         cr_number: rowData['CR_Number'],
-        name: rowData['Name'] || '', // Use a default empty string if 'Name' is undefined
-        age: rowData['Age'] || '', // Use a default empty string if 'Age' is undefined
+        name: rowData['Name'],
+        age: rowData['Age'],
+        dob: rowData['Date of Birth'], // Use undefined if 'Date of Birth' is empty or not defined
         gender: rowData['Gender'],
         state: rowData['State'],
         smoking: rowData['Smoking'],
@@ -21,9 +38,9 @@ const processBatch = async (batch) => {
         treatment_at_rgci: rowData['Treatment_At_RGCI'],
         phone_number: rowData['Phone_number'],
         status_at_last_follow_up: rowData['Status_at_last_follow_up'],
-        date_of_last_follow_up: rowData['Date_of_Last_follow_up'],
+        date_of_last_follow_up: rowData['Date_of_Last_follow_up'], // Use undefined if 'Date_of_Last_follow_up' is empty or not defined
         //progressive data
-        date_of_hpe_diagnosis: rowData['Date of HPE diagnosis'],
+        date_of_hpe_diagnosis: rowData['Date of HPE diagnosis'], // Use undefined if 'Date of HPE diagnosis' is empty or not defined
         ecog_ps: rowData['ECOG_PS'],
         extrathoracic_mets: rowData['Extrathoracic_Mets'],
         brain_mets: rowData['Brain_Mets'],

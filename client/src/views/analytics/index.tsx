@@ -1,72 +1,62 @@
-import { PageContainer, ProFormCheckbox } from "@ant-design/pro-components"
+import { PageContainer, ProFormSelect } from "@ant-design/pro-components"
 import { PieChart } from "@/features/pieChart/pieChart"
-import { Card, Checkbox } from "antd"
+import { Card } from "antd"
 import { useState } from "react"
 
 const Analytics = () => {
   const options = [
-    { label: "Overall Survival Rate", value: "overallSurvivalRate" },
-    { label: "Gender Ratio", value: "genderRatio" },
-    { label: "Patient Count", value: "patientCount" },
-    { label: "Age Distribution", value: "ageDistribution" },
-    { label: "Alive vs Dead", value: "aliveVsDead" },
-    { label: "Line of Treatments", value: "lineOfTreatments" },
-    { label: "Brain Mets Distribution", value: "brainMetsDistribution" },
-    { label: "Gene Ratio", value: "geneRatio" },
     {
-      label: "Targeted Med Distribution x LOT",
-      value: "targetedMedDistributionXLOT",
+      label: "Age",
+      value: "age",
     },
     {
-      label: "Chemo Med Distribution x LoT",
-      value: "chemoMedDistributionXLoT",
+      label: "Gender",
+      value: "gender",
     },
     {
-      label: "Immuno Med Distribution X LOT",
-      value: "immunoMedDistributionXLOT",
+      label: "Gene",
+      value: "gene",
     },
-    { label: "Progression x LOT", value: "progressionXLOT" },
-    { label: "Location Distribution", value: "locationDistribution" },
-    { label: "Smoking Distribution", value: "smokingDistribution" },
+    {
+      label: "State",
+      value: "state",
+    },
+    {
+      label: "Smoking",
+      value: "smoking",
+    },
+    {
+      label: "Variant",
+      value: "variant",
+    },
   ]
 
-  const [checkedList, setCheckedList] = useState<[]>([])
+  const [checkedList, setCheckedList] = useState<{
+    label: string
+    value: string
+  }>()
 
   return (
     <PageContainer title="Analytics">
       <div className="grid grid-flow-col gap-3">
         <Card title="Select graphs to plot">
-          <ProFormCheckbox.Group
-            wrapperCol={{
-              span: 24,
+          <ProFormSelect
+            name="select"
+            label="Select"
+            placeholder="Please select"
+            onChange={(value) => {
+              setCheckedList(
+                options.find((option) => option.value === value) || undefined,
+              )
             }}
-          >
-            {options.map((option) => (
-              <div key={option.value}>
-                <Checkbox
-                  key={option.value}
-                  value={option.value} //@ts-ignore
-                  checked={checkedList.includes(option.value)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      //@ts-ignore
-                      setCheckedList([...checkedList, option.value])
-                    } else {
-                      setCheckedList(
-                        //@ts-ignore
-                        checkedList.filter((item) => item !== option.value),
-                      )
-                    }
-                  }}
-                >
-                  {option.label}
-                </Checkbox>
-                <br />
-              </div>
-            ))}
-          </ProFormCheckbox.Group>
+            valueEnum={options.reduce(
+              (acc, option) => ({ ...acc, [option.value]: option.label }),
+              {},
+            )}
+            options={options}
+          />
         </Card>
-        {checkedList.includes("genderRatio") && <PieChart />}
+        {checkedList && <PieChart field={checkedList?.value} />}
       </div>
     </PageContainer>
   )

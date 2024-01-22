@@ -29,6 +29,13 @@ const getPatientById = async (req, res) => {
       },
     ])
 
+    if (patient[0].is_new) {
+      const patient = await Patient.updateOne(
+        {_id: patientId},
+        {$set: {is_new: false}}
+      )
+    }
+
     if (!patient)
       return res.status(404).json({success: false, error: 'Patient not found'})
     return res.status(200).json({

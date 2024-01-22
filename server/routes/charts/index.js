@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   return res.send('Chart Data service running...')
 })
 
-router.get('/pie-chart', async (req, res) => {
+router.post('/pie-chart', async (req, res) => {
   await pieChart(req, res)
 })
 

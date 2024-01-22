@@ -1,55 +1,41 @@
-import { Pie } from "@ant-design/charts"
+import { Pie, Bar, Area } from "@ant-design/plots"
 import { useGetPieChartQuery } from "./pieChartApi"
-import React, { useEffect } from "react"
 import { Card } from "antd"
 
-export const PieChart = () => {
-  const { data: pieChartData } = useGetPieChartQuery()
-
-  const [pieData, setPieData] = React.useState<any>([])
-
-  useEffect(() => {
-    if (pieChartData) {
-      setPieData(pieChartData.patients)
-    }
-  }, [pieChartData])
-
-  console.log(pieData)
+export const PieChart = ({ field }: { field: string }) => {
+  const { data } = useGetPieChartQuery({
+    field,
+  })
 
   return (
     <Card title="Statistic by Gender" bordered={false}>
       <Pie
-        data={pieData}
+        data={data?.chartData}
+        angleField="value"
+        colorField="type"
         radius={0.8}
-        angleField="count"
-        colorField="_id"
-        color={["#5B8FF9", "#5AD8A6"]}
         label={{
-          type: "inner",
-          offset: "-30%",
-          content: function content(_ref: any) {
-            var percent = _ref.percent
-            return "".concat((percent * 100).toFixed(0), "%")
-          },
-          autoRotate: false,
-          style: {
-            fontSize: 14,
-            textAlign: "center",
-          },
-        }}
-        legend={{
-          position: "bottom",
-          offsetY: -30,
+          type: "spider",
+          labelHeight: 28,
+          content: "{name}\n{percentage}",
         }}
         interactions={[
-          {
-            type: "element-active",
-          },
-          {
-            type: "element-selected",
-          },
+          { type: "element-selected" },
+          { type: "element-active" },
         ]}
       />
+
+      <Bar
+        data={data?.chartData}
+        xField="type"
+        yField="value"
+        meta={{
+          type: { alias: "type" },
+          value: { alias: "value" },
+        }}
+      />
+
+      <Area data={data?.chartData} xField="type" yField="value" />
     </Card>
   )
 }

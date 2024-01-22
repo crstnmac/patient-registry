@@ -18,7 +18,7 @@ import {
   treatmentOptions,
 } from "@/utils/constants"
 
-const AddLOTForm = () => {
+const AddLOTForm = ({ isEdit }: { isEdit?: boolean }) => {
   const params = useParams()
 
   const { id, lotId } = params
@@ -27,7 +27,9 @@ const AddLOTForm = () => {
 
   const onFinishFailed = (errorInfo: any) => {
     message.error({
-      content: "Failed to add LOT",
+      content: `
+        Failed to ${isEdit ? "update" : "add"} LOT
+      `,
     })
   }
 
@@ -39,7 +41,7 @@ const AddLOTForm = () => {
 
   const { state } = useLocation()
 
-  const { patientLOT, isEdit } = state
+  const { patientLOT } = state
 
   const onFinish = async (values: any) => {
     if (isEdit) {
@@ -51,26 +53,17 @@ const AddLOTForm = () => {
       message.success({
         content: "LOT updated successfully",
       })
-      navigate(`/patients/${id}`, {
-        state: {
-          patientId: id,
-          isEdit: true,
-        },
+      navigate(`/patients/${id}`)
+      return
+    } else {
+      addLOT({
+        patientId: id,
+        ...values,
       })
+      message.success({ content: "LOT added successfully" })
+      navigate(`/patients/${id}`)
       return
     }
-
-    addLOT({
-      patientId: id,
-      ...values,
-    })
-    message.success({ content: "LOT added successfully" })
-    navigate(`/patients/${id}`, {
-      state: {
-        patientId: id,
-        isEdit: false,
-      },
-    })
   }
 
   useEffect(() => {

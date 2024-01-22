@@ -14,9 +14,9 @@ export default function LOTTable() {
 
   const navigate = useNavigate()
 
-  const location = useLocation()
+  const params = useParams()
 
-  const { patientId } = location.state as { [key: string]: string }
+  const { id: patientId } = params
 
   const {
     data,
@@ -184,7 +184,6 @@ export default function LOTTable() {
 
   return (
     <ProForm.Group
-      title="Line of Treatments"
       titleStyle={{
         cursor: "pointer",
       }}
@@ -308,7 +307,7 @@ export default function LOTTable() {
                   {item.progressed_on_line}
                 </td>
                 <td className="border px-4 py-2 flex-1">
-                  {dayjs(item.date_of_progression).format("DD/MM/YYYY")}
+                  {item.date_of_progression}
                 </td>
                 <td className="border px-4 py-2 flex-1">
                   {item.biopsy_progression}

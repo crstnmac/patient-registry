@@ -74,7 +74,7 @@ export namespace PatientTable {
     _id: string
     cr_number: string
     name: string
-    age: number
+    dob: Date
     gender: string
     state: string
     smoking: string
@@ -101,6 +101,7 @@ export namespace PatientTable {
     lots?: LOT[]
     createdAt: Date
     updatedAt: Date
+    is_new: boolean
   }
 
   export interface ReqGetPatientTable {

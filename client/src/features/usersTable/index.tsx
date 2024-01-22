@@ -185,13 +185,10 @@ export default function UsersTable() {
             refetch()
           },
         }}
-        // columnsState={{
-        //   persistenceKey: "patientTable",
-        //   persistenceType: "localStorage",
-        //   defaultValue: {
-
-        //   },
-        // }}
+        columnsState={{
+          persistenceKey: "usersTable",
+          persistenceType: "localStorage",
+        }}
         actionRef={actionRef}
         formRef={formRef}
         rowSelection={{

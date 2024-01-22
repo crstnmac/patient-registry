@@ -4,17 +4,19 @@ import React from "react"
 import { useLocation } from "react-router-dom"
 
 const AddPatients = () => {
-  const { isEdit } = useLocation().state as { [key: string]: string }
+  const { isEdit } = useLocation().state
+
+  console.log(isEdit)
 
   return (
     <PageContainer
-      title={isEdit ? "Edit Patient" : "Add Patient"}
+      title="Add Patient"
       onBack={() => {
         window.history.back()
       }}
       fixedHeader
     >
-      <AddPatientForm />
+      <AddPatientForm isEdit={isEdit} />
     </PageContainer>
   )
 }

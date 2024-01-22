@@ -7,13 +7,12 @@ import {
   ModalForm,
   ProColumns,
   ProForm,
-  ProFormDatePicker,
+  ProFormDateRangePicker,
   ProFormInstance,
   ProFormSelect,
   ProFormText,
   ProSchemaValueEnumObj,
   ProTable,
-  Search,
 } from "@ant-design/pro-components"
 
 import {
@@ -63,6 +62,7 @@ import {
   treatmentOptions,
   ttf1Options,
 } from "@/utils/constants"
+import dayjs from "dayjs"
 
 export function PatientTable() {
   const { useDeletePatientsMutation, useGetPatientsQuery } = patientTableApi
@@ -99,6 +99,7 @@ export function PatientTable() {
   const [params, setParams] = useState<Partial<PatientTableT.SearchParams>>({
     page: 1,
     rowsPerPage: 10,
+    sort: "createdAt",
   })
 
   const [filters, setFilters] = useState<
@@ -136,7 +137,7 @@ export function PatientTable() {
     }
     setIsDeleteModalOpen(false)
     if (deletePatientsResponse) {
-      actionRef.current?.reload()
+      refetch()
       message.success({ content: "Patient deleted successfully" })
     } else {
       message.error({ content: "Patient deletion failed" })
@@ -159,11 +160,18 @@ export function PatientTable() {
       title: "CR Number",
       dataIndex: "cr_number",
       width: 120,
-      sorter: (a, b) => Number(a.cr_number) - Number(b.cr_number),
+
+      sorter: (a, b) => {
+        if (a.cr_number && b.cr_number) {
+          return a.cr_number.localeCompare(b.cr_number, undefined, {
+            numeric: true,
+          })
+        }
+        return 0
+      },
+
       render(dom, entity, index, action, schema) {
-        const dot =
-          new Date(entity.createdAt).getTime() >
-          new Date().getTime() - 1000 * 60 * 10 // 10 mins ago
+        const dot = entity?.is_new ? true : false
         return (
           <Tooltip title="Data recently added">
             <Badge dot={dot}>{dom}</Badge>
@@ -174,22 +182,30 @@ export function PatientTable() {
     {
       title: "Name",
       dataIndex: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => {
+        if (a.name && b.name) {
+          return a.name.localeCompare(b.name)
+        }
+        return 0
+      },
     },
-    // {
-    //   title: "Age",
-    //   dataIndex: "dob",
-    //   sorter: (a, b) => a.age - b.age,
-    //   renderText(text, record, index, action) {
-    //     const today = new Date()
-    //     const birthDate = new Date(text)
-    //     const age = today.getFullYear() - birthDate.getFullYear()
-    //     const m = today.getMonth() - birthDate.getMonth()
-    //     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    //       return age - 1
-    //     }
-    //   },
-    // },
+    {
+      title: "Age",
+      dataIndex: "dob",
+      sorter: (a, b) => {
+        if (a.dob && b.dob) {
+          return dayjs(a.dob).diff(dayjs(b.dob), "years")
+        } else if (a.dob && !b.dob) {
+          return -1 // a.dob is not null, b.dob is null, so a should come before b
+        } else if (!a.dob && b.dob) {
+          return 1 // a.dob is null, b.dob is not null, so b should come before a
+        }
+        return 0 // both a.dob and b.dob are null, so no change in order
+      },
+      render: (_, record) => {
+        return record.dob ? dayjs().diff(dayjs(record.dob), "years") : "NA"
+      },
+    },
     {
       title: "Gender",
       dataIndex: "gender",
@@ -238,6 +254,20 @@ export function PatientTable() {
     {
       title: "Status at Last Follow Up",
       dataIndex: "status_at_last_follow_up",
+      sorter: (a, b) => {
+        if (a.status_at_last_follow_up && b.status_at_last_follow_up) {
+          return (
+            a.status_at_last_follow_up.localeCompare(
+              b.status_at_last_follow_up,
+            ) || 0
+          )
+        } else if (a.status_at_last_follow_up) {
+          return -1 // a is not null, b is null, so a should come before b
+        } else if (b.status_at_last_follow_up) {
+          return 1 // b is not null, a is null, so b should come before a
+        }
+        return 0 // both a and b are null, so they are equal
+      },
       render: (_, record) => (
         <Space>
           {
@@ -339,6 +369,7 @@ export function PatientTable() {
     { title: "CR Number", dataIndex: "cr_number" },
     { title: "Name", dataIndex: "name" },
     { title: "Gender", dataIndex: "gender" },
+    { title: "Date of Birth", dataIndex: "dob" },
     { title: "State", dataIndex: "state" },
     { title: "Smoking", dataIndex: "smoking" },
     { title: "Family History", dataIndex: "family_history" },
@@ -403,9 +434,7 @@ export function PatientTable() {
         bordered
         onRow={(record) => ({
           onClick: () => {
-            navigate(`/patients/${record._id}`, {
-              state: { isEdit: true, patientId: record._id },
-            })
+            navigate(`/patients/${record._id}`)
           },
           style: { cursor: "pointer", whiteSpace: "nowrap" },
         })}
@@ -508,6 +537,24 @@ export function PatientTable() {
               }}
             >
               {Object.entries(filters).map(([key, value]) => {
+                const filterValue =
+                  key === "date_of_last_follow_up" ||
+                  key === "date_of_hpe_diagnosis" ||
+                  key === "small_cell_transformation_date" ||
+                  key === "date_of_start_of_treatment" ||
+                  key === "date_of_progression" ||
+                  key === "dob" ? (
+                    <span>
+                      {typeof value !== "string"
+                        ? `${dayjs(value[0]).format("DD/MM/YYYY")}-${dayjs(
+                            value[1],
+                          ).format("DD/MM/YYYY")}`
+                        : value}
+                    </span>
+                  ) : (
+                    value
+                  )
+
                 return (
                   <Button
                     type="dashed"
@@ -526,7 +573,7 @@ export function PatientTable() {
                       setUrl(url)
                     }}
                   >
-                    {filterLabels[key].text} : {value}
+                    {filterLabels[key].text} : {filterValue}
                   </Button>
                 )
               })}
@@ -621,12 +668,12 @@ export function PatientTable() {
                 <ProForm.Item label="Name" name="name">
                   <ProFormText width={"sm"} />
                 </ProForm.Item>
-                <ProForm.Item label="Date of Birth" name="dob">
-                  <ProFormDatePicker
+                <ProForm.Item label="Date of birth" name="dob">
+                  <ProFormDateRangePicker
+                    width={"sm"}
                     fieldProps={{
                       format: (value) => value.format("DD/MM/YYYY"),
                     }}
-                    width={"sm"}
                   />
                 </ProForm.Item>
                 <ProForm.Item label="Gender" name="gender">
@@ -695,7 +742,7 @@ export function PatientTable() {
                   label="Date of Last Follow-up"
                   name="date_of_last_follow_up"
                 >
-                  <ProFormDatePicker
+                  <ProFormDateRangePicker
                     width={"sm"}
                     fieldProps={{
                       format: (value) => value.format("DD/MM/YYYY"),
@@ -721,7 +768,7 @@ export function PatientTable() {
                   label="Date of HPE Diagnosis"
                   name="date_of_hpe_diagnosis"
                 >
-                  <ProFormDatePicker
+                  <ProFormDateRangePicker
                     width={"sm"}
                     fieldProps={{
                       format: (value) => value.format("DD/MM/YYYY"),
@@ -775,7 +822,7 @@ export function PatientTable() {
                   label="Small Cell Transformation Date"
                   name="small_cell_transformation_date"
                 >
-                  <ProFormDatePicker
+                  <ProFormDateRangePicker
                     fieldProps={{
                       format: (value) => value.format("DD/MM/YYYY"),
                     }}
@@ -842,7 +889,7 @@ export function PatientTable() {
                 label="Date start of Treatment"
                 name="date_of_start_of_treatment"
               >
-                <ProFormDatePicker
+                <ProFormDateRangePicker
                   width={"sm"}
                   fieldProps={{
                     format: (value) => value.format("DD/MM/YYYY"),
@@ -893,7 +940,7 @@ export function PatientTable() {
                 label="Date of Progression"
                 name="date_of_progression"
               >
-                <ProFormDatePicker
+                <ProFormDateRangePicker
                   width={"sm"}
                   fieldProps={{
                     format: (value) => value.format("DD/MM/YYYY"),
@@ -951,7 +998,7 @@ export function PatientTable() {
               icon={<PlusOutlined />}
               onClick={() => {
                 navigate("/patients/add-patient", {
-                  state: { isEdit: false },
+                  state: { isEdit: true },
                 })
               }}
               type="primary"

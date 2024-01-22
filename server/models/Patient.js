@@ -4,14 +4,17 @@ const uniqueValidator = require('mongoose-unique-validator')
 const patientSchema = new Schema(
   {
     cr_number: {
-      type: Number,
+      type: String,
       unique: true,
       required: true,
       dropDups: true,
     },
     name: String,
     age: String,
-    dob: String,
+    dob: {
+      type: Date,
+      default: undefined,
+    },
     gender: String,
     state: String,
     smoking: String,
@@ -21,9 +24,15 @@ const patientSchema = new Schema(
     treatment_at_rgci: String,
     phone_number: String,
     status_at_last_follow_up: String,
-    date_of_last_follow_up: String,
+    date_of_last_follow_up: {
+      type: Date,
+      default: undefined,
+    },
     //progressive data
-    date_of_hpe_diagnosis: String,
+    date_of_hpe_diagnosis: {
+      type: Date,
+      default: undefined,
+    },
     ecog_ps: String,
     extrathoracic_mets: String,
     brain_mets: String,
@@ -33,7 +42,10 @@ const patientSchema = new Schema(
     pdl1: String,
     brg1: String,
     ttf1: String,
-    small_cell_transformation_date: String,
+    small_cell_transformation_date: {
+      type: Date,
+      default: undefined,
+    },
     vaf: String,
     co_mutation: String,
     is_deleted: {
@@ -46,6 +58,10 @@ const patientSchema = new Schema(
         ref: 'LOT',
       },
     ],
+    is_new: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
