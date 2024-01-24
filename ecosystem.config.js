@@ -10,6 +10,9 @@ module.exports = {
       cwd: '/client', // I prefer absolute paths for clarity but this can be a relative path
       script: 'yarn',
       args: 'start',
+      env_production: {
+	NODE_ENV: "production"
+	},
       log_date_format: 'YYYY-MM-DD HH:mm Z',
     },
     {
@@ -17,6 +20,10 @@ module.exports = {
       cwd: '/server',
       script: 'npm',
       args: ['run','dev'],
+      env_production: {
+        NODE_ENV: "production"
+      },
+     
     },
   ],
 }
