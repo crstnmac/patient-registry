@@ -1,7 +1,6 @@
 // ============== PM2 ECOSYSTEM FILE =================
 // /srv/www/pm2/ecosystem.config.js
 
-
 module.exports = {
   apps: [
     {
@@ -11,19 +10,18 @@ module.exports = {
       script: 'yarn',
       args: 'start',
       env_production: {
-	NODE_ENV: "production"
-	},
+        NODE_ENV: 'production',
+      },
       log_date_format: 'YYYY-MM-DD HH:mm Z',
     },
     {
       name: 'rgci-server',
       cwd: '/server',
       script: 'npm',
-      args: ['run','dev'],
+      args: ['run', 'dev'],
       env_production: {
-        NODE_ENV: "production"
+        NODE_ENV: 'production',
       },
-     
     },
   ],
 }
