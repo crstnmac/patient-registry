@@ -6,9 +6,9 @@ module.exports = {
     {
       name: 'rgci-client', // will be used to refer to app in pm2 commands.
       // it's convenient if it's the same as nginx location and folder name but not necessary
-      cwd: '/client', // I prefer absolute paths for clarity but this can be a relative path
+      cwd: 'client', // I prefer absolute paths for clarity but this can be a relative path
       script: 'yarn',
-      args: 'start',
+      args: 'preview',
       env_production: {
         NODE_ENV: 'production',
       },
@@ -16,9 +16,8 @@ module.exports = {
     },
     {
       name: 'rgci-server',
-      cwd: '/server',
-      script: 'npm',
-      args: ['run', 'dev'],
+      cwd: 'server',
+      script: 'index.js',
       env_production: {
         NODE_ENV: 'production',
       },
