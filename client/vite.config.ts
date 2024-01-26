@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "./runtimeConfig": "./runtimeConfig.browser",
+      "antd/lib": "antd/es",
     },
   },
   envPrefix: "REACT_",
@@ -21,8 +22,16 @@ export default defineConfig({
       output: {
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "ant-vendor": ["antd"],
         },
+      },
+      onLog(level, log, handler) {
+        if (
+          log.cause &&
+          log.cause.message === `Can't resolve original location of error.`
+        ) {
+          return
+        }
+        handler(level, log)
       },
     },
   },

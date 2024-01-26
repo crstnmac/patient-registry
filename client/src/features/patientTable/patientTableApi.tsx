@@ -140,7 +140,7 @@ const patientTableApi = createApi({
   reducerPath: "patientTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/patients`,
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/patients`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({

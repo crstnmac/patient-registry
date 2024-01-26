@@ -32,7 +32,7 @@ import {
 } from "@/utils/constants"
 
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
-import * as dayjs from "dayjs"
+import dayjs from "dayjs"
 
 function LOTTable({
   patientId,

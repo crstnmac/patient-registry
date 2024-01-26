@@ -49,7 +49,7 @@ const userTableApi = createApi({
   reducerPath: "usersTable",
   refetchOnReconnect: true,
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.REACT_APP_API_URL}/api/users`,
+    baseUrl: `${import.meta.env.REACT_APP_API_URL}/users`,
     prepareHeaders: prepareHeaders,
   }),
   endpoints: (builder) => ({
