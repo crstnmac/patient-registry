@@ -522,7 +522,6 @@ export function PatientTable() {
                 newParams as unknown as Record<string, string>,
               )
               const url = urlSearchParams.toString()
-              console.log("url", url)
               setUrl(url)
             },
             allowClear: true,

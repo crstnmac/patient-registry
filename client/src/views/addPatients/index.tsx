@@ -6,8 +6,6 @@ import { useLocation } from "react-router-dom"
 const AddPatients = () => {
   const { isEdit } = useLocation().state
 
-  console.log(isEdit)
-
   return (
     <PageContainer
       title="Add Patient"

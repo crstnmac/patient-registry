@@ -377,12 +377,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select the date of birth",
-                },
-              ]}
             />
             <ProFormSelect
               label="Gender"
@@ -390,12 +384,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               width={"sm"}
               options={genderOptions}
               placeholder="Please select your gender"
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select your gender!",
-                },
-              ]}
             />
             <ProFormSelect
               label="State"
@@ -404,12 +392,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               options={indianStates}
               showSearch
               placeholder="Please select your state"
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select your state!",
-                },
-              ]}
             />
 
             <ProFormSelect
@@ -418,12 +400,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               options={smokingStatusOptions}
               width={"sm"}
               placeholder="Please select smoking status"
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select smoking status!",
-                },
-              ]}
             />
 
             <ProFormSelect
@@ -432,12 +408,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               options={familyHistoryOptions}
               width={"sm"}
               placeholder="Please select Family History"
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select Family History!",
-                },
-              ]}
             />
 
             <ProFormSelect
@@ -446,48 +416,21 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               options={geneOptions}
               width={"sm"}
               placeholder="Please select the Gene"
-              rules={[
-                { required: edit && true, message: "Please select the Gene" },
-              ]}
             />
 
-            <ProFormText
-              label="Variant"
-              name="variant"
-              width={"sm"}
-              rules={[
-                {
-                  required: edit && true,
-                  message: "Please select the Variant",
-                },
-              ]}
-            />
+            <ProFormText label="Variant" name="variant" width={"sm"} />
 
             <ProFormSelect
               label="Treatment at RGCI"
               name="treatment_at_rgci"
               width={"sm"}
               options={treatmentAtRGCIOptions}
-              rules={[
-                {
-                  required: edit && true,
-
-                  message: "Please select the treatment at rgci",
-                },
-              ]}
             />
 
             <ProFormText
               label="Phone Number"
               name="phone_number"
               width={"sm"}
-              rules={[
-                {
-                  required: edit && true,
-
-                  message: "Please enter the phone number",
-                },
-              ]}
             />
 
             <ProFormSelect
@@ -495,13 +438,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               name="status_at_last_follow_up"
               width={"sm"}
               options={statusAtLastFollowUpOptions}
-              rules={[
-                {
-                  required: edit && true,
-
-                  message: "Please select the status at last followup",
-                },
-              ]}
             />
 
             <ProFormDatePicker
@@ -511,13 +447,6 @@ export function AddPatientForm({ isEdit }: { isEdit: boolean }) {
               fieldProps={{
                 format: (value) => value.format("DD/MM/YYYY"),
               }}
-              rules={[
-                {
-                  required: edit && true,
-
-                  message: "Please select the date of last followup",
-                },
-              ]}
             />
           </ProForm.Group>
 

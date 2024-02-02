@@ -31,8 +31,6 @@ const LayoutIndex = () => {
 
   const role = userInfo?.role
 
-  console.log("role", role)
-
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login")
@@ -108,9 +106,9 @@ const LayoutIndex = () => {
           }}
         >
           <span>
-            ©2023 Created by
+            © ${new Date().getFullYear()}` Created by
             <button
-              onClick={() => window.open("https://www.rgcirc.org/")}
+              onClick={() => window.open("https://www.varenium.com/")}
               style={{
                 color: "rgba(0, 0, 0, 0.45)",
                 border: "none",
@@ -119,7 +117,7 @@ const LayoutIndex = () => {
                 paddingLeft: "4px",
               }}
             >
-              RGCI
+              Varenium
             </button>
           </span>
         </div>

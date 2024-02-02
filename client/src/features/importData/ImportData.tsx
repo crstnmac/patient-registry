@@ -56,7 +56,11 @@ export default function ImportData() {
       </p>
       <Button
         icon={<DownloadOutlined />}
-        onClick={() => window.open("./public/RGCI Import Template.xlsx")}
+        onClick={() =>
+          window.open(
+            `${import.meta.env.REACT_PROD_URL}/RGCI%20Import%20Template.xlsx`,
+          )
+        }
         title="Download Template"
         type="dashed"
       >
