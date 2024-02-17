@@ -15,12 +15,11 @@ const Settings = () => {
 
   return (
     <PageContainer title="Settings" fixedHeader>
-      <Card bordered={false}>
+      <Card>
         <ProDescriptions
           dataSource={profile?.user}
           column={2}
           title="Profile"
-          bordered
           editable={{
             onSave: async (key, row) => {
               console.log(key, row)

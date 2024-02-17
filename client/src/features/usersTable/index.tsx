@@ -168,7 +168,6 @@ export default function UsersTable() {
         scroll={{
           x: "max-content",
         }}
-        bordered
         onRow={(record) => ({
           style: { cursor: "pointer", whiteSpace: "nowrap" },
         })}

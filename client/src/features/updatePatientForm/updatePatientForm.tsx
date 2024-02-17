@@ -77,9 +77,7 @@ function LOTTable({
           icon={<PlusOutlined />}
           disabled={data?.length === 5}
           onClick={() => {
-            navigate(`/patients/${patientId}/add-lot`, {
-              state: { isEdit: false },
-            })
+            navigate(`/patients/${patientId}/add-lot`)
           }}
         >
           Add LOT
@@ -220,7 +218,7 @@ function LOTTable({
   )
 }
 
-export function AddPatientForm() {
+export function UpdatePatientForm() {
   const [form] = ProForm.useForm()
 
   const params = useParams()
@@ -235,7 +233,7 @@ export function AddPatientForm() {
     })
   }
 
-  const { useAddPatientMutation, useGetPatientByIdQuery } = patientTableApi
+  const { useUpdatePatientMutation, useGetPatientByIdQuery } = patientTableApi
 
   const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
 
@@ -252,7 +250,8 @@ export function AddPatientForm() {
     if (id) {
       refetch()
     }
-    if (data?.patient) {
+
+    if (data) {
       form.setFieldsValue(data?.patient)
     }
 
@@ -263,12 +262,22 @@ export function AddPatientForm() {
     }
   }, [form, data, refetch, id, error, message])
 
-  const [addPatient, { isLoading: isPatientMutating }] = useAddPatientMutation()
+  const [updatePatient, { isLoading: isPatientMutating, isError }] =
+    useUpdatePatientMutation()
 
   const onFinish = async (values: any) => {
-    const { _id, ...body } = values
-    addPatient(body)
-    message.success({ content: "Patient added successfully" })
+    const { _id, ...rest } = values
+    updatePatient({
+      _id: id,
+      ...rest,
+    })
+    if (isError) {
+      message.error({
+        content: "Something went wrong",
+      })
+    } else {
+      message.success({ content: "Patient updated successfully" })
+    }
   }
 
   return (
@@ -293,7 +302,6 @@ export function AddPatientForm() {
             },
             render: (_, dom) => dom.pop(),
           }}
-          // initialValues={{ remember: true }}
         >
           <ProForm.Group
             title="Bio"

@@ -1,11 +1,23 @@
 const LOT = require('../../../models/LOT')
 const mongoose = require('mongoose')
+const moment = require('moment')
 
 const addLOT = async (req, res) => {
   try {
     const patientId = new mongoose.Types.ObjectId(req.params.patientId)
-    const checkupData = req.body
-    const lot = new LOT(checkupData)
+
+    const dateFields = [
+      'date_of_start_of_treatment',
+      'date_of_progression',
+    ]
+
+    dateFields.forEach((field) => {
+      if (req.body[field]) {
+        req.body[field] = moment(req.body[field], 'DD/MM/YYYY').toISOString()
+      }
+    })
+
+    const lot = new LOT(req.body)
 
     lot.patient = patientId
 

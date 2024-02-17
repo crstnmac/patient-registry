@@ -145,8 +145,13 @@ const LayoutIndex = () => {
               icon: <UserAddOutlined />,
             },
             {
-              path: "/patients/:id/edit-patient",
-              name: "Edit Patient",
+              path: "/patients/:id/update-patient",
+              name: "Update Patient",
+              icon: <UserAddOutlined />,
+            },
+            {
+              path: "/patients/:id/update-lot/:lotId",
+              name: "Update Line of Treatments",
               icon: <UserAddOutlined />,
             },
             {

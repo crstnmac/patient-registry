@@ -1,17 +1,17 @@
-import AddLOTForm from "@/features/addLOTForm"
+import UpdateLOTForm from "@/features/updateLOTForm"
 import { PageContainer } from "@ant-design/pro-components"
 import React from "react"
 
-const AddLOT = () => {
+const UpdateLOT = () => {
   return (
     <PageContainer
-      title={"Add LOT"}
+      title={"Update LOT"}
       fixedHeader
       onBack={() => window.history.back()}
     >
-      <AddLOTForm />
+      <UpdateLOTForm />
     </PageContainer>
   )
 }
 
-export default AddLOT
+export default UpdateLOT

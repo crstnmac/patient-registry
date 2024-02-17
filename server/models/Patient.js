@@ -28,7 +28,6 @@ const patientSchema = new Schema(
       type: Date,
       default: undefined,
     },
-    //progressive data
     date_of_hpe_diagnosis: {
       type: Date,
       default: undefined,

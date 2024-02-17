@@ -1,8 +1,21 @@
 const LOT = require('../../../models/LOT')
+const moment = require('moment')
 
 const updateLOT = async (req, res) => {
   try {
-    const {lotId, patientId} = req.params
+    const { lotId, patientId } = req.params
+    
+    const dateFields = [
+      'date_of_start_of_treatment',
+      'date_of_progression',
+    ]
+
+    dateFields.forEach((field) => {
+      if (req.body[field]) {
+        req.body[field] = moment(req.body[field], 'DD/MM/YYYY').toISOString()
+      }
+    })
+
     const lot = await LOT.findOneAndUpdate(
       {_id: lotId},
       {$set: req.body},

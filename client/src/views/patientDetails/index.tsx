@@ -1,9 +1,6 @@
-import LOTTable from "@/features/LOTTable"
 import { PageContainer } from "@ant-design/pro-components"
-import { AddPatientForm } from "@/features/addPatientForm/addPatientForm"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
-import { Card } from "antd"
+import UpdatePatients from "../updatePatients"
 
 const PatientDetails = () => {
   const navigate = useNavigate()
@@ -14,10 +11,7 @@ const PatientDetails = () => {
       onBack={() => navigate("/patients")}
       fixedHeader
     >
-      <AddPatientForm isEdit={false} />
-      {/* <Card title="LOT Table" style={{ marginTop: 20 }}>
-        <LOTTable />
-      </Card> */}
+      <UpdatePatients />
     </PageContainer>
   )
 }

@@ -207,6 +207,12 @@ const patientTableApi = createApi({
         method: "GET",
       }),
     }),
+    getLOT: builder.query<PatientTable.LOT, string>({
+      query: (id) => ({
+        url: `/get-lot/${id}`,
+        method: "GET",
+      }),
+    }),
     deletePatients: builder.mutation<PatientTable.ResDeletePatient, string[]>({
       query: (ids) => ({
         url: `/delete-patients`,

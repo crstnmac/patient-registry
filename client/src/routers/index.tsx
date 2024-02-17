@@ -8,6 +8,8 @@ import { LOTs } from "@/views/lots"
 import PatientDetails from "@/views/patientDetails"
 import Patients from "@/views/patients"
 import Settings from "@/views/settings"
+import UpdateLOT from "@/views/updateLOT"
+import UpdatePatients from "@/views/updatePatients"
 import Users from "@/views/users"
 import { RouteObject, useRoutes } from "react-router-dom"
 
@@ -33,14 +35,6 @@ export const routesConfig: RouteObject[] = [
         ),
       },
       {
-        path: "/patients/:id",
-        element: (
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <PatientDetails />
-          </ProtectedRoute>
-        ),
-      },
-      {
         path: "/patients/add-patient",
         element: (
           <ProtectedRoute allowedRoles={["admin"]}>
@@ -57,18 +51,18 @@ export const routesConfig: RouteObject[] = [
         ),
       },
       {
-        path: "/patients/:id/edit-patient",
+        path: "/patients/:id/update-patient",
         element: (
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AddPatients />
+            <UpdatePatients />
           </ProtectedRoute>
         ),
       },
       {
-        path: "/patients/:id/edit-lot/:lotId",
+        path: "/patients/:id/update-lot/:lotId",
         element: (
           <ProtectedRoute allowedRoles={["admin"]}>
-            <AddLOT />
+            <UpdateLOT />
           </ProtectedRoute>
         ),
       },

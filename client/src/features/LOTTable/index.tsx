@@ -1,16 +1,26 @@
-import { ActionType, ProColumns, ProForm } from "@ant-design/pro-components"
+import { ActionType, ProForm } from "@ant-design/pro-components"
 import React, { useEffect } from "react"
 import patientTableApi, {
   PatientTable as PatientTableT,
 } from "../patientTable/patientTableApi"
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import { Button, Card, Divider, Popconfirm, message } from "antd"
+import { useNavigate, useParams } from "react-router-dom"
+import { Button, Card, Popconfirm, message } from "antd"
 
 import dayjs from "dayjs"
 
-export default function LOTTable() {
-  const { useGetLOTsQuery, useDeleteLOTMutation } = patientTableApi
+export default function LOTTable({
+  isLoading,
+  data,
+  getPatientLOTs,
+  actionRef,
+}: {
+  isLoading: boolean
+  data: PatientTableT.LOT[]
+  getPatientLOTs: () => void
+  actionRef: React.MutableRefObject<ActionType | undefined>
+}) {
+  const { useDeleteLOTMutation } = patientTableApi
 
   const navigate = useNavigate()
 
@@ -18,18 +28,7 @@ export default function LOTTable() {
 
   const { id: patientId } = params
 
-  const {
-    data,
-    error,
-    isLoading,
-    refetch: getPatientLOTs,
-  } = useGetLOTsQuery(patientId!)
-
   const [deleteLOT, deleteLOTResponse] = useDeleteLOTMutation()
-
-  useEffect(() => {
-    getPatientLOTs()
-  }, [getPatientLOTs])
 
   // const columns: ProColumns<PatientTableT.LOT>[] = [
   //   {
@@ -99,7 +98,7 @@ export default function LOTTable() {
   //       <Button
   //         key="edit"
   //         onClick={() => {
-  //           navigate(`/patients/${id}/edit-lot/${record._id}`, {
+  //           navigate(`/patients/${id}/update-lot/${record._id}`, {
   //             state: { patientLOT: record, isEdit: true },
   //           })
   //         }}
@@ -166,6 +165,10 @@ export default function LOTTable() {
   //     ]}
   //   />
   // )
+
+  useEffect(() => {
+    getPatientLOTs()
+  }, [getPatientLOTs])
 
   function parseHeader(index: number) {
     switch (index) {
@@ -250,9 +253,12 @@ export default function LOTTable() {
                       fontWeight: 700,
                     }}
                     onClick={() => {
-                      navigate(`/patients/${patientId}/edit-lot/${item._id}`, {
-                        state: { patientLOT: item, isEdit: true },
-                      })
+                      navigate(
+                        `/patients/${patientId}/update-lot/${item._id}`,
+                        {
+                          state: { patientLOT: item, isEdit: true },
+                        },
+                      )
                     }}
                     icon={<EditTwoTone />}
                   />

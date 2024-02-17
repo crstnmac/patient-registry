@@ -1,22 +1,22 @@
-import { AddPatientForm } from "@/features/addPatientForm/addPatientForm"
+import { UpdatePatientForm } from "@/features/updatePatientForm/updatePatientForm"
 import { PageContainer } from "@ant-design/pro-components"
-import React from "react"
 import { useNavigate } from "react-router-dom"
+import React from "react"
 
-const AddPatients = () => {
+const UpdatePatients = () => {
   const navigate = useNavigate()
 
   return (
     <PageContainer
-      title="Add Patient"
+      title="Update Patient"
       onBack={() => {
         navigate("/patients")
       }}
       fixedHeader
     >
-      <AddPatientForm />
+      <UpdatePatientForm />
     </PageContainer>
   )
 }
 
-export default AddPatients
+export default UpdatePatients

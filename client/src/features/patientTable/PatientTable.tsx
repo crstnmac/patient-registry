@@ -431,10 +431,9 @@ export function PatientTable() {
         scroll={{
           x: "max-content",
         }}
-        bordered
         onRow={(record) => ({
           onClick: () => {
-            navigate(`/patients/${record._id}`)
+            navigate(`/patients/${record._id}/update-patient`)
           },
           style: { cursor: "pointer", whiteSpace: "nowrap" },
         })}
@@ -513,7 +512,11 @@ export function PatientTable() {
           showSizeChanger: true,
         }}
         toolbar={{
-          title: `Total (${data?.totalCount})`,
+          title: data?.totalCount ? (
+            `Total Count: ${data?.totalCount}`
+          ) : (
+            <span style={{ color: "gray" }}>No Data</span>
+          ),
           search: {
             onSearch: (value) => {
               const newParams = { ...params, search: value }
@@ -996,9 +999,7 @@ export function PatientTable() {
               key="button"
               icon={<PlusOutlined />}
               onClick={() => {
-                navigate("/patients/add-patient", {
-                  state: { isEdit: true },
-                })
+                navigate("/patients/add-patient")
               }}
               type="primary"
             />

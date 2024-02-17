@@ -11,6 +11,7 @@ const {
   deleteLOT,
   updateLOT,
   updatePatient,
+  getLOTById,
 } = require('../../Controllers/patients/index')
 
 router.get('/', async (req, res) => {
@@ -32,6 +33,10 @@ router.post('/:patientId/add-lot', async (req, res) => {
 
 router.get('/:patientId/get-lots', async (req, res) => {
   await getLOTs(req, res)
+})
+
+router.get('/get-lot/:lotId', async (req, res) => {
+  await getLOTById(req, res)
 })
 
 router.put('/update-patient/:patientId', async (req, res) => {

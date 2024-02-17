@@ -5,8 +5,8 @@ import {
   ProFormSelect,
   ProFormText,
 } from "@ant-design/pro-components"
-import React, { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import React, { useEffect, useState } from "react"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import patientTableApi from "../patientTable/patientTableApi"
 import { message } from "antd"
 import {
@@ -18,10 +18,10 @@ import {
   treatmentOptions,
 } from "@/utils/constants"
 
-const AddLOTForm = ({ isEdit }: { isEdit?: boolean }) => {
+const UpdateLOTForm = () => {
   const params = useParams()
 
-  const { id } = params
+  const { id, lotId } = params
 
   const [form] = ProForm.useForm()
   const [selectedTreatment, setSelectedTreatment] = useState<
@@ -31,23 +31,34 @@ const AddLOTForm = ({ isEdit }: { isEdit?: boolean }) => {
   const onFinishFailed = (errorInfo: any) => {
     message.error({
       content: `
-        Failed to ${isEdit ? "update" : "add"} LOT
+        Failed to update LOT
       `,
     })
   }
 
-  const { useAddLOTMutation } = patientTableApi
+  const { useGetLOTQuery, useUpdateLOTMutation } = patientTableApi
 
-  const [addLOT, { isLoading }] = useAddLOTMutation()
+  const { data } = useGetLOTQuery(lotId!)
+
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue(data)
+    }
+  }, [data, form])
+
+  const [updateLOT, { isLoading }] = useUpdateLOTMutation()
   const navigate = useNavigate()
 
   const onFinish = async (values: any) => {
-    addLOT({
+    await updateLOT({
       patientId: id,
       ...values,
+      _id: lotId,
     })
-    message.success({ content: "LOT added successfully" })
-    navigate(`/patients/${id}/update-patient`)
+    message.success({
+      content: "LOT updated successfully",
+    })
+    navigate(`/patients/${id}/update-lot/${lotId}`)
   }
 
   const handleTreatmentChange = (value: string) => {
@@ -57,7 +68,7 @@ const AddLOTForm = ({ isEdit }: { isEdit?: boolean }) => {
   return (
     <ProCard>
       <ProForm
-        name="Add LOT"
+        name="Update LOT"
         layout="vertical"
         form={form}
         onFinish={onFinish}
@@ -244,4 +255,4 @@ const AddLOTForm = ({ isEdit }: { isEdit?: boolean }) => {
   )
 }
 
-export default AddLOTForm
+export default UpdateLOTForm

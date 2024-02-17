@@ -8,7 +8,7 @@ export const PieChart = ({ field }: { field: string }) => {
   })
 
   return (
-    <Card title="Statistic by Gender" bordered={false}>
+    <Card title="Statistic by Gender">
       <Pie
         data={data?.chartData}
         angleField="value"
