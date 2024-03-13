@@ -1,4 +1,5 @@
 import {
+  PageContainer,
   ProCard,
   ProForm,
   ProFormDatePicker,
@@ -33,6 +34,7 @@ import {
 
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from "@ant-design/icons"
 import dayjs from "dayjs"
+import { ArrowLeftIcon } from "lucide-react"
 
 function LOTTable({
   patientId,
@@ -70,19 +72,6 @@ function LOTTable({
         cursor: "pointer",
       }}
       labelLayout="inline"
-      extra={
-        <Button
-          key="button"
-          type="primary"
-          icon={<PlusOutlined />}
-          disabled={data?.length === 5}
-          onClick={() => {
-            navigate(`/patients/${patientId}/add-lot`)
-          }}
-        >
-          Add LOT
-        </Button>
-      }
     >
       <Card className="overflow-x-auto">
         <table className="table-auto border-none border-gray-700">
@@ -280,254 +269,315 @@ export function UpdatePatientForm() {
     }
   }
 
+  const navigate = useNavigate()
+
   return (
-    <div className="flex flex-col gap-4">
-      <ProCard>
-        <ProForm<PatientTable.Patient>
-          layout="vertical"
-          form={form}
-          dateFormatter="string"
-          onFinish={onFinish}
-          labelAlign="left"
-          labelCol={{
-            style: {
-              fontWeight: 600,
-            },
-          }}
-          loading={isPatientLoading || isPatientMutating}
-          onFinishFailed={onFinishFailed}
-          submitter={{
-            searchConfig: {
-              submitText: "Save",
-            },
-            render: (_, dom) => dom.pop(),
-          }}
+    <PageContainer
+      // title={
+      //   data?.patient.name + " (" + data?.patient.cr_number + ")" ||
+      //   "Patient Details"
+      // }
+      header={{
+        children: (
+          <div className="flex gap-4 items-center">
+            <Button
+              key="button"
+              type="text"
+              icon={<ArrowLeftIcon />}
+              onClick={() => window.history.back()}
+            />
+            <div className="flex flex-col">
+              <div className="font-semibold text-xl">
+                {data?.patient.name} {"("}
+                {data?.patient.cr_number}
+                {")"}
+              </div>
+            </div>
+            <div className="flex flex-1 flex-row gap-4 justify-end">
+              <div className="flex flex-col">
+                <div className="font-semibold">Date of Last Follow Up</div>
+                <div>
+                  {data?.patient.date_of_last_follow_up
+                    ? dayjs(data?.patient.date_of_last_follow_up).format(
+                        "DD/MM/YYYY",
+                      )
+                    : "N/A"}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <div className="font-semibold">Status at Last Follow Up</div>
+                <div>{data?.patient.status_at_last_follow_up || "N/A"}</div>
+              </div>
+            </div>
+          </div>
+        ),
+      }}
+      fixedHeader
+    >
+      <div className="flex flex-col gap-4">
+        <ProCard
+          collapsible
+          defaultCollapsed
+          title="Line of Treatments"
+          extra={
+            <Button
+              key="button"
+              type="primary"
+              icon={<PlusOutlined />}
+              disabled={data?.patient?.lots?.length === 5}
+              onClick={() => {
+                navigate(`/patients/${id}/add-lot`)
+              }}
+            >
+              Add LOT
+            </Button>
+          }
         >
-          <ProForm.Group
-            title="Bio"
-            collapsible
-            titleStyle={{
-              cursor: "pointer",
+          <LOTTable
+            patientId={id!}
+            data={data?.patient?.lots || []}
+            getPatientLOTs={refetch}
+            deleteLOT={deleteLOT}
+            deleteLOTResponse={deleteLOTResponse}
+          />
+        </ProCard>
+        <ProCard>
+          <ProForm<PatientTable.Patient>
+            layout="vertical"
+            form={form}
+            dateFormatter="string"
+            onFinish={onFinish}
+            labelAlign="left"
+            labelCol={{
+              style: {
+                fontWeight: 600,
+              },
             }}
-            labelLayout="inline"
-          >
-            <ProFormText
-              label="CR Number"
-              name="cr_number"
-              width={"sm"}
-              validateFirst
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter the CR Number",
-                },
-                {
-                  pattern: /^[0-9]*$/,
-                  message: "Please enter a valid CR Number",
-                },
-              ]}
-            />
-            <ProFormText
-              label="Name"
-              name="name"
-              width={"sm"}
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter the name",
-                },
-                {
-                  pattern: /^[a-zA-Z\s]*$/,
-                  message: "Please enter a valid name",
-                },
-                {
-                  min: 3,
-                  message: "Please enter a valid name",
-                },
-              ]}
-            />
-            <ProFormDatePicker
-              label="Date of Birth"
-              name="dob"
-              width={"sm"}
-              fieldProps={{
-                format: (value) => value.format("DD/MM/YYYY"),
-              }}
-            />
-            <ProFormSelect
-              label="Gender"
-              name="gender"
-              width={"sm"}
-              options={genderOptions}
-              placeholder="Please select your gender"
-            />
-            <ProFormSelect
-              label="State"
-              name="state"
-              width={"sm"}
-              options={indianStates}
-              showSearch
-              placeholder="Please select your state"
-            />
-
-            <ProFormSelect
-              label="Smoking"
-              name="smoking"
-              options={smokingStatusOptions}
-              width={"sm"}
-              placeholder="Please select smoking status"
-            />
-
-            <ProFormSelect
-              label="Family History"
-              name="family_history"
-              options={familyHistoryOptions}
-              width={"sm"}
-              placeholder="Please select Family History"
-            />
-
-            <ProFormSelect
-              label="Gene"
-              name="gene"
-              options={geneOptions}
-              width={"sm"}
-              placeholder="Please select the Gene"
-            />
-
-            <ProFormText label="Variant" name="variant" width={"sm"} />
-
-            <ProFormSelect
-              label="Treatment at RGCI"
-              name="treatment_at_rgci"
-              width={"sm"}
-              options={treatmentAtRGCIOptions}
-            />
-
-            <ProFormText
-              label="Phone Number"
-              name="phone_number"
-              width={"sm"}
-            />
-
-            <ProFormSelect
-              label="Status at Last Follow-up"
-              name="status_at_last_follow_up"
-              width={"sm"}
-              options={statusAtLastFollowUpOptions}
-            />
-
-            <ProFormDatePicker
-              label="Date of Last Follow-up"
-              name="date_of_last_follow_up"
-              width={"sm"}
-              fieldProps={{
-                format: (value) => value.format("DD/MM/YYYY"),
-              }}
-            />
-          </ProForm.Group>
-
-          <Divider />
-
-          <ProForm.Group
-            title="Progressive Data"
-            collapsible
-            titleStyle={{
-              cursor: "pointer",
+            loading={isPatientLoading || isPatientMutating}
+            onFinishFailed={onFinishFailed}
+            submitter={{
+              searchConfig: {
+                submitText: "Save",
+              },
+              render: (_, dom) => dom.pop(),
             }}
-            labelLayout="inline"
           >
-            <ProForm.Group>
-              <ProFormDatePicker
-                label="Date of HPE Diagnosis"
-                name="date_of_hpe_diagnosis"
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-              />
-              <ProFormSelect
-                label="ECOG_PS"
-                name="ecog_ps"
-                width={"sm"}
-                options={ecogPSOptions}
-              />
-              <ProFormSelect
-                label="Extrathoracic Mets"
-                name="extrathoracic_mets"
-                width={"sm"}
-                options={extrathoracicMetastasesOptions}
-              />
-              <ProFormSelect
-                label="Brain Mets"
-                name="brain_mets"
-                width={"sm"}
-                options={brainMetastasesOptions}
-              />
-              <ProFormSelect
-                label="Letptomeningeal Mets"
-                name="letptomeningeal_mets"
-                width={"sm"}
-                options={leptomeningealMetastasesOptions}
-              />
+            <ProForm.Group
+              title="Progressive Data"
+              collapsible
+              titleStyle={{
+                cursor: "pointer",
+              }}
+              labelLayout="inline"
+            >
+              <ProForm.Group>
+                <ProFormDatePicker
+                  label="Date of HPE Diagnosis"
+                  name="date_of_hpe_diagnosis"
+                  width={"sm"}
+                  fieldProps={{
+                    format: (value) => value.format("DD/MM/YYYY"),
+                  }}
+                />
+                <ProFormSelect
+                  label="ECOG_PS"
+                  name="ecog_ps"
+                  width={"sm"}
+                  options={ecogPSOptions}
+                />
+                <ProFormSelect
+                  label="Extrathoracic Mets"
+                  name="extrathoracic_mets"
+                  width={"sm"}
+                  options={extrathoracicMetastasesOptions}
+                />
+                <ProFormSelect
+                  label="Brain Mets"
+                  name="brain_mets"
+                  width={"sm"}
+                  options={brainMetastasesOptions}
+                />
+                <ProFormSelect
+                  label="Letptomeningeal Mets"
+                  name="letptomeningeal_mets"
+                  width={"sm"}
+                  options={leptomeningealMetastasesOptions}
+                />
 
-              <ProFormSelect
-                label="LM Mets CSF"
-                name="lm_mets_csf"
-                width={"md"}
-                options={lmMetsOptions}
-              />
-              <ProFormSelect
-                label="Histology"
-                name="histology"
-                width={"md"}
-                options={histoloyOptions}
-              />
-              <ProFormSelect
-                label="PDL1"
-                name="pdl1"
-                width={"sm"}
-                options={pdl1Options}
-              />
-              <ProFormSelect
-                label="BRG1"
-                name="brg1"
-                width={"sm"}
-                options={brg1Options}
-              />
-              <ProFormSelect
-                label="TTF1"
-                name="ttf1"
-                width={"sm"}
-                options={ttf1Options}
-              />
-              <ProFormDatePicker
-                label="Small Cell Transformation Date"
-                name="small_cell_transformation_date"
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-                width={"sm"}
-              />
-              <ProFormText label="VAF" name="vaf" width={"sm"} />
+                <ProFormSelect
+                  label="LM Mets CSF"
+                  name="lm_mets_csf"
+                  width={"md"}
+                  options={lmMetsOptions}
+                />
+                <ProFormSelect
+                  label="Histology"
+                  name="histology"
+                  width={"md"}
+                  options={histoloyOptions}
+                />
+                <ProFormSelect
+                  label="PDL1"
+                  name="pdl1"
+                  width={"sm"}
+                  options={pdl1Options}
+                />
+                <ProFormSelect
+                  label="BRG1"
+                  name="brg1"
+                  width={"sm"}
+                  options={brg1Options}
+                />
+                <ProFormSelect
+                  label="TTF1"
+                  name="ttf1"
+                  width={"sm"}
+                  options={ttf1Options}
+                />
+                <ProFormDatePicker
+                  label="Small Cell Transformation Date"
+                  name="small_cell_transformation_date"
+                  fieldProps={{
+                    format: (value) => value.format("DD/MM/YYYY"),
+                  }}
+                  width={"sm"}
+                />
+                <ProFormText label="VAF" name="vaf" width={"sm"} />
+                <ProFormText
+                  label="Co-Mutation"
+                  name="co_mutation"
+                  width={"sm"}
+                />
+              </ProForm.Group>
+            </ProForm.Group>
+
+            <Divider />
+
+            <ProForm.Group
+              title="Bio"
+              collapsible
+              titleStyle={{
+                cursor: "pointer",
+              }}
+              labelLayout="inline"
+            >
               <ProFormText
-                label="Co-Mutation"
-                name="co_mutation"
+                label="CR Number"
+                name="cr_number"
                 width={"sm"}
+                validateFirst
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter the CR Number",
+                  },
+                  {
+                    pattern: /^[0-9]*$/,
+                    message: "Please enter a valid CR Number",
+                  },
+                ]}
+              />
+              <ProFormText
+                label="Name"
+                name="name"
+                width={"sm"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter the name",
+                  },
+                  {
+                    pattern: /^[a-zA-Z\s]*$/,
+                    message: "Please enter a valid name",
+                  },
+                  {
+                    min: 3,
+                    message: "Please enter a valid name",
+                  },
+                ]}
+              />
+              <ProFormDatePicker
+                label="Date of Birth"
+                name="dob"
+                width={"sm"}
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
+              />
+              <ProFormSelect
+                label="Gender"
+                name="gender"
+                width={"sm"}
+                options={genderOptions}
+                placeholder="Please select your gender"
+              />
+              <ProFormSelect
+                label="State"
+                name="state"
+                width={"sm"}
+                options={indianStates}
+                showSearch
+                placeholder="Please select your state"
+              />
+
+              <ProFormSelect
+                label="Smoking"
+                name="smoking"
+                options={smokingStatusOptions}
+                width={"sm"}
+                placeholder="Please select smoking status"
+              />
+
+              <ProFormSelect
+                label="Family History"
+                name="family_history"
+                options={familyHistoryOptions}
+                width={"sm"}
+                placeholder="Please select Family History"
+              />
+
+              <ProFormSelect
+                label="Gene"
+                name="gene"
+                options={geneOptions}
+                width={"sm"}
+                placeholder="Please select the Gene"
+              />
+
+              <ProFormText label="Variant" name="variant" width={"sm"} />
+
+              <ProFormSelect
+                label="Treatment at RGCI"
+                name="treatment_at_rgci"
+                width={"sm"}
+                options={treatmentAtRGCIOptions}
+              />
+
+              <ProFormText
+                label="Phone Number"
+                name="phone_number"
+                width={"sm"}
+              />
+
+              <ProFormSelect
+                label="Status at Last Follow-up"
+                name="status_at_last_follow_up"
+                width={"sm"}
+                options={statusAtLastFollowUpOptions}
+              />
+
+              <ProFormDatePicker
+                label="Date of Last Follow-up"
+                name="date_of_last_follow_up"
+                width={"sm"}
+                fieldProps={{
+                  format: (value) => value.format("DD/MM/YYYY"),
+                }}
               />
             </ProForm.Group>
-          </ProForm.Group>
-        </ProForm>
-      </ProCard>
-
-      <ProCard>
-        <LOTTable
-          patientId={id!}
-          data={data?.patient?.lots || []}
-          getPatientLOTs={refetch}
-          deleteLOT={deleteLOT}
-          deleteLOTResponse={deleteLOTResponse}
-        />
-      </ProCard>
-    </div>
+          </ProForm>
+        </ProCard>
+      </div>
+    </PageContainer>
   )
 }

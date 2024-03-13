@@ -4,8 +4,6 @@ import AddLOT from "@/views/addLOT"
 import AddPatients from "@/views/addPatients"
 import Analytics from "@/views/analytics"
 import Login from "@/views/login"
-import { LOTs } from "@/views/lots"
-import PatientDetails from "@/views/patientDetails"
 import Patients from "@/views/patients"
 import Settings from "@/views/settings"
 import UpdateLOT from "@/views/updateLOT"
@@ -63,14 +61,6 @@ export const routesConfig: RouteObject[] = [
         element: (
           <ProtectedRoute allowedRoles={["admin"]}>
             <UpdateLOT />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/patients/:id/get-lots",
-        element: (
-          <ProtectedRoute allowedRoles={["admin"]}>
-            <LOTs />
           </ProtectedRoute>
         ),
       },

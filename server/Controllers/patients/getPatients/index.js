@@ -1,5 +1,4 @@
 const Patient = require('../../../models/Patient')
-const LOT = require('../../../models/LOT')
 
 const getPatients = async (req, res) => {
   try {
@@ -10,7 +9,7 @@ const getPatients = async (req, res) => {
     const order = params.get('order') || 'ascend'
     const search = params.get('search') || ''
 
-    //make filters array of objects
+    // Make filters array of objects
     const filters = {}
     for (const [param, value] of params) {
       // Create a regex pattern for each parameter's value (case-insensitive)
@@ -48,7 +47,7 @@ const getPatients = async (req, res) => {
 
       filters[param] = regexPattern
     }
-    // remove filters with empty values
+    // Remove filters with empty values
     Object.keys(filters).forEach(
       (key) => (filters[key] === '' || undefined) && delete filters[key]
     )
@@ -57,26 +56,38 @@ const getPatients = async (req, res) => {
       {
         $match: {
           ...filters,
-          is_deleted: false,
-        },
-      },
-      {
-        $match: {
-          $or: [
+          $and: [
             {
-              cr_number: {
-                $regex: new RegExp(search, 'i'),
-              },
+              $or: [
+                // Patient fields
+                {cr_number: {$regex: new RegExp(search, 'i')}},
+                {name: {$regex: new RegExp(search, 'i')}},
+                {age: {$regex: new RegExp(search, 'i')}},
+                {dob: {$regex: new RegExp(search, 'i')}},
+              ],
             },
-            {name: {$regex: new RegExp(search, 'i')}},
+            {is_deleted: false},
           ],
         },
       },
+      {
+        $lookup: {
+          from: 'LOT',
+          localField: 'lots',
+          foreignField: '_id',
+          as: 'lots',
+        },
+      },
+      {
+        $sort: {[sort]: order === 'createdAt' ? 1 : -1},
+      },
+      // {
+      //   $skip: (page - 1) * perPage,
+      // },
+      // {
+      //   $limit: perPage,
+      // },
     ])
-      .sort({[sort]: order === 'createdAt' ? 1 : -1})
-      // .skip((page - 1) * perPage)
-      // .limit(perPage)
-      .exec()
 
     const patientCount = await Patient.countDocuments({
       ...filters,

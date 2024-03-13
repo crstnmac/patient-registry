@@ -36,7 +36,7 @@ import {
   CloseCircleTwoTone,
 } from "@ant-design/icons"
 import ImportData from "../importData/ImportData"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import "./PatientTable.module.css"
 import {
   brainMetastasesOptions,
@@ -70,6 +70,8 @@ export function PatientTable() {
   const [url, setUrl] = useState<string>("")
 
   const [form] = Form.useForm()
+
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const { data, error, isLoading, refetch } = useGetPatientsQuery(url, {
     refetchOnMountOrArgChange: true,
@@ -494,10 +496,10 @@ export function PatientTable() {
         columns={columns}
         rowKey="cr_number"
         pagination={{
-          current: params?.page || 1,
-          pageSize: params?.rowsPerPage || 10,
+          current: parseInt(searchParams.get("page") || "1"),
+          pageSize: parseInt(searchParams.get("rowsPerPage") || "10"),
           showQuickJumper: true,
-          pageSizeOptions: ["10", "20", "30", "40", "50"],
+          pageSizeOptions: ["10", "20", "30", "40", "50", "100"],
           defaultCurrent: 1,
           total: data?.totalCount,
           onChange(page, pageSize) {
@@ -507,6 +509,7 @@ export function PatientTable() {
               newParams as unknown as Record<string, string>,
             )
             const url = urlSearchParams.toString()
+            setSearchParams(url)
             setUrl(url)
           },
           showSizeChanger: true,
