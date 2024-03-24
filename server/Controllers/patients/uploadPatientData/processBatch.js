@@ -45,7 +45,6 @@ const processBatch = async (batch) => {
         extrathoracic_mets: rowData['Extrathoracic_Mets'],
         brain_mets: rowData['Brain_Mets'],
         letptomeningeal_mets: rowData['Letptomeningeal_Mets'],
-        lm_mets_csf: rowData['LM_Mets_CSF'],
         histology: rowData['Histology'],
         pdl1: rowData['PDL1'],
         brg1: rowData['BRG1'],

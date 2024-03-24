@@ -461,13 +461,6 @@ export function AddPatientForm() {
                 width={"sm"}
                 options={leptomeningealMetastasesOptions}
               />
-
-              <ProFormSelect
-                label="LM Mets CSF"
-                name="lm_mets_csf"
-                width={"md"}
-                options={lmMetsOptions}
-              />
               <ProFormSelect
                 label="Histology"
                 name="histology"

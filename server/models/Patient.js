@@ -36,7 +36,6 @@ const patientSchema = new Schema(
     extrathoracic_mets: String,
     brain_mets: String,
     letptomeningeal_mets: String,
-    lm_mets_csf: String,
     histology: String,
     pdl1: String,
     brg1: String,

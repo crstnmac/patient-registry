@@ -45,7 +45,6 @@ export namespace PatientTable {
     extrathoracic_mets: string
     brain_mets: string
     letptomeningeal_mets: string
-    lm_mets_csf: string
     histology: string
     pdl1: string
     brg1: string
@@ -90,7 +89,6 @@ export namespace PatientTable {
     extrathoracic_mets: string
     brain_mets: string
     letptomeningeal_mets: string
-    lm_mets_csf: string
     histology: string
     pdl1: string
     brg1: string
