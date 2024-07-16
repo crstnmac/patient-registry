@@ -1,4 +1,6 @@
 import React, { useState } from "react"
+import * as XLSX from 'xlsx';
+import { RiFileExcel2Line  } from "react-icons/ri";
 import patientTableApi, {
   PatientTable as PatientTableT,
 } from "@/features/patientTable/patientTableApi"
@@ -420,10 +422,115 @@ export function PatientTable() {
     },
     {} as { [key: string]: { text: string } },
   )
+// flatten a array of object
+  function normalizePatientData(data:any) {
+    // Flatten lots into a single object
+    const flattenLots = (lots:any) => {
+      return lots.reduce((acc:any, lot:any, index:any) => {
+        Object.keys(lot).forEach(key => {
+          acc[`lot_${index + 1}_${key}`] = lot[key];
+        });
+        return acc;
+      }, {});
+    };
+  
+    const lotsFlattened = flattenLots(data.lots || []);
+  
+    return {
+      age: parseInt(data.age, 10) || null,
+      brain_mets: data.brain_mets || null,
+      brg1: data.brg1 || null,
+      co_mutation: data.co_mutation === '-' ? null : data.co_mutation,
+      cr_number: data.cr_number || null,
+      createdAt: data.createdAt || null,
+      date_of_hpe_diagnosis: data.date_of_hpe_diagnosis || null,
+      date_of_last_follow_up: data.date_of_last_follow_up || null,
+      ecog_ps: parseInt(data.ecog_ps, 10) || null,
+      extrathoracic_mets: data.extrathoracic_mets || null,
+      family_history: data.family_history || null,
+      gender: data.gender || null,
+      gene: data.gene || null,
+      histology: data.histology || null,
+      is_deleted: data.is_deleted || false,
+      is_new: data.is_new || false,
+      name: data.name ? data.name.replace(" abc", "") : null,
+      pdl1: data.pdl1 || null,
+      phone_number: data.phone_number || null,
+      smoking: data.smoking || null,
+      status_at_last_follow_up: data.status_at_last_follow_up || null,
+      treatment_at_rgci: data.treatment_at_rgci || null,
+      ttf1: data.ttf1 || null,
+      updatedAt: data.updatedAt || null,
+      vaf: data.vaf === '-' ? null : data.vaf,
+      variant: data.variant || null,
+      __v: data.__v || 0,
+      _id: data._id || null,
+      ...lotsFlattened
+    };
+  }
+  function getCurrentDateTime() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+    return `${day}${month}${year}${hours}${minutes}`;
+  }
+
+
+// Download  Excel export functionlity
+  const handleDownload = () => {
+    // check if data is present
+    if (!data || !data.patients || data.patients.length === 0) {
+      alert('No data available to download'); // Alert box
+      return;
+    }
+
+   const  normalizeData=data.patients.map((items)=>{
+    return normalizePatientData(items);
+   })
+  
+    // Assuming headers is dynamically fetched or defined elsewhere
+    const headers = Object.keys(normalizeData[0])
+  
+    const worksheetData = normalizeData.map(item => {
+      const newItem:any = {};
+      headers.forEach(header => {
+        if (Object.prototype.hasOwnProperty.call(item, header)) {
+          if (Array.isArray(item[header]) && item[header].every(obj => typeof obj === 'object' && obj !== null)) {
+              // Handle array of objects
+              newItem[header] = item[header].map(obj => JSON.stringify(obj));
+          } else if (typeof item[header] === 'object' && item[header] !== null) {
+              // Handle nested object by converting to JSON string
+              newItem[header] = JSON.stringify(item[header]);
+          } else {
+              // Handle other types like string, number, etc.
+              newItem[header] = item[header];
+          }
+      } else {
+          newItem[header] = ''; // Set empty string for missing fields
+      }
+    })
+      return newItem;
+    });
+    console.error('No data available to download',worksheetData);
+  
+    const ws = XLSX.utils.json_to_sheet(worksheetData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Patients");
+    XLSX.writeFile(wb, `patients_data${getCurrentDateTime()}.xlsx`);
+  };
+  
+  console.log("hhhghjghbbvvg",data)
+console.log("api data",searchParams,"ghggdggdfv",url);
+
 
   return (
     <>
       <ProTable<PatientTableT.Patient, PatientTableT.SearchParams>
+        
         scroll={{
           x: "max-content",
         }}
@@ -487,11 +594,24 @@ export function PatientTable() {
           showSizeChanger: true,
         }}
         toolbar={{
-          title: data?.totalCount ? (
+          title:(
+            <Space>{ data?.totalCount ? (
             `Total Count: ${data?.totalCount}`
           ) : (
             <span style={{ color: "gray" }}>No Data</span>
+          )}
+          {/* render the download button */}
+           <Button
+           key="download"
+           icon={<RiFileExcel2Line  />}
+           onClick={handleDownload}
+           type="primary"
+         >
+          Export 
+         </Button>
+          </Space>
           ),
+          
           search: {
             onSearch: (value) => {
               const newParams = { ...params, search: value }
@@ -505,6 +625,7 @@ export function PatientTable() {
             allowClear: true,
             placeholder: "CR Number/Name",
           },
+        
           filter: (
             <Space
               size={[10, "middle"]}
@@ -537,6 +658,7 @@ export function PatientTable() {
                     type="dashed"
                     key={key}
                     onClick={() => {
+                      console.log("i am clicked ");
                       const newParams: Record<string, any> = { ...params }
                       delete newParams[key]
                       setParams(newParams)
@@ -557,6 +679,7 @@ export function PatientTable() {
             </Space>
           ),
           multipleLine: true,
+         
         }}
         dataSource={data?.patients}
         loading={isLoading}
@@ -965,6 +1088,7 @@ export function PatientTable() {
               </ProForm.Item>
             </ProForm.Group>
           </ModalForm>,
+          
           <Tooltip title={"Add Patient"}>
             <Button
               key="button"
@@ -1009,6 +1133,7 @@ export function PatientTable() {
         width={1000}
       >
         <ImportData />
+        
       </Modal>
       <Modal
         title="Delete Patient"

@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/pie-chart', async (req, res) => {
+  // console.log("hhdfbchuf",req.body);
   await pieChart(req, res)
 })
 

@@ -44,7 +44,9 @@ router.post('/login-admin', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
+  console.log("reqdata",req.body);
   const {role} = req.body
+
   await userLogin(req.body, role, res)
 })
 

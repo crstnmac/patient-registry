@@ -5,14 +5,15 @@ import {
   ProFormDatePicker,
   ProFormSelect,
   ProFormText,
+  
 } from "@ant-design/pro-components"
-import { App, Button, Card, Divider, Popconfirm, message } from "antd"
+import { App, Button, Card, Divider, Popconfirm, message,Switch,Modal } from "antd"
 import patientTableApi, {
   PatientTable,
   useDeleteLOTMutation,
 } from "../patientTable/patientTableApi"
 import { useNavigate, useParams } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect,useState } from "react"
 import {
   brainMetastasesOptions,
   brg1Options,
@@ -209,6 +210,8 @@ function LOTTable({
 
 export function UpdatePatientForm() {
   const [form] = ProForm.useForm()
+  const [isEditable, setIsEditable] = useState(false); //handel state for toggle
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const params = useParams()
 
@@ -265,13 +268,43 @@ export function UpdatePatientForm() {
         content: "Something went wrong",
       })
     } else {
+      setIsEditable(false)
       message.success({ content: "Patient updated successfully" })
     }
   }
 
   const navigate = useNavigate()
 
+  const handleToggle = () => {
+    if (isEditable) {
+      setIsEditable(false); // Directly set to frozen state if editable
+    } else {
+      setConfirmVisible(true); // Show confirmation if switching from frozen to freeze
+    }
+  };
+
+  const handleConfirmOk = () => {
+    setIsEditable(true); // Set to freeze if user confirms
+    setConfirmVisible(false); // Close modal
+  };
+
+  const handleConfirmCancel = () => {
+    setConfirmVisible(false); // Close modal without changing state
+  };
+
   return (
+    <>
+    <Modal
+        title="Confirmation"
+        visible={confirmVisible}
+        onOk={handleConfirmOk}
+        onCancel={handleConfirmCancel}
+        okText="Confirm"
+        cancelText="Cancel"
+      >
+        Please confirm if u want to edit the Bio Parameters
+      </Modal>
+    
     <PageContainer
       // title={
       //   data?.patient.name + " (" + data?.patient.cr_number + ")" ||
@@ -445,132 +478,156 @@ export function UpdatePatientForm() {
             </ProForm.Group>
 
             <Divider />
-
+           
             <ProForm.Group
-              title="Bio"
-              collapsible
-              titleStyle={{
-                cursor: "pointer",
-              }}
-              labelLayout="inline"
-            >
-              <ProFormText
-                label="CR Number"
-                name="cr_number"
-                width={"sm"}
-                validateFirst
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter the CR Number",
-                  },
-                  {
-                    pattern: /^[0-9]*$/,
-                    message: "Please enter a valid CR Number",
-                  },
-                ]}
-              />
-              <ProFormText
-                label="Name"
-                name="name"
-                width={"sm"}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter the name",
-                  },
-                  {
-                    pattern: /^[a-zA-Z\s]*$/,
-                    message: "Please enter a valid name",
-                  },
-                  {
-                    min: 3,
-                    message: "Please enter a valid name",
-                  },
-                ]}
-              />
-              <ProFormDatePicker
-                label="Date of Birth"
-                name="dob"
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-              />
-              <ProFormSelect
-                label="Gender"
-                name="gender"
-                width={"sm"}
-                options={genderOptions}
-                placeholder="Please select your gender"
-              />
-              <ProFormSelect
-                label="State"
-                name="state"
-                width={"sm"}
-                options={indianStates}
-                showSearch
-                placeholder="Please select your state"
-              />
+        title="Bio"
+        collapsible
+        titleStyle={{
+          cursor: 'pointer',
+        }}
+        labelLayout="inline"
+        extra={
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ marginRight: '16px' }}>{isEditable ? 'Lock Bio' : 'Edit Bio'}</div>
+            {/* Add the toggle button  to toggle the field editable or non editable */}
+            <Switch checked={isEditable} onChange={handleToggle} />
+          </div>
+        }
+      >
+               {/* <div style={{ justifyContent: 'right', alignItems: 'right' }}>
+             
+             <Switch checked={isEditable} onChange={(checked) => handleToggle(checked)} />
+           </div> */}
+             <ProFormText
+        label="CR Number"
+        name="cr_number"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        validateFirst
+        rules={[
+          {
+            required: true,
+            message: "Please enter the CR Number",
+          },
+          {
+            pattern: /^[0-9]*$/,
+            message: "Please enter a valid CR Number",
+          },
+        ]}
+      />
+      <ProFormText
+        label="Name"
+        name="name"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        rules={[
+          {
+            required: true,
+            message: "Please enter the name",
+          },
+          {
+            pattern: /^[a-zA-Z\s]*$/,
+            message: "Please enter a valid name",
+          },
+          {
+            min: 3,
+            message: "Please enter a valid name",
+          },
+        ]}
+      />
+      <ProFormDatePicker
+        label="Date of Birth"
+        name="dob"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        fieldProps={{
+          format: (value) => value.format("DD/MM/YYYY"),
+        }}
+      />
+      <ProFormSelect
+        label="Gender"
+        name="gender"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={genderOptions}
+        placeholder="Please select your gender"
+      />
+      <ProFormSelect
+        label="State"
+        name="state"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={indianStates}
+        showSearch
+        placeholder="Please select your state"
+      />
 
-              <ProFormSelect
-                label="Smoking"
-                name="smoking"
-                options={smokingStatusOptions}
-                width={"sm"}
-                placeholder="Please select smoking status"
-              />
+      <ProFormSelect
+        label="Smoking"
+        name="smoking"
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={smokingStatusOptions}
+        width={"sm"}
+        placeholder="Please select smoking status"
+      />
 
-              <ProFormSelect
-                label="Family History"
-                name="family_history"
-                options={familyHistoryOptions}
-                width={"sm"}
-                placeholder="Please select Family History"
-              />
+      <ProFormSelect
+        label="Family History"
+        name="family_history"
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={familyHistoryOptions}
+        width={"sm"}
+        placeholder="Please select Family History"
+      />
 
-              <ProFormSelect
-                label="Gene"
-                name="gene"
-                options={geneOptions}
-                width={"sm"}
-                placeholder="Please select the Gene"
-              />
+      <ProFormSelect
+        label="Gene"
+        name="gene"
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={geneOptions}
+        width={"sm"}
+        placeholder="Please select the Gene"
+      />
 
-              <ProFormText label="Variant" name="variant" width={"sm"} />
+      <ProFormText label="Variant" name="variant" width={"sm"} disabled={!isEditable} />
 
-              <ProFormSelect
-                label="Treatment at RGCI"
-                name="treatment_at_rgci"
-                width={"sm"}
-                options={treatmentAtRGCIOptions}
-              />
+      <ProFormSelect
+        label="Treatment at RGCI"
+        name="treatment_at_rgci"
+        disabled={!isEditable} // Disable field based on isEditable state
+        width={"sm"}
+        options={treatmentAtRGCIOptions}
+      />
 
-              <ProFormText
-                label="Phone Number"
-                name="phone_number"
-                width={"sm"}
-              />
+      <ProFormText
+        label="Phone Number"
+        name="phone_number"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+      />
 
-              <ProFormSelect
-                label="Status at Last Follow-up"
-                name="status_at_last_follow_up"
-                width={"sm"}
-                options={statusAtLastFollowUpOptions}
-              />
+      <ProFormSelect
+        label="Status at Last Follow-up"
+        name="status_at_last_follow_up"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        options={statusAtLastFollowUpOptions}
+      />
 
-              <ProFormDatePicker
-                label="Date of Last Follow-up"
-                name="date_of_last_follow_up"
-                width={"sm"}
-                fieldProps={{
-                  format: (value) => value.format("DD/MM/YYYY"),
-                }}
-              />
+      <ProFormDatePicker
+        label="Date of Last Follow-up"
+        name="date_of_last_follow_up"
+        width={"sm"}
+        disabled={!isEditable} // Disable field based on isEditable state
+        fieldProps={{
+          format: (value) => value.format("DD/MM/YYYY"),
+        }}
+      />
             </ProForm.Group>
           </ProForm>
         </ProCard>
       </div>
     </PageContainer>
+    </>
   )
 }

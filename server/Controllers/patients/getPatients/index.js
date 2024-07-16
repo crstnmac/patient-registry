@@ -8,7 +8,8 @@ const getPatients = async (req, res) => {
     const sort = params.get('sort') || 'createdAt'
     const order = params.get('order') || 'ascend'
     const search = params.get('search') || ''
-
+    console.log("params111",search);
+    
     // Make filters array of objects
     const filters = {}
     for (const [param, value] of params) {
@@ -50,6 +51,12 @@ const getPatients = async (req, res) => {
         }
         continue
       }
+      // specifi the gender  filter
+      if (param === 'gender') {
+        filters[param] = value
+        continue
+      }
+
 
       const regexPattern = {
         $regex: new RegExp(params.get(param) || '', 'i'),
@@ -93,6 +100,7 @@ const getPatients = async (req, res) => {
       }
     }
     // Remove filters with empty values
+    console.log("filters",filters);
 
     Object.keys(filters).forEach(
       (key) => (filters[key] === '' || undefined) && delete filters[key]
@@ -174,7 +182,6 @@ const getPatients = async (req, res) => {
       //   $limit: perPage,
       // },
     ])
-
     const patientCount = patients.length
 
     return res.status(200).json({
@@ -182,6 +189,7 @@ const getPatients = async (req, res) => {
       patients: patients,
       totalCount: patientCount,
     })
+    
   } catch (error) {
     return res.status(500).json({
       success: false,

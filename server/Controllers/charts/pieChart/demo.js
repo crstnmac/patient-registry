@@ -41,12 +41,12 @@ const Patient = require('../../../models/Patient')
 //     }
 //   })
 // }
-
 function getDataBasedOnField(array, field) {
   return new Promise((resolve, reject) => {
     try {
       const result = array.reduce((acc, obj) => {
         const key = obj[field];
+        console.log("field",key);
         if (!acc[key]) {
           acc[key] = { type: key, value: 0 };
         }

@@ -15,3 +15,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.custom-legend .g2-legend-item {
+  font-size: 18px; /* Adjust font size */
+  font-weight: bold; /* Make text bold */
+}
+
+.custom-legend .g2-legend-marker {
+  width: 20px; /* Adjust marker size */
+  height: 20px; /* Adjust marker size */
+}

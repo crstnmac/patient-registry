@@ -44,7 +44,7 @@ const startApp = async () => {
     //   autoCreate: true,
     // })
 
-    await connect(MONGO_URL, {
+    await connect("mongodb+srv://digitalrgci:d98kcrbbKOQGgRfw@cluster0.mq3hwyr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: REQUEST_TIMEOUT,
@@ -63,6 +63,7 @@ const startApp = async () => {
       success({ message: `Server started on PORT ${PORT}`, badge: true })
     );
   } catch (err) {
+    console.log("error",err);
     error({
       message: `Unable to connect with Database \n${err}`,
       badge: true,

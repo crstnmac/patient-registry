@@ -30,6 +30,7 @@ const MSG = {
  */
 const login = async (userRequest, role, res) => {
   try {
+    
     const loginRequest = await loginSchema.validateAsync(userRequest);
     let { username, password } = userRequest;
     // First Check if the username or email is in the database
@@ -39,6 +40,7 @@ const login = async (userRequest, role, res) => {
       const email = username;
       user = await User.findOne({ email });
     } else {
+      
       user = await User.findOne({ username });
     }
 
@@ -64,6 +66,7 @@ const login = async (userRequest, role, res) => {
     // Now check for the password
     let isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
+
       // Sign in the token and issue it to the user
       let token = jwt.sign(
         {

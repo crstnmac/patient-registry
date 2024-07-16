@@ -1,4 +1,4 @@
-import React, { useRef ,useEffect,useState} from 'react';
+import React, { useRef } from 'react';
 import { Pie, Bar, Area } from "@ant-design/plots";
 import { useGetPieChartQuery } from "./pieChartApi";
 import { Card, Button } from "antd";
@@ -15,14 +15,10 @@ export const PieChart =({ field, chartType,filter }: PieChartProps) => {
   const { data } = useGetPieChartQuery({
     field,
     filter,
-  })as { data: { chartData: { type: string; value: number; }[] } };// pass the filter props  to the api backend
+  })as { data: { chartData: { name: string; count: number; }[] } };// pass the filter props  to the api backend
   
-  const [chartData, setChartData] = useState<{ type: string; value: number }[]>([]);
-  useEffect(() => {
-   const  charData=data?.chartData
-      setChartData(charData);
-   
-  }, [data]);
+  console.log("data",data);
+  
   const chartRef = useRef(null);
   function getCurrentDateTime() {
     const now = new Date();
@@ -43,7 +39,6 @@ export const PieChart =({ field, chartType,filter }: PieChartProps) => {
       alert("No data available to download.");
       return;
     }
-   console.log(data,"hii hello")
     if(chartRef.current){
     html2canvas(chartRef.current).then((canvas) => {
       const timeNow=  getCurrentDateTime();
@@ -54,51 +49,46 @@ export const PieChart =({ field, chartType,filter }: PieChartProps) => {
     });
   }
   };
-  
-  
   const pieConfig = {
-    data:data?.chartData,
+    data: data?.chartData ,
     angleField: 'value',
     colorField: 'type',
     radius: 0.8,
+   
     label: {
       type: 'spider',
-      labelHeight: 28,
-      content: "{name}\n{percentage}",
+      content: '{type}\n{percentage}',
+      offset: 30, // Adjust the offset for label distance from the pie chart
       style: {
         lineWidth: 1,
         stroke: 'rgba(0, 0, 0, 0.15)',
+        r:50
       },
     },
+   
+    
+    // itemName: {
+    //   style: {
+    //     fontSize: 30, // Font size
+    //     fontWeight: 'bold', // Font weight
+    //   },
+    // },
+    // itemValue: {
+    //   style: {
+    //     fontSize: 30, // Font size
+    //   },
+    // },
+    // marker: {
+    //   style: {
+    //     r: 100, // Marker size
+    //   },
+    // },
     interactions: [
       { type: 'element-selected' },
       { type: 'element-active' },
     ],
-   
-   
-  };
-  // const pieConfig = {
-  //   data:data?.chartData,
-  //   angleField: 'value',
-  //   colorField: 'type',
-  //   radius: 0.8,
-   
-  //   label: {
-  //     type: 'spider',
-  //     content: '{name}\n{percentage}',
-  //     offset: 30, // Adjust the offset for label distance from the pie chart
-  //     style: {
-  //       lineWidth: 1,
-  //       stroke: 'rgba(0, 0, 0, 0.15)',
-  //       r:50
-  //     },
-  //   },
-  //   interactions: [
-  //     { type: 'element-selected' },
-  //     { type: 'element-active' },
-  //   ],
-    
-  // }
+  
+  }
   const renderChart = () => {
     switch (chartType) {
       case 'pie':
@@ -118,8 +108,6 @@ export const PieChart =({ field, chartType,filter }: PieChartProps) => {
         return null;
     }
   };
-  console.log("cgvgcvcv",data);
-
 
   return (
     <Card

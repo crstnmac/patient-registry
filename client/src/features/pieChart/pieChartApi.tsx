@@ -6,14 +6,15 @@ export namespace PieChartApi {
     message: string
     chartData: [
       {
-        name: string
-        count: number
+        type: string
+        value: number
       },
     ]
   }
 
   export interface PieChartReq {
-    field: string
+    field: string,
+    filter:any
   }
 }
 
